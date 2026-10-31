@@ -10,7 +10,7 @@
 @media(max-width:650px){main{padding-left:10px;padding-right:10px}.top{height:38px}.brand{font-size:19px}.tag{font-size:9px}.view{min-height:125px;padding:2px 0}.viewTitle{padding-bottom:3px}.tabs{padding:6px 0}.tabs button{padding:7px 4px}.tools{padding-top:5px;max-height:56dvh}.toolLine{margin-bottom:5px}.hscroll button{padding:7px 9px}.hscroll{gap:4px}.bottomSmall{margin-top:3px}}
 
 .colorSheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:46dvh;min-height:210px;padding:17px 18px calc(15px + env(safe-area-inset-bottom));background:#f9f9f6;border-radius:17px 17px 0 0;box-shadow:0 -12px 45px #0002;display:none;overflow:auto}.colorSheet.open{display:block}.sheetMask{position:fixed;inset:0;background:#0002;z-index:20;display:none}.sheetMask.open{display:block;pointer-events:none}.sheetBar,.colorLine,.sheetLine{display:flex;justify-content:space-between;align-items:center;gap:12px}.sheetBar{margin-bottom:18px}.colorLine{justify-content:flex-start}.colorLine label{display:flex;align-items:center;gap:8px;font-size:13px}.colorLine input{width:50px;height:43px}.sheetHint{font-size:12px;color:#666;margin:14px 0;line-height:1.5}.sheetLine{justify-content:space-between;font-size:12px}.colorSheet button{padding:10px}.view:has(#edit){position:relative}#color{min-width:75px}.tools{max-height:48dvh}main:has(.colorSheet.open){}body.colorEditing .view{margin-bottom:min(30px,4dvh)}body.colorEditing .tools{opacity:.15;pointer-events:none}body.colorEditing .tabs{opacity:.4;pointer-events:none}
-.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v0.9</span></header>
+.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v1.0</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -23,7 +23,7 @@
 <div class="toolLine presetLine"><label>プリセット</label><div class="swatches"><button class="swatch" style="background:linear-gradient(130deg,#ea958a,#8b8cc9,#6caeb8)" data-preset="0" title="夕凪"></button><button class="swatch" style="background:linear-gradient(130deg,#101f4f,#f6a1b4,#eeb16f)" data-preset="1" title="夜明け"></button><button class="swatch" style="background:linear-gradient(130deg,#345b72,#8bd1b7,#e6cfad)" data-preset="2" title="翡翠"></button><button class="swatch" style="background:linear-gradient(130deg,#3b2464,#c13b7c,#faab51)" data-preset="3" title="深紅"></button></div></div>
 <div class="hscroll" id="fileControls"><button id="savepng">画像保存</button><button id="savedata">設定保存</button><button id="loaddata">設定読込</button><button id="reset">初期化</button></div>
 <input id="fileinput" type="file" accept="application/json,.json" hidden>
-<div class="bottomSmall">遠くは小さく、手前は大きな雲。雲の影は丘・家・海にゆっくり移動します。</div></section>
+<div class="bottomSmall">雲量は空の被覆率、厚みは層雲から雨雲への形状・陰影変化を調整します。</div></section>
 </main><div class="sheetMask" id="colorMask"></div><section class="colorSheet" id="colorSheet" aria-label="線形グラデーションの色設定"><div class="sheetBar"><b>領域のグラデーション</b><button id="closeColor">完了</button></div><div class="colorLine"><label>開始色 <input type="color" id="startColor"></label><label>終了色 <input type="color" id="endColor"></label><button id="swapColors">色を交換</button></div><div class="sheetHint">領域表示ではプレビューの2点を動かし、方向と色の移行幅を編集できます。</div><div class="sheetLine"><button id="resetDirection">方向を初期化</button><span id="gradientReadout">方向 0°</span></div></section><div class="modal" id="layerModal" aria-hidden="true"><div class="dialog"><div class="dialogTitle"><span>色面の重なり順</span><button id="closeLayers">閉じる</button></div><div class="groupHeading">上側が最前面。色面を選択して上下に移動します。</div><div class="layers" id="layers"></div><div class="subButtons"><button onclick="document.getElementById('up').click()">前へ</button><button onclick="document.getElementById('down').click()">後ろへ</button></div></div></div><script>
 (()=>{'use strict';const $=id=>document.getElementById(id);const edit=$('edit'),res=$('result'),scene=$('scene'),ec=edit.getContext('2d'),rc=res.getContext('2d'),sc=scene.getContext('2d');const W=360,H=180;const field=document.createElement('canvas');field.width=W;field.height=H;const fc=field.getContext('2d',{willReadFrequently:true});let sphereView=false;let colorEditing=false;let handleDrag=null;let objects=[],selected=null,activeLayer='sky',skyObjects=[],cloudObjects=[],skySelected=null,cloudSelected=null,cloudAmount=45,cloudThickness=55,mode='select',draft=null,drag=null,shift=0,blur=140,skyShift=0,cloudShift=0,skyBlur=140,cloudBlur=140,windDir=30,windSpeed=15,windT=0,nextId=1;const shapes=[['select','選択'],['rect','矩形'],['round','角丸'],['circle','円'],['ellipse','楕円'],['free','自由線']];const presets=[[
  ['rect',.5,.5,1.05,1.05,'#9596cf'],['ellipse',.2,.35,.56,.62,'#e990aa'],['ellipse',.78,.28,.53,.48,'#6cbbba'],['ellipse',.39,.82,.66,.4,'#eeba80'],['ellipse',.95,.86,.5,.43,'#6568ab']],
@@ -118,106 +118,106 @@ function targetLayer(layer){if(activeLayer===layer)return;
 function getLayerPixels(list,context,layer){const prior=objects;objects=list;const layerShift=layer==='sky'?skyShift:cloudShift;const layerBlur=layer==='sky'?skyBlur:cloudBlur;drawCurrent(context,W,H,layerShift,false);objects=prior;
  let img=context.getImageData(0,0,W,H),pix=img.data;
  if(layerBlur){let radius=Math.max(1,Math.round(layerBlur*.32));let low=processBlur(pix,Math.min(96,Math.round(radius*1.75+3)));let near=processBlur(pix,Math.min(72,radius));let out=new Uint8ClampedArray(pix.length),t=Math.min(1,blur/200);for(let i=0;i<pix.length;i+=4){for(let c=0;c<3;c++)out[i+c]=near[i+c]*(.67-.13*t)+low[i+c]*(.33+.13*t);out[i+3]=255}img.data.set(out)}context.putImageData(img,0,0);return img;}
-// v0.9: coherent, perspective-scaled cloud masses rather than fine periodic speckle.
-// The same evolving field drives the visible clouds and their soft ground shadows.
+// v1.0: continuous cloud-density field; morphology and illumination are separate.
+// Thickness changes the geometry (flat stratus -> billowing rain clouds), not just opacity.
 const clamp01=x=>Math.max(0,Math.min(1,x));
 const smooth01=x=>{x=clamp01(x);return x*x*(3-2*x)};
-const cloudGroups=[
- // Far horizon: smaller puffs and narrow masses
- [.07,.78,.07,.067,1.0],[.22,.81,.055,.047,.8],[.34,.75,.095,.072,.9],[.51,.83,.075,.054,1],[.68,.77,.088,.066,.9],[.87,.81,.066,.053,.9],
- // Mid-distance: large gently overlapping banks
- [.12,.53,.165,.135,1.1],[.35,.57,.135,.116,.9],[.61,.51,.18,.145,1.15],[.83,.58,.16,.11,1],
- // Near: broad slow cloud sheets, very large in apparent size
- [.02,.19,.31,.23,1.06],[.41,.24,.28,.25,1.02],[.83,.16,.32,.26,1.1]
-];
-function cloudField(px,py){
- const theta=windDir*Math.PI/180;
- const u=px+cloudShift+Math.cos(theta)*windT;
- const v=py+Math.sin(theta)*windT*.30;
- let q=0;
- for(let i=0;i<cloudGroups.length;i++){
-  let [cx,cy,rx,ry,amp]=cloudGroups[i];
-  // small organic deviations, broad enough to avoid grain or pixel-like spots
-  const wobble=Math.sin((v-cy)*9+i*1.7)*.016+Math.sin(v*15+i*2.3)*.009;
-  let dx=u-cx+wobble;dx-=Math.round(dx);let dy=v-cy;
-  let d=(dx*dx)/(rx*rx)+(dy*dy)/(ry*ry);
-  let val=amp*Math.exp(-d*1.8);
-  q=Math.max(q,val);
- }
- // Slight broad swells merge nearby cloud masses, without high frequency noise.
- q+=.10*Math.sin(u*2*Math.PI*2.0+Math.sin(v*5)*.3)*Math.sin(v*8.0+.7);
- return clamp01(q);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const fract=x=>x-Math.floor(x);
+function hash2(x,y){return fract(Math.sin(x*127.1+y*311.7)*43758.5453)}
+function valueNoise(x,y,period=0){
+ let x0=Math.floor(x),y0=Math.floor(y),fx=smooth01(x-x0),fy=smooth01(y-y0);
+ const h=(ix,iy)=>hash2(period?((ix%period)+period)%period:ix,iy);
+ return lerp(lerp(h(x0,y0),h(x0+1,y0),fx),lerp(h(x0,y0+1),h(x0+1,y0+1),fx),fy);
 }
-function coverageAt(px,py){
+function cloudCoords(u,v){let theta=windDir*Math.PI/180;return [u+cloudShift+Math.cos(theta)*windT,v+Math.sin(theta)*windT*.30]}
+function densityComponents(u,v){
+ const [x,y]=cloudCoords(u,v);
+ // Periodic around 360-degree longitude, with frequency increasing toward horizon.
+ const perspective=lerp(.75,1.8,smooth01(v));
+ const large=valueNoise(x*3, y*3.4*perspective,3);
+ const medium=valueNoise(x*6,y*8*perspective,6);
+ const small=valueNoise(x*12,y*16*perspective,12);
+ const bank=valueNoise(x*2,y*2.7,2);
+ const stratus=clamp01(.55*large+.30*bank+.15*medium);
+ const billow=clamp01(.48*large+.31*medium+.21*small);
+ return {stratus,billow,detail:small};
+}
+function cloudDensity(u,v){
+ const t=cloudThickness/100,c=densityComponents(u,v);
+ // The flat layer becomes organically corrugated as depth increases.
+ return lerp(c.stratus,c.billow,smooth01(t));
+}
+function coverageAt(u,v){
  if(cloudAmount<=0)return 0;
  if(cloudAmount>=100)return 1;
- const amount=cloudAmount/100,field=cloudField(px,py);
- // Increasing coverage merges separate masses into contiguous banks.
- const edge=.88-amount*.92;
- return smooth01((field-edge)/(.13+.065*amount)+.5);
+ const amount=cloudAmount/100,d=cloudDensity(u,v),t=cloudThickness/100;
+ const edge=lerp(.77,.17,amount);
+ const softness=lerp(.17,.07,smooth01(t));
+ return smooth01((d-edge)/softness+.5);
 }
-const cloudMask=document.createElement('canvas');cloudMask.width=360;cloudMask.height=220;
-const shadowMask=document.createElement('canvas');shadowMask.width=240;shadowMask.height=110;
+const cloudMask=document.createElement('canvas');cloudMask.width=320;cloudMask.height=180;
+const shadowMask=document.createElement('canvas');shadowMask.width=220;shadowMask.height=100;
+function cloudColorAt(u,v,t,relief){
+ // The user's cloud gradient and the physical sky both color the illuminated volume.
+ const cloud=cloudLatest?.data,sky=skyLatest?.data;
+ const ix=Math.min(W-1,Math.max(0,Math.floor(((u+cloudShift)%1+1)%1*(W-1))));
+ const iy=Math.min(H-1,Math.max(0,Math.floor(v*(H-1))));
+ const k=(iy*W+ix)*4;
+ const alt=Math.max(0,Math.min(H-1,Math.floor(.15*(H-1))));
+ const sk=(alt*W+ix)*4;
+ const light=smooth01(.56+relief*lerp(.18,.54,t)-v*.12);
+ let rgb=[];
+ for(let j=0;j<3;j++){
+  const tint=(cloud?.[k+j]??180)*.65+(sky?.[sk+j]??170)*.35;
+  const skyBase=sky?.[k+j]??170;
+  const lit=lerp(tint,255,.16+.22*light);
+  const dark=lerp(tint,skyBase,.38)*(lerp(.96,.47,t));
+  rgb.push(Math.round(Math.max(0,Math.min(255,lerp(dark,lit,light)))));
+ }
+ return rgb;
+}
 function drawCloudOverlay(w,h){
  if(cloudAmount<=0)return;
- const ctx=cloudMask.getContext('2d');const cw=cloudMask.width,ch=cloudMask.height;
+ const ctx=cloudMask.getContext('2d'),cw=cloudMask.width,ch=cloudMask.height;
  let img=ctx.createImageData(cw,ch),a=img.data;
- const thickness=cloudThickness/100;
- // Estimate lighting from sky color at multiple directions; cloud highlights and
- // shadows receive the same atmospheric colors as the rest of the scene.
- const upper=sample(.45,.13),lower=sample(.54,.64);
+ const t=cloudThickness/100;
  for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){
-  const u=x/(cw-1),v=y/(ch-1),cover=coverageAt(u,v);
-  const i=(y*cw+x)*4;
-  if(cover<.005){a[i+3]=0;continue}
-  const f=cloudField(u,v);
-  // Wide local slopes produce a rounded lit rim and shaded undersides.
-  const left=cloudField(u-.015,v),above=cloudField(u,v-.024);
-  const relief=clamp01(.56+(f-left)*1.65+(f-above)*.95-v*.26);
-  const shadow=.91-.36*thickness+(relief-.5)*(.20+.25*thickness);
-  const skyTint=v*.26;
-  for(let c=0;c<3;c++){
-    const lit=226*(1-skyTint)+upper[c]*skyTint;
-    const shade=lower[c]*(.20+.20*thickness)+112*(.80-.20*thickness);
-    a[i+c]=Math.round(Math.max(0,Math.min(255,(lit*relief+shade*(1-relief))*shadow+18*(1-thickness))));
-  }
-  // At full cloud cover, no holes to the sky, regardless of thickness.
-  const opacity=cloudAmount>=100?1:(.72+.27*thickness)*cover;
-  a[i+3]=Math.round(255*opacity);
+  let u=x/(cw-1),v=y/(ch-1),cover=coverageAt(u,v),i=(y*cw+x)*4;
+  if(cover<.002){a[i+3]=0;continue}
+  // Density gradient gives shape-specific illumination. Stratus remains smooth and flat.
+  const f=cloudDensity(u,v),left=cloudDensity(u-.008,v),above=cloudDensity(u,v-.012);
+  const relief=((f-left)*1.3+(f-above)*1.1)*smooth01(t);
+  const color=cloudColorAt(u,v,t,relief);
+  for(let j=0;j<3;j++)a[i+j]=color[j];
+  // At 100% cover, an overcast ceiling must hide the entire sky.
+  a[i+3]=Math.round(255*(cloudAmount===100?1:cover*lerp(.52,.97,t)));
  }
- ctx.putImageData(img,0,0);
- sc.imageSmoothingEnabled=true;
- sc.drawImage(cloudMask,0,0,w,h*.79);
+ ctx.putImageData(img,0,0);sc.imageSmoothingEnabled=true;sc.drawImage(cloudMask,0,0,w,h*.79);
 }
 function projectedCloud(u,v){
- // Cloud projection is deliberately broad, softer than the visible cloud edge.
- // Offset along wind/light direction to convey the shadow cast on the landscape.
  const angle=windDir*Math.PI/180;
- const f=coverageAt(u+Math.cos(angle)*.085,v+Math.sin(angle)*.07);
- return f;
+ return coverageAt(u+Math.cos(angle)*.08,v+Math.sin(angle)*.055);
 }
 function drawProjectedShadow(w,h,part){
  if(cloudAmount<=0)return;
  const ctx=shadowMask.getContext('2d'),cw=shadowMask.width,ch=shadowMask.height;
- let img=ctx.createImageData(cw,ch),d=img.data;
- const thickness=cloudThickness/100;
+ let img=ctx.createImageData(cw,ch),d=img.data,t=cloudThickness/100;
  for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){
   let u=x/(cw-1),v=y/(ch-1);
-  // Map landscape surface to the broad cloud field, avoiding tiled dots.
-  let cover=projectedCloud(u*.82+.09,.24+v*.50);
-  let soft=(cover+projectedCloud(u*.82+.075,.24+v*.50)+projectedCloud(u*.82+.105,.24+v*.50))/3;
+  let f=(projectedCloud(u*.82+.09,.24+v*.50)+projectedCloud(u*.82+.075,.24+v*.50)+projectedCloud(u*.82+.105,.24+v*.50))/3;
   let i=(y*cw+x)*4;
-  d[i]=49;d[i+1]=54;d[i+2]=81;
-  d[i+3]=Math.round(255*soft*(.10+.33*thickness));
+  const sky=skyLatest?.data,ii=((Math.floor(.56*(H-1))*W+Math.floor(u*(W-1)))*4);
+  for(let j=0;j<3;j++)d[i+j]=Math.round(lerp(54,sky?.[ii+j]??90,.24));
+  d[i+3]=Math.round(255*f*lerp(.08,.39,t));
  }
  ctx.putImageData(img,0,0);
- sc.imageSmoothingEnabled=true;
  if(part==='sea')sc.drawImage(shadowMask,0,h*.725,w,h*.33);
  if(part==='hill')sc.drawImage(shadowMask,0,h*.73,w,h*.44);
 }
 function shadowStrengthAt(u,v){
  if(cloudAmount<=0)return 0;
- return projectedCloud(u,.24+(v-.73)*.6)*(.08+.38*cloudThickness/100);
+ return projectedCloud(u,.24+(v-.73)*.6)*lerp(.06,.44,cloudThickness/100);
 }
 let latestPixels=null;function fieldRender(){
  if(activeLayer==='sky'){skyObjects=objects;skySelected=selected}else{cloudObjects=objects;cloudSelected=selected}
