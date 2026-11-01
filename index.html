@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.2 | 太陽と影</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.3 | 色づく照明</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#252528;background:#f5f5f2}*{box-sizing:border-box}html,body{height:100%;margin:0}button,select,input{font:inherit}button{border:1px solid #dadad8;background:#fff;color:#333;border-radius:5px;padding:8px 10px;font-size:12px;touch-action:manipulation}button:disabled{opacity:.35}button.selected,button.active{background:#29292e;color:white;border-color:#29292e}button:active{opacity:.7}main{height:100dvh;max-width:900px;margin:auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden}.top{height:52px;flex:none;display:flex;justify-content:space-between;align-items:center}.brand{font-size:22px;font-weight:450;letter-spacing:.055em}.tag{font-size:11px;color:#777}.tabs{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px 0}.tabs button{border-radius:4px;font-size:13px;padding:11px 4px}.view{display:none;min-height:140px;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;overflow:hidden}body[data-tab="area"] #areaView,body[data-tab="gradient"] #gradientView,body[data-tab="scene"] #sceneView{display:flex}.viewTitle{width:100%;max-width:800px;display:flex;justify-content:space-between;align-items:center;padding:0 2px 8px;font-size:11px;color:#777}.view canvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border:1px solid #dededb;touch-action:none;user-select:none;-webkit-user-select:none}#edit,#result{aspect-ratio:2/1;width:100%}#scene{aspect-ratio:720/410;width:100%}.tools{flex:none;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;border-top:1px solid #dededb;padding:9px 0 5px;display:none;min-height:0;max-height:56dvh}#commonTools{display:block}.toolLine{display:flex;gap:6px;align-items:center;margin-bottom:9px}.toolLine >label{font-size:11px;color:#6d6d6d;flex:none;min-width:46px}.toolLine input[type=range]{flex:1;min-width:0;accent-color:#36363c}.toolLine output{font-size:11px;color:#666;min-width:37px;text-align:right;font-variant-numeric:tabular-nums}.hscroll{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-bottom:3px}.hscroll::-webkit-scrollbar{display:none}.hscroll button{flex:none;white-space:nowrap;padding:9px 10px}.swatches{display:flex;gap:7px;align-items:center;flex-wrap:nowrap}.swatch{width:29px;height:29px;border:2px solid white;outline:1px solid #ddd;border-radius:50%;padding:0;flex:none}input[type=color]{width:38px;height:32px;padding:2px;border:1px solid #ddd;background:white;border-radius:4px;flex:none}.bottomSmall{font-size:10px;color:#888;line-height:1.4;min-height:14px}.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;z-index:10;padding:20px}.modal.open{display:flex}.dialog{background:#fafaf8;border-radius:12px;width:min(450px,100%);max-height:80dvh;display:flex;flex-direction:column;padding:20px;box-shadow:0 15px 60px #0003}.dialogTitle{display:flex;align-items:center;justify-content:space-between;font-weight:600}.layers{overflow-y:auto;min-height:0;margin:14px 0;display:flex;flex-direction:column-reverse;gap:6px}.layer{display:flex;gap:9px;align-items:center;width:100%;text-align:left;padding:11px}.layer.active{border-color:#444}.chip{width:18px;height:18px;border-radius:50%;flex:none}.groupHeading{font-size:11px;color:#777;margin:6px 0}.subButtons{display:flex;gap:6px}.subButtons button{flex:1}.compactGroup{display:flex;align-items:center;gap:8px;min-width:0}.compactGroup .toolLine{margin:0;flex:1}.fill{flex:1}.mobileNote{font-size:11px;color:#777} @media(min-width:700px){main{padding-left:22px;padding-right:22px}.tools{max-height:56dvh}.view{padding:18px 0}.tabs{max-width:480px;width:100%;margin:0 auto}}
 @media(max-height:700px){.top{height:42px}.brand{font-size:19px}.tabs button{padding:7px}.tools{max-height:55dvh;padding-top:6px}.toolLine{margin-bottom:6px}.hscroll button{padding:6px 9px}.bottomSmall{font-size:9px}}
@@ -10,7 +10,7 @@
 @media(max-width:650px){main{padding-left:10px;padding-right:10px}.top{height:38px}.brand{font-size:19px}.tag{font-size:9px}.view{min-height:125px;padding:2px 0}.viewTitle{padding-bottom:3px}.tabs{padding:6px 0}.tabs button{padding:7px 4px}.tools{padding-top:5px;max-height:56dvh}.toolLine{margin-bottom:5px}.hscroll button{padding:7px 9px}.hscroll{gap:4px}.bottomSmall{margin-top:3px}}
 
 .colorSheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:46dvh;min-height:210px;padding:17px 18px calc(15px + env(safe-area-inset-bottom));background:#f9f9f6;border-radius:17px 17px 0 0;box-shadow:0 -12px 45px #0002;display:none;overflow:auto}.colorSheet.open{display:block}.sheetMask{position:fixed;inset:0;background:#0002;z-index:20;display:none}.sheetMask.open{display:block;pointer-events:none}.sheetBar,.colorLine,.sheetLine{display:flex;justify-content:space-between;align-items:center;gap:12px}.sheetBar{margin-bottom:18px}.colorLine{justify-content:flex-start}.colorLine label{display:flex;align-items:center;gap:8px;font-size:13px}.colorLine input{width:50px;height:43px}.sheetHint{font-size:12px;color:#666;margin:14px 0;line-height:1.5}.sheetLine{justify-content:space-between;font-size:12px}.colorSheet button{padding:10px}.view:has(#edit){position:relative}#color{min-width:75px}.tools{max-height:48dvh}main:has(.colorSheet.open){}body.colorEditing .view{margin-bottom:min(30px,4dvh)}body.colorEditing .tools{opacity:.15;pointer-events:none}body.colorEditing .tabs{opacity:.4;pointer-events:none}
-.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px}.timeControl{border-top:1px solid #dededb;padding-top:7px;margin-top:5px}.timeControl .timeSelect{display:flex;gap:5px;flex:1}.timeSelect select{width:100%;min-width:0;padding:5px;border:1px solid #ddd;background:#fff;border-radius:5px;font-size:11px}.timeControl button{padding:5px 8px}.timeNote{color:#888;font-size:10px;margin:0 0 6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v1.2</span></header>
+.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px}.timeControl{border-top:1px solid #dededb;padding-top:7px;margin-top:5px}.timeControl .timeSelect{display:flex;gap:5px;flex:1}.timeSelect select{width:100%;min-width:0;padding:5px;border:1px solid #ddd;background:#fff;border-radius:5px;font-size:11px}.timeControl button{padding:5px 8px}.timeNote{color:#888;font-size:10px;margin:0 0 6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v1.3</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -159,20 +159,22 @@ function coverageAt(u,v){
 const cloudMask=document.createElement('canvas');cloudMask.width=320;cloudMask.height=180;
 const shadowMask=document.createElement('canvas');shadowMask.width=220;shadowMask.height=100;
 function cloudColorAt(u,v,t,relief){
- // The user's cloud gradient and the physical sky both color the illuminated volume.
+ // Clouds should inherit the sky's hue rather than remaining neutral grey.
  const cloud=cloudLatest?.data,sky=skyLatest?.data;
  const ix=Math.min(W-1,Math.max(0,Math.floor(((u+cloudShift)%1+1)%1*(W-1))));
  const iy=Math.min(H-1,Math.max(0,Math.floor(v*(H-1))));
  const k=(iy*W+ix)*4;
  const alt=Math.max(0,Math.min(H-1,Math.floor(.15*(H-1))));
  const sk=(alt*W+ix)*4;
- const light=smooth01(.56+relief*lerp(.18,.54,t)-v*.12);
+ const light=smooth01(.58+relief*lerp(.24,.62,t)-v*.12);
  let rgb=[];
  for(let j=0;j<3;j++){
-  const tint=(cloud?.[k+j]??180)*.50+(sky?.[sk+j]??170)*.50;
-  const skyBase=sky?.[k+j]??170;
-  const lit=lerp(tint,255,.04+.12*light);
-  const dark=lerp(tint,skyBase,.50)*(lerp(.93,.55,t));
+  const cloudBase=(cloud?.[k+j]??188);
+  const skyTint=(sky?.[sk+j]??176);
+  const skyBase=(sky?.[k+j]??170);
+  const tint=cloudBase*.28+skyTint*.72;
+  const lit=lerp(tint,255,.03+.18*light);
+  const dark=lerp(tint,skyBase,.62)*(lerp(.96,.62,t));
   rgb.push(Math.round(Math.max(0,Math.min(255,lerp(dark,lit,light)))));
  }
  return rgb;
@@ -271,16 +273,16 @@ function renderScene(){
  // Directional light and ambient bounce are deliberately modeled separately.
  const cloudDim=1-(cloudAmount/100)*(.13+.36*cloudThickness/100);
  const directPower=Math.max(0,daylight)*cloudDim;
- const tintMix=.08+.43*twilightWeight;
+ const ambientWorld=mix(horizon,zenith,.38);
+ const tintMix=.18+.58*twilightWeight;
  const lightTint=mix([252,250,245],solarColor,tintMix);
  const shade=(base,ambient,strength,brightness=1,exposure=.32)=>{
-   const ambientTint=mix([215,213,218],ambient,.28);
+   const ambientTint=mix(base,mix(ambient,ambientWorld,.55),.44+.16*twilightWeight);
    const lit=base.map((c,i)=>{
-     let diffuse=c*(.79+.21*litFactor);
-     // Multiplicative colored light retains the substance's native color.
-     diffuse*=lerp(1,ambientTint[i]/215,strength*.37);
-     diffuse*=lerp(1,lightTint[i]/242,exposure*directPower*.93);
-     diffuse+=exposure*directPower*16;
+     let diffuse=c*(.72+.28*litFactor);
+     diffuse=lerp(diffuse,diffuse*(ambientTint[i]/Math.max(1,c)),.18+strength*.52);
+     diffuse=lerp(diffuse,diffuse*(lightTint[i]/240),Math.min(.86,exposure*directPower*1.24));
+     diffuse+=exposure*directPower*24+twilightWeight*6;
      return Math.max(0,Math.min(255,diffuse*brightness));
    });
    return lit.map(Math.round);
@@ -314,7 +316,7 @@ function renderScene(){
    sc.save();sc.globalCompositeOperation='soft-light';
    const cx=w*(isMorning?.86:.19),cy=h*(isMorning?.63:.70);
    const glow=sc.createRadialGradient(cx,cy,0,cx,cy,w*.69);
-   glow.addColorStop(0,`rgba(${solarColor.map(x=>Math.round(x)).join(',')},${(.42*twilightWeight).toFixed(3)})`);
+   glow.addColorStop(0,`rgba(${solarColor.map(x=>Math.round(x)).join(',')},${(.66*twilightWeight).toFixed(3)})`);
    glow.addColorStop(1,`rgba(${solarColor.map(x=>Math.round(x)).join(',')},0)`);
    sc.fillStyle=glow;sc.fillRect(0,0,w,h*.745);sc.restore();
  }
@@ -329,10 +331,10 @@ function renderScene(){
   const x=w*(isMorning?.83:.19);
   const glow=sc.createRadialGradient(x,h*.754,2,x,h*.77,w*.24);
   const rgbLight=solarColor.map(Math.round).join(',');
-  glow.addColorStop(0,`rgba(${rgbLight},${(.42*twilightWeight).toFixed(3)})`);
+  glow.addColorStop(0,`rgba(${rgbLight},${(.72*twilightWeight).toFixed(3)})`);
   glow.addColorStop(1,`rgba(${rgbLight},0)`);
   sc.fillStyle=glow;sc.fillRect(0,horizonY,w,h-horizonY);
-  sc.save();sc.globalAlpha=.22*twilightWeight;sc.strokeStyle=css(mix(solarColor,[255,255,255],.22));
+  sc.save();sc.globalAlpha=.34*twilightWeight;sc.strokeStyle=css(mix(solarColor,[255,255,255],.18));
   for(let i=0;i<22;i++){let y=horizonY+4+i*2.6;let spread=3+i*.7;let shift=Math.sin(i*2.8)*i*.6;sc.beginPath();sc.moveTo(x-spread+shift,y);sc.lineTo(x+spread+shift,y);sc.stroke()};sc.restore();
  }
  sc.strokeStyle=css(shade([198,210,207],horizon,.5,.95));sc.globalAlpha=.42;sc.lineWidth=1.1;
@@ -341,9 +343,9 @@ function renderScene(){
  // Rounded hill skyline: its crest occludes the center of the ocean.
  const ridge=()=>{sc.moveTo(0,h*.874);sc.bezierCurveTo(w*.18,h*.813,w*.31,h*.763,w*.51,h*.775);sc.bezierCurveTo(w*.69,h*.769,w*.80,h*.824,w,h*.867);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath()};
  const hillGrad=sc.createLinearGradient(w*.12,h*.75,w*.65,h*1.13);
- hillGrad.addColorStop(0,css(shade([124,157,118],back,.30,1.06)));
- hillGrad.addColorStop(.48,css(shade([107,143,101],frontLeft,.40,.91)));
- hillGrad.addColorStop(1,css(shade([77,112,83],front,.49,.77)));
+ hillGrad.addColorStop(0,css(shade([138,171,130],back,.32,1.12,.46)));
+ hillGrad.addColorStop(.48,css(shade([122,158,114],frontLeft,.46,1.02,.54)));
+ hillGrad.addColorStop(1,css(shade([88,124,92],front,.58,.83,.60)));
  sc.beginPath();ridge();sc.fillStyle=hillGrad;sc.fill();sc.save();sc.beginPath();ridge();sc.clip();
  // Gentle reflected pools of light across the grass.
  for(let i=0;i<4;i++){
@@ -357,9 +359,19 @@ function renderScene(){
   const gx=w*(isMorning?.74:.24),gy=h*.81;
   const patch=sc.createRadialGradient(gx,gy,0,gx,gy,w*.68);
   const color=solarColor.map(Math.round).join(',');
-  patch.addColorStop(0,`rgba(${color},${(.54*twilightWeight*cloudDim).toFixed(3)})`);
+  patch.addColorStop(0,`rgba(${color},${(.96*twilightWeight*(.42+.58*cloudDim)).toFixed(3)})`);
   patch.addColorStop(1,`rgba(${color},0)`);
   sc.fillStyle=patch;sc.fillRect(0,h*.74,w,h*.26);
+ }
+ if(twilightWeight>.025){
+  const sweep=sc.createLinearGradient(isMorning?w*.88:w*.10,h*.78,isMorning?w*.30:w*.64,h*.96);
+  const hillRGB=solarColor.map(Math.round).join(',');
+  sweep.addColorStop(0,`rgba(${hillRGB},0)`);
+  sweep.addColorStop(.52,`rgba(${hillRGB},${(.22*twilightWeight).toFixed(3)})`);
+  sweep.addColorStop(1,`rgba(${hillRGB},${(.42*twilightWeight).toFixed(3)})`);
+  sc.globalCompositeOperation='screen';
+  sc.fillStyle=sweep;sc.fillRect(0,h*.74,w,h*.26);
+  sc.globalCompositeOperation='source-over';
  }
  // Tiny specks of grass provide texture without pixel-art styling.
  for(let i=0;i<170;i++){let x=(i*137.7%w),y=h*(.78+((i*47.13)%100)/435);sc.strokeStyle=i%3?'rgba(42,73,42,.12)':'rgba(230,230,193,.18)';sc.lineWidth=.8;sc.beginPath();sc.moveTo(x,y);sc.lineTo(x+1.3,y-2.8);sc.stroke()}
@@ -380,16 +392,21 @@ function renderScene(){
  // Cottage: simple volume with independent roof, front and side lighting.
  const cx=w*.49,top=h*.781,unit=w/720;
  sc.save();sc.translate(cx,top);sc.scale(unit,unit);
- const buildingShadow=shadowStrengthAt(.49,.83);let faceSun=directPower*(isMorning?.28:-.10);
- let sideSun=directPower*(isMorning?-.08:.17);
- let wallFront=shade([224,207,179],front,.30,Math.max(.28,.86+faceSun-buildingShadow*.52),isMorning?.88:.20);
- let wallSide=shade([183,177,156],frontRight,.30,Math.max(.25,.80+sideSun-buildingShadow*.35),isMorning?.18:.83);
+ const buildingShadow=shadowStrengthAt(.49,.83);
+ let frontLight=isMorning?(directPower*.50+twilightWeight*.30):(directPower*.14+twilightWeight*.22);
+ let sideLight=isMorning?(directPower*.10+twilightWeight*.15):(directPower*.54+twilightWeight*.32);
+ let wallFront=shade([224,207,179],front,.42,Math.max(.34,.90+frontLight-buildingShadow*.44),isMorning?.98:.42);
+ let wallSide=shade([183,177,156],frontRight,.42,Math.max(.30,.84+sideLight-buildingShadow*.28),isMorning?.32:.98);
  fill(()=>{sc.moveTo(-36,-5);sc.lineTo(33,-5);sc.lineTo(33,54);sc.lineTo(-36,54);sc.closePath()},wallFront);
- if(twilightWeight>.01&&isMorning){sc.save();sc.globalAlpha=.34*twilightWeight*cloudDim;fill(()=>{sc.moveTo(-36,-5);sc.lineTo(33,-5);sc.lineTo(33,54);sc.lineTo(-36,54);sc.closePath()},solarColor);sc.restore()}
+ sc.save();sc.globalAlpha=.12+.13*twilightWeight;fill(()=>{sc.moveTo(-36,-5);sc.lineTo(33,-5);sc.lineTo(33,54);sc.lineTo(-36,54);sc.closePath()},mix(front,solarColor,.35));sc.restore();
+ if(twilightWeight>.01&&isMorning){sc.save();sc.globalAlpha=.58*twilightWeight*(.45+.55*cloudDim);fill(()=>{sc.moveTo(-36,-5);sc.lineTo(33,-5);sc.lineTo(33,54);sc.lineTo(-36,54);sc.closePath()},solarColor);sc.restore()}
  fill(()=>{sc.moveTo(33,-5);sc.lineTo(56,-17);sc.lineTo(56,41);sc.lineTo(33,54);sc.closePath()},wallSide);
- if(twilightWeight>.01&&!isMorning){sc.save();sc.globalAlpha=.32*twilightWeight*cloudDim;fill(()=>{sc.moveTo(33,-5);sc.lineTo(56,-17);sc.lineTo(56,41);sc.lineTo(33,54);sc.closePath()},solarColor);sc.restore()}
- fill(()=>{sc.moveTo(-45,-6);sc.lineTo(-1,-42);sc.lineTo(39,-7);sc.lineTo(33,0);sc.lineTo(-1,-29);sc.lineTo(-37,1);sc.closePath()},shade([81,76,81],zenith,.32,.94,.65));
- fill(()=>{sc.moveTo(-1,-42);sc.lineTo(22,-50);sc.lineTo(63,-17);sc.lineTo(39,-7);sc.closePath()},shade([109,96,101],frontRight,.38,.96,.70));
+ sc.save();sc.globalAlpha=.10+.12*twilightWeight;fill(()=>{sc.moveTo(33,-5);sc.lineTo(56,-17);sc.lineTo(56,41);sc.lineTo(33,54);sc.closePath()},mix(frontRight,solarColor,.32));sc.restore();
+ if(twilightWeight>.01&&!isMorning){sc.save();sc.globalAlpha=.56*twilightWeight*(.45+.55*cloudDim);fill(()=>{sc.moveTo(33,-5);sc.lineTo(56,-17);sc.lineTo(56,41);sc.lineTo(33,54);sc.closePath()},solarColor);sc.restore()}
+ fill(()=>{sc.moveTo(-45,-6);sc.lineTo(-1,-42);sc.lineTo(39,-7);sc.lineTo(33,0);sc.lineTo(-1,-29);sc.lineTo(-37,1);sc.closePath()},shade([86,80,86],zenith,.40,1.01,.82));
+ if(twilightWeight>.01){sc.save();sc.globalAlpha=.20*twilightWeight;fill(()=>{sc.moveTo(-45,-6);sc.lineTo(-1,-42);sc.lineTo(39,-7);sc.lineTo(33,0);sc.lineTo(-1,-29);sc.lineTo(-37,1);sc.closePath()},mix(zenith,solarColor,.22));sc.restore()}
+ fill(()=>{sc.moveTo(-1,-42);sc.lineTo(22,-50);sc.lineTo(63,-17);sc.lineTo(39,-7);sc.closePath()},shade([118,103,108],frontRight,.44,1.05,.88));
+ if(twilightWeight>.01){sc.save();sc.globalAlpha=.28*twilightWeight;fill(()=>{sc.moveTo(-1,-42);sc.lineTo(22,-50);sc.lineTo(63,-17);sc.lineTo(39,-7);sc.closePath()},mix(frontRight,solarColor,.38));sc.restore()}
  // Left-side chimney, with faint drifting smoke.
  fill(()=>{sc.rect(-22,-56,12,23)},shade([155,135,123],frontLeft,.41,.85));
  sc.fillStyle=css(shade([75,72,79],zenith,.38,.75));sc.fillRect(-23,-57,14,4);
@@ -400,12 +417,12 @@ function renderScene(){
  sc.fillStyle=css(shade([106,89,78],front,.32,.83));sc.beginPath();sc.roundRect(-4,24,17,30,[8,8,0,0]);sc.fill();
  sc.restore();
  // Narrow trail from the front door toward the viewer.
- sc.strokeStyle=css(shade([194,171,139],front,.37,.90));sc.lineWidth=12;sc.lineCap='round';sc.beginPath();sc.moveTo(cx+4,top+55*unit);sc.bezierCurveTo(cx+2,h*.94,cx+21,h*.96,cx+26,h+10);sc.stroke();
+ sc.strokeStyle=css(shade([202,177,144],front,.44,1.00,.66));sc.lineWidth=12;sc.lineCap='round';sc.beginPath();sc.moveTo(cx+4,top+55*unit);sc.bezierCurveTo(cx+2,h*.94,cx+21,h*.96,cx+26,h+10);sc.stroke();
  // Right-hand fire pit: cropped grass, stones, charcoal stain.
  const fx=w*.72,fy=h*.89;
  sc.fillStyle='rgba(84,83,70,.30)';sc.beginPath();sc.ellipse(fx,fy,30*unit,14*unit,-.2,0,Math.PI*2);sc.fill();
  sc.fillStyle='#48443d';sc.beginPath();sc.ellipse(fx,fy,11*unit,5*unit,0,0,Math.PI*2);sc.fill();
- sc.fillStyle=css(shade([143,145,132],frontRight,.45,.9));sc.beginPath();sc.ellipse(fx+27*unit,fy+2*unit,13*unit,8*unit,-.35,0,Math.PI*2);sc.fill();
+ sc.fillStyle=css(shade([154,154,139],frontRight,.54,1.02,.72));sc.beginPath();sc.ellipse(fx+27*unit,fy+2*unit,13*unit,8*unit,-.35,0,Math.PI*2);sc.fill();
 }
 function sample(x,y){if(!latestPixels)return[150,150,150];const px=latestPixels.data,ix=Math.round(x*(W-1)),iy=Math.round(y*(H-1)),idx=(iy*W+ix)*4;return [px[idx],px[idx+1],px[idx+2]]}let pending=false;function render(){renderEdit();if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;fieldRender()})}function pos(e){let r=edit.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}function hit(p){let ox=wrap(p.x+shift,1);for(let i=objects.length-1;i>=0;i--){let o=objects[i],uv=rotatedUV(ox,p.y,o,true),dx=((uv[0]-o.x+.5)%1+1)%1-.5,dy=uv[1]-o.y,ang=-o.rot*Math.PI/180,xx=(dx*Math.cos(ang)-dy*Math.sin(ang))/o.scale,yy=(dx*Math.sin(ang)+dy*Math.cos(ang))/o.scale;if(o.type==='ellipse'&&((xx/(o.w/2))**2+(yy/(o.h/2))**2<1))return o;if(o.type==='circle'&&Math.hypot(xx,yy)<Math.max(o.w,o.h)/2)return o;if(Math.abs(xx)<o.w/2&&Math.abs(yy)<o.h/2)return o}return null}edit.addEventListener('pointerdown',e=>{e.preventDefault();edit.setPointerCapture(e.pointerId);let p=pos(e);if(colorEditing){let o=obj();if(o){let pts=handlePositions(o,1,1,shift);let idx=pts.findIndex(q=>Math.hypot((q.x-p.x)*edit.clientWidth,(q.y-p.y)*edit.clientHeight)<32);if(idx>=0){handleDrag=idx;return}}return;}if(mode==='select'){let o=hit(p);selected=o?.id??selected;drag=o?{type:'move',id:o.id,start:p,x:o.x,y:o.y}:null;sync();renderEdit();return}let x=wrap(p.x+shift,1),color=obj()?.color||'#c48fbe';draft=make(mode,x,p.y,.001,.001,color);if(mode==='free')draft.points=[[x,p.y]];drag={type:'create',start:p};renderEdit()});edit.addEventListener('pointermove',e=>{if(colorEditing&&handleDrag!==null){let o=obj();if(!o)return;let p=pos(e),cx=wrap(o.x-shift,1),dx=p.x-cx;dx-=Math.round(dx);let dy=p.y-o.y,angle=-o.rot*Math.PI/180;let x=(dx*Math.cos(angle)-dy*Math.sin(angle))/Math.max(.001,o.w*o.scale),y=(dx*Math.sin(angle)+dy*Math.cos(angle))/Math.max(.001,o.h*o.scale);(handleDrag===0?o.gradA:o.gradB)[0]=Math.max(-2,Math.min(2,x));(handleDrag===0?o.gradA:o.gradB)[1]=Math.max(-2,Math.min(2,y));readDirection();render();return}if(!drag)return;let p=pos(e);if(drag.type==='move'){let o=obj();if(o){let a=rotatedUV(wrap(drag.start.x+shift,1),drag.start.y,o,true),b=rotatedUV(wrap(p.x+shift,1),p.y,o,true);let delta=b[0]-a[0];if(delta>.5)delta-=1;if(delta<-.5)delta+=1;o.x=wrap(drag.x+delta,1);o.y=Math.max(0,Math.min(1,drag.y+b[1]-a[1]));render()}}else if(draft){let sx=drag.start.x,sy=drag.start.y;if(draft.type==='free'){draft.points.push([wrap(p.x+shift,1),p.y]);draft.w=1;draft.h=1}else{draft.x=wrap((sx+p.x)/2+shift,1);draft.y=(sy+p.y)/2;draft.w=Math.max(.005,Math.abs(p.x-sx));draft.h=Math.max(.005,Math.abs(p.y-sy));if(draft.type==='circle'){let v=Math.max(draft.w,draft.h);draft.w=v;draft.h=v}}renderEdit()}});function end(){if(handleDrag!==null){handleDrag=null;return}if(drag?.type==='create'&&draft){if(draft.type==='free'){if(draft.points.length>3){const p=draft.points;let xs=p.map(z=>z[0]),ys=p.map(z=>z[1]);draft.x=(Math.min(...xs)+Math.max(...xs))/2;draft.y=(Math.min(...ys)+Math.max(...ys))/2;draft.w=Math.max(...xs)-Math.min(...xs);draft.h=Math.max(...ys)-Math.min(...ys);draft.points=simplify(p)}else draft=null}if(draft&&draft.w>.007&&draft.h>.007){objects.push(draft);selected=draft.id;sync()}draft=null}drag=null;render()}edit.addEventListener('pointerup',end);edit.addEventListener('pointercancel',end);function simplify(p){let arr=p.filter((_,i)=>i%Math.max(1,Math.round(p.length/80))===0);if(arr.length<4)return p;let result=[];for(let i=0;i<arr.length;i++){let prev=arr[(i-1+arr.length)%arr.length],next=arr[(i+1)%arr.length],curr=arr[i];result.push([prev[0]*.15+curr[0]*.7+next[0]*.15,prev[1]*.15+curr[1]*.7+next[1]*.15])}return result}function bind(id,event,cb){$(id).addEventListener(event,cb)}bind('skyTarget','click',()=>targetLayer('sky'));bind('cloudTarget','click',()=>targetLayer('cloud'));for(const [id,key,out] of [['cloudAmount','amount','cloudAmountVal'],['cloudThickness','thickness','cloudThicknessVal']])bind(id,'input',e=>{if(key==='amount')cloudAmount=+e.target.value;else cloudThickness=+e.target.value;$(out).textContent=e.target.value+'%';render()});bind('blur','input',e=>{blur=+e.target.value;if(activeLayer==='sky')skyBlur=blur;else cloudBlur=blur;$('blurVal').textContent=blur;render()});bind('shift','input',e=>{shift=+e.target.value/360;if(activeLayer==='sky')skyShift=shift;else cloudShift=shift;$('shiftVal').textContent=e.target.value+'°';render()});bind('timeOfDay','input',e=>{timeOfDay=+e.target.value;updateTimeUI();renderScene()});bind('timePause','click',()=>{timeStopped=!timeStopped;updateTimeUI()});bind('dayLength','change',e=>{dayLength=+e.target.value});bind('skyRate','change',e=>{skyRate=+e.target.value});function updateTimeUI(){let h=Math.floor(timeOfDay/60),m=Math.floor(timeOfDay%60);$('timeVal').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');$('timePause').textContent=timeStopped?'再開':'固定';$('timePause').classList.toggle('active',timeStopped);$('timeOfDay').value=Math.round(timeOfDay)}bind('windDir','input',e=>{windDir=+e.target.value;$('windDirVal').textContent=windDir+'°';renderScene()});bind('windSpeed','input',e=>{windSpeed=+e.target.value;$('windSpeedVal').textContent=windSpeed+'%';renderScene()});bind('color','click',showColors);bind('closeColor','click',closeColors);bind('startColor','input',e=>{const o=obj();if(o){o.color=e.target.value;render()}});bind('endColor','input',e=>{const o=obj();if(o){o.endColor=e.target.value;render()}});bind('swapColors','click',()=>{const o=obj();if(!o)return;[o.color,o.endColor]=[o.endColor,o.color];$('startColor').value=o.color;$('endColor').value=o.endColor;render()});bind('resetDirection','click',()=>{const o=obj();if(o){o.gradA=[-.4,0];o.gradB=[.4,0];readDirection();render()}});bind('size','input',e=>{const o=obj();if(o){o.scale=+e.target.value/100;$('sizeVal').textContent=e.target.value+'%';render()}});bind('rotation','input',e=>{const o=obj();if(o){o.rot=+e.target.value;$('rotationVal').textContent=e.target.value+'°';render()}});for(const axis of ['X','Y','Z'])bind('sphere'+axis,'input',e=>{const o=obj();if(!o)return;o['sphere'+axis]=+e.target.value;$('sphere'+axis+'Val').textContent=e.target.value+'°';render()});bind('sphereToggle','click',()=>{sphereView=!sphereView;$('sphereToggle').textContent=sphereView?'展開図で確認':'球面で確認';fieldRender()});function duplicate(offset){const o=obj();if(!o)return;let n=structuredClone(o);n.id=nextId++;if(offset){n.x=wrap(n.x+.07,1);n.y=Math.min(1,n.y+.06)}objects.push(n);selected=n.id;sync();render()}bind('dup','click',()=>duplicate(false));bind('offset','click',()=>duplicate(true));bind('remove','click',()=>{objects=objects.filter(o=>o.id!==selected);selected=objects.at(-1)?.id||null;sync();render()});function moveOrder(d){let i=objects.findIndex(o=>o.id===selected),j=i+d;if(i<0||j<0||j>=objects.length)return;[objects[i],objects[j]]=[objects[j],objects[i]];sync();render()}bind('up','click',()=>moveOrder(1));bind('down','click',()=>moveOrder(-1));bind('reset','click',()=>preset(0));document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>preset(+b.dataset.preset));function download(name,url){let a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}bind('savepng','click',()=>download('sky-gradient.png',res.toDataURL('image/png')));bind('savedata','click',()=>{let blob=new Blob([JSON.stringify({version:2,objects:activeLayer==='sky'?objects:skyObjects,skyObjects:activeLayer==='sky'?objects:skyObjects,cloudObjects:activeLayer==='cloud'?objects:cloudObjects,cloudAmount,cloudThickness,activeLayer,blur,shift,skyBlur,cloudBlur,skyShift,cloudShift,windDir,windSpeed,timeOfDay,timeStopped,dayLength,skyDrift,skyRate,nextId},null,2)],{type:'application/json'});let url=URL.createObjectURL(blob);download('sky-gradient.json',url);setTimeout(()=>URL.revokeObjectURL(url),5000)});bind('loaddata','click',()=>$('fileinput').click());bind('fileinput','change',async e=>{const f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.objects))throw Error();skyObjects=d.skyObjects||d.objects;cloudObjects=d.cloudObjects||[];cloudAmount=d.cloudAmount??45;cloudThickness=d.cloudThickness??55;activeLayer=d.activeLayer||'sky';objects=activeLayer==='sky'?skyObjects:cloudObjects;$('cloudAmount').value=cloudAmount;$('cloudAmountVal').textContent=cloudAmount+'%';$('cloudThickness').value=cloudThickness;$('cloudThicknessVal').textContent=cloudThickness+'%';nextId=d.nextId||Math.max(...objects.map(o=>o.id),0)+1;skyBlur=d.skyBlur??d.blur??140;cloudBlur=d.cloudBlur??d.blur??140;skyShift=d.skyShift??d.shift??0;cloudShift=d.cloudShift??d.shift??0;windDir=d.windDir??30;windSpeed=d.windSpeed??15;timeOfDay=d.timeOfDay??1020;timeStopped=d.timeStopped??false;dayLength=d.dayLength??3600;skyDrift=d.skyDrift??0;skyRate=d.skyRate??.35;$('dayLength').value=dayLength;$('skyRate').value=skyRate;updateTimeUI();blur=activeLayer==='sky'?skyBlur:cloudBlur;shift=activeLayer==='sky'?skyShift:cloudShift;$('windDir').value=windDir;$('windDirVal').textContent=windDir+'°';$('windSpeed').value=windSpeed;$('windSpeedVal').textContent=windSpeed+'%';selected=objects.at(-1)?.id??null;$('blur').value=blur;$('blurVal').textContent=blur;$('shift').value=shift*360;$('shiftVal').textContent=Math.round(shift*360)+'°';sync();render()}catch{alert('設定ファイルを読み込めませんでした。')}e.target.value=''});
 const tabs=[...document.querySelectorAll('.tabs button[data-tab]')];
