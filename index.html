@@ -104,11 +104,11 @@ body.menuOpen[data-category="sky"] #menuControls .tabs,body.menuOpen[data-catego
 #menuControls .tabs button{background:#ffffff50;border:1px solid #ffffff55;color:inherit}
 #menuControls .tabs button.active{background:#282828c9;color:#fff}
 #menuControls #commonTools,#menuControls #weatherDock,#menuControls #settingsPanel,#menuControls #savePanel,#menuControls #starPanel{display:none!important;max-height:none!important;overflow:visible!important;min-height:0!important;background:transparent;border:0}
-body.menuOpen[data-category="sky"] #commonTools,body.menuOpen[data-category="cloud"] #commonTools{display:block!important}
-body.menuOpen[data-category="weather"] #weatherDock{display:flex!important}
-body.menuOpen[data-category="other"] #settingsPanel{display:block!important}
-body.menuOpen[data-category="save"] #savePanel{display:block!important}
-body.menuOpen[data-category="star"] #starPanel{display:block!important}
+body.menuOpen[data-category="sky"] #menuControls #commonTools,body.menuOpen[data-category="cloud"] #menuControls #commonTools{display:block!important}
+body.menuOpen[data-category="weather"] #menuControls #weatherDock{display:flex!important}
+body.menuOpen[data-category="other"] #menuControls #settingsPanel{display:block!important}
+body.menuOpen[data-category="save"] #menuControls #savePanel{display:block!important}
+body.menuOpen[data-category="star"] #menuControls #starPanel{display:block!important}
 #quickPanel{display:none;overflow-y:auto;padding:27px 8px}
 body.menuOpen[data-category="quick"] #quickPanel{display:block}
 #quickPanel h2{font-size:15px;font-weight:500}
@@ -123,7 +123,18 @@ body.menuOpen[data-category="quick"] #quickPanel{display:block}
 #ambMenu .toolLine label,#ambMenu .weatherLine label,#ambMenu .weatherHint,#ambMenu .settingsHeading{color:var(--menu-text);opacity:.85}
 #ambMenu .toolLine input[type=range],#ambMenu .weatherLine input[type=range]{accent-color:var(--menu-text)}
 @media(max-height:680px){#ambMenu{top:calc(env(safe-area-inset-top) + 7px);bottom:calc(env(safe-area-inset-bottom) + 73px)}#menuEditViews .view{height:135px}.menuTop{padding:9px 16px 5px}.menuBrand{font-size:20px}#menuCategories{padding-top:5px}}
-</style></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9</span></header>
+
+/* v1.9.1 fixes: restore category controls and make the menu trigger unobtrusive */
+#menuTrigger{width:46px;height:44px;right:calc(15px + env(safe-area-inset-right));bottom:calc(17px + env(safe-area-inset-bottom));padding:11px 8px;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;gap:6px;justify-content:center;filter:drop-shadow(0 1px 2px #ffffff70)}
+#menuTrigger span{height:2px;min-height:2px;border-radius:0;background:#252428;width:100%}
+body.menuOpen #menuTrigger{background:transparent!important}
+#menuControls #commonTools,#menuControls #weatherDock,#menuControls #settingsPanel,#menuControls #savePanel,#menuControls #starPanel{flex-shrink:0}
+body.menuOpen[data-category="sky"] #menuControls #commonTools,body.menuOpen[data-category="cloud"] #menuControls #commonTools{display:block!important}
+body.menuOpen[data-category="weather"] #menuControls #weatherDock{display:flex!important}
+body.menuOpen[data-category="other"] #menuControls #settingsPanel{display:block!important}
+body.menuOpen[data-category="save"] #menuControls #savePanel{display:block!important}
+body.menuOpen[data-category="star"] #menuControls #starPanel{display:block!important}
+</style></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.1</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
