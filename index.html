@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.1 | 時間と光</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.1.2 | 太陽と影</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#252528;background:#f5f5f2}*{box-sizing:border-box}html,body{height:100%;margin:0}button,select,input{font:inherit}button{border:1px solid #dadad8;background:#fff;color:#333;border-radius:5px;padding:8px 10px;font-size:12px;touch-action:manipulation}button:disabled{opacity:.35}button.selected,button.active{background:#29292e;color:white;border-color:#29292e}button:active{opacity:.7}main{height:100dvh;max-width:900px;margin:auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden}.top{height:52px;flex:none;display:flex;justify-content:space-between;align-items:center}.brand{font-size:22px;font-weight:450;letter-spacing:.055em}.tag{font-size:11px;color:#777}.tabs{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px 0}.tabs button{border-radius:4px;font-size:13px;padding:11px 4px}.view{display:none;min-height:140px;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;overflow:hidden}body[data-tab="area"] #areaView,body[data-tab="gradient"] #gradientView,body[data-tab="scene"] #sceneView{display:flex}.viewTitle{width:100%;max-width:800px;display:flex;justify-content:space-between;align-items:center;padding:0 2px 8px;font-size:11px;color:#777}.view canvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border:1px solid #dededb;touch-action:none;user-select:none;-webkit-user-select:none}#edit,#result{aspect-ratio:2/1;width:100%}#scene{aspect-ratio:720/410;width:100%}.tools{flex:none;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;border-top:1px solid #dededb;padding:9px 0 5px;display:none;min-height:0;max-height:56dvh}#commonTools{display:block}.toolLine{display:flex;gap:6px;align-items:center;margin-bottom:9px}.toolLine >label{font-size:11px;color:#6d6d6d;flex:none;min-width:46px}.toolLine input[type=range]{flex:1;min-width:0;accent-color:#36363c}.toolLine output{font-size:11px;color:#666;min-width:37px;text-align:right;font-variant-numeric:tabular-nums}.hscroll{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-bottom:3px}.hscroll::-webkit-scrollbar{display:none}.hscroll button{flex:none;white-space:nowrap;padding:9px 10px}.swatches{display:flex;gap:7px;align-items:center;flex-wrap:nowrap}.swatch{width:29px;height:29px;border:2px solid white;outline:1px solid #ddd;border-radius:50%;padding:0;flex:none}input[type=color]{width:38px;height:32px;padding:2px;border:1px solid #ddd;background:white;border-radius:4px;flex:none}.bottomSmall{font-size:10px;color:#888;line-height:1.4;min-height:14px}.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;z-index:10;padding:20px}.modal.open{display:flex}.dialog{background:#fafaf8;border-radius:12px;width:min(450px,100%);max-height:80dvh;display:flex;flex-direction:column;padding:20px;box-shadow:0 15px 60px #0003}.dialogTitle{display:flex;align-items:center;justify-content:space-between;font-weight:600}.layers{overflow-y:auto;min-height:0;margin:14px 0;display:flex;flex-direction:column-reverse;gap:6px}.layer{display:flex;gap:9px;align-items:center;width:100%;text-align:left;padding:11px}.layer.active{border-color:#444}.chip{width:18px;height:18px;border-radius:50%;flex:none}.groupHeading{font-size:11px;color:#777;margin:6px 0}.subButtons{display:flex;gap:6px}.subButtons button{flex:1}.compactGroup{display:flex;align-items:center;gap:8px;min-width:0}.compactGroup .toolLine{margin:0;flex:1}.fill{flex:1}.mobileNote{font-size:11px;color:#777} @media(min-width:700px){main{padding-left:22px;padding-right:22px}.tools{max-height:56dvh}.view{padding:18px 0}.tabs{max-width:480px;width:100%;margin:0 auto}}
 @media(max-height:700px){.top{height:42px}.brand{font-size:19px}.tabs button{padding:7px}.tools{max-height:55dvh;padding-top:6px}.toolLine{margin-bottom:6px}.hscroll button{padding:6px 9px}.bottomSmall{font-size:9px}}
@@ -10,7 +10,7 @@
 @media(max-width:650px){main{padding-left:10px;padding-right:10px}.top{height:38px}.brand{font-size:19px}.tag{font-size:9px}.view{min-height:125px;padding:2px 0}.viewTitle{padding-bottom:3px}.tabs{padding:6px 0}.tabs button{padding:7px 4px}.tools{padding-top:5px;max-height:56dvh}.toolLine{margin-bottom:5px}.hscroll button{padding:7px 9px}.hscroll{gap:4px}.bottomSmall{margin-top:3px}}
 
 .colorSheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:46dvh;min-height:210px;padding:17px 18px calc(15px + env(safe-area-inset-bottom));background:#f9f9f6;border-radius:17px 17px 0 0;box-shadow:0 -12px 45px #0002;display:none;overflow:auto}.colorSheet.open{display:block}.sheetMask{position:fixed;inset:0;background:#0002;z-index:20;display:none}.sheetMask.open{display:block;pointer-events:none}.sheetBar,.colorLine,.sheetLine{display:flex;justify-content:space-between;align-items:center;gap:12px}.sheetBar{margin-bottom:18px}.colorLine{justify-content:flex-start}.colorLine label{display:flex;align-items:center;gap:8px;font-size:13px}.colorLine input{width:50px;height:43px}.sheetHint{font-size:12px;color:#666;margin:14px 0;line-height:1.5}.sheetLine{justify-content:space-between;font-size:12px}.colorSheet button{padding:10px}.view:has(#edit){position:relative}#color{min-width:75px}.tools{max-height:48dvh}main:has(.colorSheet.open){}body.colorEditing .view{margin-bottom:min(30px,4dvh)}body.colorEditing .tools{opacity:.15;pointer-events:none}body.colorEditing .tabs{opacity:.4;pointer-events:none}
-.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px}.timeControl{border-top:1px solid #dededb;padding-top:7px;margin-top:5px}.timeControl .timeSelect{display:flex;gap:5px;flex:1}.timeSelect select{width:100%;min-width:0;padding:5px;border:1px solid #ddd;background:#fff;border-radius:5px;font-size:11px}.timeControl button{padding:5px 8px}.timeNote{color:#888;font-size:10px;margin:0 0 6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v1.1</span></header>
+.colorSheet.open{display:block!important;visibility:visible!important;opacity:1!important}#color{touch-action:manipulation;cursor:pointer}.sphereAxes{display:flex;gap:5px;align-items:center;margin:0 0 6px}.sphereAxes .axisCaption{font-size:10px;min-width:46px;color:#6d6d6d}.sphereAxes label{min-width:0;flex:1;display:flex;gap:3px;align-items:center;font-size:10px}.sphereAxes input{min-width:0;width:100%;accent-color:#36363c}.sphereAxes output{font-size:9px;white-space:nowrap;min-width:26px;text-align:right}@media(max-width:390px){.sphereAxes .axisCaption{min-width:39px}.sphereAxes label{gap:1px}.sphereAxes output{min-width:23px;font-size:9px}} .layerSelect{display:flex;gap:5px;flex:1}.layerSelect button{flex:1;padding:6px 7px}.layerSelect #swapLayerFields{flex:1.2}.cloudControl input:disabled{opacity:.35}.layerTarget{margin-bottom:6px}.timeControl{border-top:1px solid #dededb;padding-top:7px;margin-top:5px}.timeControl .timeSelect{display:flex;gap:5px;flex:1}.timeSelect select{width:100%;min-width:0;padding:5px;border:1px solid #ddd;background:#fff;border-radius:5px;font-size:11px}.timeControl button{padding:5px 8px}.timeNote{color:#888;font-size:10px;margin:0 0 6px} </style></head><body data-tab="area"><main><header class="top"><span class="brand">Ambience</span><span class="tag">COLOR FIELD · v1.1.2</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -243,18 +243,20 @@ function renderScene(){
  // Provisional day/night palette transformation; keeps user-designed colors visible.
  const skyPhase=timeOfDay/1440,night=Math.max(0,Math.min(1,(Math.cos(skyPhase*2*Math.PI)+.38)/1.2));
  if(night>0){sc.save();sc.globalCompositeOperation='multiply';sc.fillStyle=`rgba(102,91,154,${night*.56})`;sc.fillRect(0,0,w,h*.79);sc.restore();}
- drawCloudOverlay(w,h);
+ // Clouds are drawn after the sun, so their opacity correctly hides its disk and halo.
  const pick=(x,y)=>sample(((x+skyDrift)%1+1)%1,Math.max(.01,Math.min(.99,y)));
  // Solar elevation follows the 24h clock, independent of the drifting sky.
  const phase=timeOfDay/1440,solar=Math.sin(2*Math.PI*(phase-.25));
  const daylight=Math.max(0,solar),twilight=Math.max(0,1-Math.abs(solar)/.48)*(solar>-.28?1:0);
  const litFactor=Math.min(1,daylight*.88+twilight*.16+.09);
- const solarColor=pick(.48+(phase-.5)*.30,.60); // sample around the sun direction
+ const solarColor=pick(.32,.67); // color close to the western horizon, not the full sky average
  const solarMix=.30*twilight;
  const sunlight=[255,253,249].map((c,i)=>c*(1-solarMix)+solarColor[i]*solarMix);
  const solarShadow=Math.max(0,daylight)*.20;
  const shadowLen=Math.min(1.8,.12/(Math.max(.12,daylight)));
- const sunSide=phase<.5?1:-1;
+ const isMorning=phase<.5;
+ // Morning light travels from foreground-right to background-left. Evening is reversed.
+ const sunSide=isMorning?-1:1;
  const front=pick(.02,.52),frontLeft=pick(.92,.55),frontRight=pick(.10,.55);
  const back=pick(.50,.47),zenith=pick(.5,.08),horizon=pick(.50,.70);
  const mix=(a,b,t)=>a.map((v,i)=>v*(1-t)+b[i]*t);
@@ -262,8 +264,27 @@ function renderScene(){
  const css=c=>'rgb('+c.map(x=>Math.round(x)).join(',')+')';
  const fill=(path,color)=>{sc.fillStyle=css(color);sc.beginPath();path();sc.fill()};
  const horizonY=h*.745;
- // The setting sun appears toward the rear-left horizon; sunrise remains outside the frame.
- if(phase>.51&&phase<.79){let t=(phase-.51)/.28,px=w*(.34-t*.19),py=h*(.18+t*.59),a=Math.sin(Math.PI*t)*.65;sc.save();sc.globalAlpha=a;let halo=sc.createRadialGradient(px,py,0,px,py,w*.17);halo.addColorStop(0,'rgba(255,251,222,.65)');halo.addColorStop(1,'rgba(255,251,222,0)');sc.fillStyle=halo;sc.fillRect(px-w*.17,py-w*.17,w*.34,w*.34);sc.beginPath();sc.arc(px,py,w*.018,0,Math.PI*2);sc.fillStyle=css(sunlight);sc.fill();sc.restore();}
+ // Sunset: the sun enters briefly from the left and descends diagonally to the
+ // right toward the left half of the sea horizon. The morning sun stays offscreen.
+ // No artificial fading: visibility changes through screen/horizon clipping and cloud cover.
+ if(phase>=.714&&phase<=.752){
+  const t=(phase-.714)/(.752-.714);
+  const px=w*(-.023+.325*t), py=h*(.43+.32*t);
+  const radius=w*.0135;
+  const solarTint=pick(.20+.105*t,.60+.08*t);
+  const sunHue=[255,248,232].map((c,i)=>Math.round(lerp(c,solarTint[i],.48+.30*t)));
+  // Small and restrained aureole, rather than a large circular glowing disk.
+  sc.save();sc.beginPath();sc.rect(0,0,w,h*.745);sc.clip();
+  const r=radius*3.2;
+  const halo=sc.createRadialGradient(px,py,radius*.65,px,py,r);
+  halo.addColorStop(0,'rgba('+sunHue.join(',')+',0.13)');
+  halo.addColorStop(1,'rgba('+sunHue.join(',')+',0)');
+  sc.fillStyle=halo;sc.fillRect(px-r,py-r,2*r,2*r);
+  sc.beginPath();sc.arc(px,py,radius,0,Math.PI*2);sc.fillStyle=css(sunHue);sc.fill();
+  sc.restore();
+ }
+ // The actual cloud alpha overlays the solar disk. Thick/overcast clouds hide it.
+ drawCloudOverlay(w,h);
  // Ocean is behind the uneven curved ridge, not a straight band in front of it.
  const sea=sc.createLinearGradient(0,horizonY,0,h);
  sea.addColorStop(0,css(shade([104,140,157],horizon,.48,1.09)));
@@ -290,12 +311,26 @@ function renderScene(){
  // Tiny specks of grass provide texture without pixel-art styling.
  for(let i=0;i<170;i++){let x=(i*137.7%w),y=h*(.78+((i*47.13)%100)/435);sc.strokeStyle=i%3?'rgba(42,73,42,.12)':'rgba(230,230,193,.18)';sc.lineWidth=.8;sc.beginPath();sc.moveTo(x,y);sc.lineTo(x+1.3,y-2.8);sc.stroke()}
  drawProjectedShadow(w,h,'hill');sc.restore();
- // Wide, low-contrast shadow from the small cottage. Long at dawn/dusk.
- if(daylight>.02){sc.save();sc.fillStyle='rgba(38,40,53,'+(solarShadow*.58)+')';sc.filter='blur(10px)';sc.beginPath();sc.ellipse(w*.49+sunSide*w*.11*shadowLen,h*.865,w*.07+w*.055*shadowLen,h*.012+w*.012*shadowLen,-sunSide*.24,0,Math.PI*2);sc.fill();sc.restore();}
+ // Ground shadow extends opposite the solar azimuth, with a long diagonal at low elevations.
+ // Morning: rear-left. Evening: foreground-right. Keep it soft and low contrast.
+ if(daylight>.008){
+  const lowSun=Math.pow(1-Math.min(1,daylight),1.5);
+  const displacement=(.024+.105*lowSun)*w;
+  const x0=w*.49,y0=h*.855;
+  const dx=isMorning?-displacement:displacement*.85;
+  const dy=isMorning?-displacement*.36:displacement*.37;
+  sc.save();sc.filter='blur(9px)';
+  sc.strokeStyle='rgba(35,39,52,'+(.055+.13*daylight).toFixed(3)+')';
+  sc.lineWidth=12+lowSun*8;sc.lineCap='round';sc.beginPath();
+  sc.moveTo(x0,y0);sc.quadraticCurveTo(x0+dx*.55,y0+dy*.6,x0+dx,y0+dy);sc.stroke();sc.restore();
+ }
  // Cottage: simple volume with independent roof, front and side lighting.
  const cx=w*.49,top=h*.781,unit=w/720;
  sc.save();sc.translate(cx,top);sc.scale(unit,unit);
- const buildingShadow=shadowStrengthAt(.49,.83);let wallFront=shade([224,207,179],front,.30,.98-buildingShadow*.52),wallSide=shade([183,177,156],frontRight,.30,.79-buildingShadow*.35);
+ const buildingShadow=shadowStrengthAt(.49,.83);let faceSun=Math.max(0,daylight)*(isMorning?.28:-.16);
+ let sideSun=Math.max(0,daylight)*(isMorning?-.07:.13);
+ let wallFront=shade([224,207,179],front,.30,Math.max(.28,.83+faceSun-buildingShadow*.52));
+ let wallSide=shade([183,177,156],frontRight,.30,Math.max(.25,.76+sideSun-buildingShadow*.35));
  fill(()=>{sc.moveTo(-36,-5);sc.lineTo(33,-5);sc.lineTo(33,54);sc.lineTo(-36,54);sc.closePath()},wallFront);
  fill(()=>{sc.moveTo(33,-5);sc.lineTo(56,-17);sc.lineTo(56,41);sc.lineTo(33,54);sc.closePath()},wallSide);
  fill(()=>{sc.moveTo(-45,-6);sc.lineTo(-1,-42);sc.lineTo(39,-7);sc.lineTo(33,0);sc.lineTo(-1,-29);sc.lineTo(-37,1);sc.closePath()},shade([81,76,81],zenith,.32,.94));
