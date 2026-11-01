@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.8 | Setting</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#f5f5f2"><title>Ambience v1.9 | Overlay Menu</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#252528;background:#f5f5f2}*{box-sizing:border-box}html,body{height:100%;margin:0}button,select,input{font:inherit}button{border:1px solid #dadad8;background:#fff;color:#333;border-radius:5px;padding:8px 10px;font-size:12px;touch-action:manipulation}button:disabled{opacity:.35}button.selected,button.active{background:#29292e;color:white;border-color:#29292e}button:active{opacity:.7}main{height:100dvh;max-width:900px;margin:auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden}.top{height:52px;flex:none;display:flex;justify-content:space-between;align-items:center}.brand{font-size:22px;font-weight:450;letter-spacing:.055em}.tag{font-size:11px;color:#777}.tabs{flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px 0}.tabs button{border-radius:4px;font-size:13px;padding:11px 4px}.view{display:none;min-height:140px;flex:1;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;overflow:hidden}body[data-tab="area"] #areaView,body[data-tab="gradient"] #gradientView,body[data-tab="scene"] #sceneView{display:flex}.viewTitle{width:100%;max-width:800px;display:flex;justify-content:space-between;align-items:center;padding:0 2px 8px;font-size:11px;color:#777}.view canvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border:1px solid #dededb;touch-action:none;user-select:none;-webkit-user-select:none}#edit,#result{aspect-ratio:2/1;width:100%}#scene{aspect-ratio:720/410;width:100%}.tools{flex:none;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;border-top:1px solid #dededb;padding:9px 0 5px;display:none;min-height:0;max-height:56dvh}#commonTools{display:block}.toolLine{display:flex;gap:6px;align-items:center;margin-bottom:9px}.toolLine >label{font-size:11px;color:#6d6d6d;flex:none;min-width:46px}.toolLine input[type=range]{flex:1;min-width:0;accent-color:#36363c}.toolLine output{font-size:11px;color:#666;min-width:37px;text-align:right;font-variant-numeric:tabular-nums}.hscroll{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-bottom:3px}.hscroll::-webkit-scrollbar{display:none}.hscroll button{flex:none;white-space:nowrap;padding:9px 10px}.swatches{display:flex;gap:7px;align-items:center;flex-wrap:nowrap}.swatch{width:29px;height:29px;border:2px solid white;outline:1px solid #ddd;border-radius:50%;padding:0;flex:none}input[type=color]{width:38px;height:32px;padding:2px;border:1px solid #ddd;background:white;border-radius:4px;flex:none}.bottomSmall{font-size:10px;color:#888;line-height:1.4;min-height:14px}.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;z-index:10;padding:20px}.modal.open{display:flex}.dialog{background:#fafaf8;border-radius:12px;width:min(450px,100%);max-height:80dvh;display:flex;flex-direction:column;padding:20px;box-shadow:0 15px 60px #0003}.dialogTitle{display:flex;align-items:center;justify-content:space-between;font-weight:600}.layers{overflow-y:auto;min-height:0;margin:14px 0;display:flex;flex-direction:column-reverse;gap:6px}.layer{display:flex;gap:9px;align-items:center;width:100%;text-align:left;padding:11px}.layer.active{border-color:#444}.chip{width:18px;height:18px;border-radius:50%;flex:none}.groupHeading{font-size:11px;color:#777;margin:6px 0}.subButtons{display:flex;gap:6px}.subButtons button{flex:1}.compactGroup{display:flex;align-items:center;gap:8px;min-width:0}.compactGroup .toolLine{margin:0;flex:1}.fill{flex:1}.mobileNote{font-size:11px;color:#777} @media(min-width:700px){main{padding-left:22px;padding-right:22px}.tools{max-height:56dvh}.view{padding:18px 0}.tabs{max-width:480px;width:100%;margin:0 auto}}
 @media(max-height:700px){.top{height:42px}.brand{font-size:19px}.tabs button{padding:7px}.tools{max-height:55dvh;padding-top:6px}.toolLine{margin-bottom:6px}.hscroll button{padding:6px 9px}.bottomSmall{font-size:9px}}
@@ -55,7 +55,7 @@ body[data-app="color"] .tools{max-height:min(43dvh,410px)}
 body[data-app="weather"] #weatherDock{max-height:min(48dvh,420px)}
 @media(max-height:700px){main{padding-bottom:calc(61px + env(safe-area-inset-bottom))}.appFooter{min-height:calc(55px + env(safe-area-inset-bottom))}}
 
-/* v1.8: two top-level pages, settings subsections */
+/* v1.9: two top-level pages, settings subsections */
 .appFooter{grid-template-columns:repeat(2,minmax(0,1fr))}
 .settingNav{display:none;flex:none;gap:4px;overflow-x:auto;scrollbar-width:none;padding:8px 0 6px;-webkit-overflow-scrolling:touch}
 .settingNav button{flex:0 0 auto;border:1px solid #d8d8d7;background:transparent;color:#666;padding:7px 10px;font-size:12px;border-radius:4px}
@@ -73,7 +73,57 @@ body[data-app="settings"][data-setting="star"] #starPanel{display:block!importan
 body[data-app="ambience"] .settingNav,body[data-app="ambience"] .tabs,body[data-app="ambience"] #commonTools,body[data-app="ambience"] #weatherDock,body[data-app="ambience"] #settingsPanel,body[data-app="ambience"] #savePanel{display:none!important}
 #commonTools,#weatherDock,#settingsPanel,#savePanel,#starPanel{max-height:min(42dvh,410px);min-height:0;overflow-y:auto}
 body[data-app="settings"] .view{min-height:110px}
-</style></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.8</span></header>
+
+/* v1.9: immersive scene and translucent overlay (all prior page nav superseded) */
+html,body{width:100%;height:100%;overflow:hidden;background:#14161d}
+body{--menu-r:240;--menu-g:240;--menu-b:237;--menu-alpha:.78;--menu-text:#252528;color:var(--menu-text)}
+main{position:relative;width:100%;height:100dvh;max-width:none;padding:0!important;margin:0;overflow:hidden;background:#14161d}
+.top,.appFooter,.settingNav{display:none!important}
+#sceneView{display:flex!important;position:absolute;inset:0;width:100%;height:100%;min-height:0!important;margin:0;padding:0!important;overflow:hidden;z-index:0}
+#sceneView .viewTitle{display:none!important}
+#scene{width:100%;height:100%;max-width:none;max-height:none;border:0!important;aspect-ratio:auto;object-fit:cover;touch-action:pan-y}
+#areaView,#gradientView{display:none!important}
+#menuTrigger{position:fixed;right:calc(18px + env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));width:53px;height:53px;padding:14px 13px;z-index:31;display:flex;flex-direction:column;justify-content:space-around;align-items:stretch;border:1px solid #ffffff80;border-radius:50%;background:#f6f6f1b8;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 5px 18px #0002;touch-action:manipulation}
+#menuTrigger span{display:block;height:1.6px;border-radius:5px;background:#333}
+#ambMenu{display:none;position:fixed;z-index:30;top:calc(env(safe-area-inset-top) + 14px);right:12px;bottom:calc(env(safe-area-inset-bottom) + 86px);left:12px;max-width:620px;margin:auto;min-width:0;min-height:0;flex-direction:column;border-radius:20px;overflow:hidden;background:rgba(var(--menu-r),var(--menu-g),var(--menu-b),var(--menu-alpha));color:var(--menu-text);backdrop-filter:blur(22px) saturate(110%);-webkit-backdrop-filter:blur(22px) saturate(110%);box-shadow:0 0 24px #ffffff45,0 13px 45px #0003;border:1px solid #ffffff48}
+body.menuOpen #ambMenu{display:flex}
+body.menuOpen #menuTrigger{background:#f6f6f1e8}
+.menuTop{display:flex;flex:none;justify-content:space-between;align-items:center;padding:17px 19px 10px}
+.menuBrand{font-size:25px;letter-spacing:.035em;font-weight:350;line-height:1.12}
+.menuSection{font-size:10px;letter-spacing:.2em;margin-top:5px;opacity:.65}
+#menuClose{font-size:27px;line-height:1;border:0;background:transparent;color:inherit;padding:4px 9px}
+#menuWorkspace{min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden;padding:0 17px 7px}
+#menuEditViews{flex:none;min-height:0}
+#menuEditViews .view{min-height:0!important;height:clamp(140px,25dvh,230px);flex:none;padding:3px 0!important}
+#menuEditViews .viewTitle{font-size:10px;display:flex!important}
+#menuEditViews .view canvas{max-height:calc(100% - 19px);width:auto;max-width:100%}
+body.menuOpen[data-category="sky"][data-tab="area"] #areaView,body.menuOpen[data-category="cloud"][data-tab="area"] #areaView,body.menuOpen[data-category="sky"][data-tab="gradient"] #gradientView,body.menuOpen[data-category="cloud"][data-tab="gradient"] #gradientView{display:flex!important}
+#menuControls{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#menuControls .tabs{display:none!important;margin:0;padding:5px 0}
+body.menuOpen[data-category="sky"] #menuControls .tabs,body.menuOpen[data-category="cloud"] #menuControls .tabs{display:grid!important}
+#menuControls .tabs button{background:#ffffff50;border:1px solid #ffffff55;color:inherit}
+#menuControls .tabs button.active{background:#282828c9;color:#fff}
+#menuControls #commonTools,#menuControls #weatherDock,#menuControls #settingsPanel,#menuControls #savePanel,#menuControls #starPanel{display:none!important;max-height:none!important;overflow:visible!important;min-height:0!important;background:transparent;border:0}
+body.menuOpen[data-category="sky"] #commonTools,body.menuOpen[data-category="cloud"] #commonTools{display:block!important}
+body.menuOpen[data-category="weather"] #weatherDock{display:flex!important}
+body.menuOpen[data-category="other"] #settingsPanel{display:block!important}
+body.menuOpen[data-category="save"] #savePanel{display:block!important}
+body.menuOpen[data-category="star"] #starPanel{display:block!important}
+#quickPanel{display:none;overflow-y:auto;padding:27px 8px}
+body.menuOpen[data-category="quick"] #quickPanel{display:block}
+#quickPanel h2{font-size:15px;font-weight:500}
+#quickPanel p{font-size:12px;line-height:1.8;opacity:.7}
+#menuCategories{flex:none;display:flex;gap:2px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:9px 9px calc(11px + env(safe-area-inset-bottom)*.2);border-top:1px solid #ffffff66}
+#menuCategories button{display:flex;flex:1 0 58px;min-width:58px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 3px;background:transparent;color:inherit;border:0;opacity:.65;font-size:9px;border-radius:9px}
+#menuCategories button.active{background:#ffffff55;opacity:1;font-weight:600}
+.catIcon{font-size:20px;line-height:1.2;font-weight:300}
+.appearanceOptions{margin:15px 0 18px;padding-top:14px;border-top:1px solid #9995}
+.appearanceRow{display:flex;align-items:center;gap:12px;margin:11px 0;font-size:12px}.appearanceRow label{width:76px;flex:none}.appearanceRow input[type=range]{flex:1;min-width:0}.appearanceRow output{font-size:11px}
+#ambMenu button:not(.active),#ambMenu select{color:var(--menu-text)}
+#ambMenu .toolLine label,#ambMenu .weatherLine label,#ambMenu .weatherHint,#ambMenu .settingsHeading{color:var(--menu-text);opacity:.85}
+#ambMenu .toolLine input[type=range],#ambMenu .weatherLine input[type=range]{accent-color:var(--menu-text)}
+@media(max-height:680px){#ambMenu{top:calc(env(safe-area-inset-top) + 7px);bottom:calc(env(safe-area-inset-bottom) + 73px)}#menuEditViews .view{height:135px}.menuTop{padding:9px 16px 5px}.menuBrand{font-size:20px}#menuCategories{padding-top:5px}}
+</style></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -92,7 +142,7 @@ body[data-app="settings"] .view{min-height:110px}
 <div class="hscroll" id="fileControls"><button id="savepng">画像保存</button><button id="savedata">設定保存</button><button id="loaddata">設定読込</button><button id="reset">初期化</button></div>
 <input id="fileinput" type="file" accept="application/json,.json" hidden>
 <div class="bottomSmall">天候と雨音は試作です。iPhoneでは「音をオン」を押すと再生します。地面や屋根の濡れは暫定です。</div></section>
-<section class="tools" id="settingsPanel" aria-label="共通設定"><p class="settingsHeading">時間と環境の設定</p></section><section class="tools" id="savePanel" aria-label="保存と読込"></section><section class="tools" id="starPanel"><p class="settingsHeading">Star</p><p class="weatherHint">星の編集は今後実装します。</p></section></main><nav class="appFooter" aria-label="アプリのメインメニュー"><button type="button" class="active" data-app="ambience">Ambience</button><button type="button" data-app="settings">Setting</button></nav><div class="sheetMask" id="colorMask"></div><section class="colorSheet" id="colorSheet" aria-label="線形グラデーションの色設定"><div class="sheetBar"><b>領域のグラデーション</b><button id="closeColor">完了</button></div><div class="colorLine"><label>開始色 <input type="color" id="startColor"></label><label>終了色 <input type="color" id="endColor"></label><button id="swapColors">色を交換</button></div><div class="sheetHint">領域表示ではプレビューの2点を動かし、方向と色の移行幅を編集できます。</div><div class="sheetLine"><button id="resetDirection">方向を初期化</button><span id="gradientReadout">方向 0°</span></div></section><div class="modal" id="layerModal" aria-hidden="true"><div class="dialog"><div class="dialogTitle"><span>色面の重なり順</span><button id="closeLayers">閉じる</button></div><div class="groupHeading">上側が最前面。色面を選択して上下に移動します。</div><div class="layers" id="layers"></div><div class="subButtons"><button onclick="document.getElementById('up').click()">前へ</button><button onclick="document.getElementById('down').click()">後ろへ</button></div></div></div><script>
+<section class="tools" id="settingsPanel" aria-label="共通設定"><p class="settingsHeading">時間と環境の設定</p><div class="appearanceOptions"><p class="settingsHeading">メニューの外観</p><div class="appearanceRow"><label for="panelColor">パネル色</label><input type="color" id="panelColor" value="#f0f0ed"></div><div class="appearanceRow"><label for="panelOpacity">透過度</label><input type="range" id="panelOpacity" min="40" max="94" value="78"><output id="panelOpacityVal">78%</output></div><div class="appearanceRow"><label for="panelText">文字色</label><input type="color" id="panelText" value="#252528"></div><button id="panelReset" type="button">初期の色に戻す</button></div></section><section class="tools" id="savePanel" aria-label="保存と読込"></section><section class="tools" id="starPanel"><p class="settingsHeading">Star</p><p class="weatherHint">星の編集は今後実装します。</p></section><section id="ambMenu" aria-label="Ambience メニュー" aria-hidden="true"><div class="menuTop"><div><div class="menuBrand">Ambience</div><div class="menuSection" id="menuSectionName">QUICK</div></div><button id="menuClose" type="button" aria-label="メニューを閉じる">×</button></div><div id="menuWorkspace"><section id="quickPanel"><h2>Quick</h2><p>簡易操作はこれから検討します。</p><p>ここでは景観を眺めながら、必要な設定をすぐ操作できる構成を検討します。</p></section><div id="menuEditViews"></div><div id="menuControls"></div></div><nav id="menuCategories" aria-label="設定カテゴリー"><button type="button" data-category="quick" class="active"><span class="catIcon">◉</span><span>Quick</span></button><button type="button" data-category="sky"><span class="catIcon">☼</span><span>Sky</span></button><button type="button" data-category="cloud"><span class="catIcon">☁</span><span>Cloud</span></button><button type="button" data-category="star"><span class="catIcon">✧</span><span>Star</span></button><button type="button" data-category="weather"><span class="catIcon">☂</span><span>Weather</span></button><button type="button" data-category="other"><span class="catIcon">⚙</span><span>Other</span></button><button type="button" data-category="save"><span class="catIcon">▣</span><span>Save</span></button></nav></section><button type="button" id="menuTrigger" aria-label="メニューを開く" aria-expanded="false"><span></span><span></span><span></span></button></main><nav class="appFooter" aria-label="アプリのメインメニュー"><button type="button" class="active" data-app="ambience">Ambience</button><button type="button" data-app="settings">Setting</button></nav><div class="sheetMask" id="colorMask"></div><section class="colorSheet" id="colorSheet" aria-label="線形グラデーションの色設定"><div class="sheetBar"><b>領域のグラデーション</b><button id="closeColor">完了</button></div><div class="colorLine"><label>開始色 <input type="color" id="startColor"></label><label>終了色 <input type="color" id="endColor"></label><button id="swapColors">色を交換</button></div><div class="sheetHint">領域表示ではプレビューの2点を動かし、方向と色の移行幅を編集できます。</div><div class="sheetLine"><button id="resetDirection">方向を初期化</button><span id="gradientReadout">方向 0°</span></div></section><div class="modal" id="layerModal" aria-hidden="true"><div class="dialog"><div class="dialogTitle"><span>色面の重なり順</span><button id="closeLayers">閉じる</button></div><div class="groupHeading">上側が最前面。色面を選択して上下に移動します。</div><div class="layers" id="layers"></div><div class="subButtons"><button onclick="document.getElementById('up').click()">前へ</button><button onclick="document.getElementById('down').click()">後ろへ</button></div></div></div><script>
 (()=>{'use strict';const $=id=>document.getElementById(id);const edit=$('edit'),res=$('result'),scene=$('scene'),ec=edit.getContext('2d'),rc=res.getContext('2d'),sc=scene.getContext('2d');const W=360,H=180;const field=document.createElement('canvas');field.width=W;field.height=H;const fc=field.getContext('2d',{willReadFrequently:true});let sphereView=false;let colorEditing=false;let handleDrag=null;let objects=[],selected=null,activeLayer='sky',skyObjects=[],cloudObjects=[],skySelected=null,cloudSelected=null,cloudAmount=45,cloudThickness=55,mode='select',draft=null,drag=null,shift=0,blur=140,skyShift=0,cloudShift=0,skyBlur=140,cloudBlur=140,windDir=30,windSpeed=15,windT=0,nextId=1,timeOfDay=1020,timeStopped=false,dayLength=3600,skyDrift=0,skyRate=.35,lastSceneFrame=0,weather="clear",wetness=0,rainClock=0,snowCover=0,lightningFlash=0,rainStrength=100,snowStrength=65,thunderStrength=50,weatherWind=0;const shapes=[['select','選択'],['rect','矩形'],['round','角丸'],['circle','円'],['ellipse','楕円'],['free','自由線']];const presets=[[
  ['rect',.5,.5,1.05,1.05,'#9596cf'],['ellipse',.2,.35,.56,.62,'#e990aa'],['ellipse',.78,.28,.53,.48,'#6cbbba'],['ellipse',.39,.82,.66,.4,'#eeba80'],['ellipse',.95,.86,.5,.43,'#6568ab']],
  [['rect',.5,.5,1.05,1.05,'#252e5e'],['ellipse',.28,.36,.7,.54,'#e887ac'],['ellipse',.78,.66,.68,.61,'#f2b273'],['ellipse',.76,.12,.46,.36,'#a6b3da']],
@@ -695,46 +745,62 @@ edit.addEventListener('pointermove',e=>{if(pressStart&&Math.hypot(e.clientX-pres
 showTab('area');
 skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.05,'#d7c1df'),make('ellipse',.48,.49,.56,.36,'#f9e0cf')];skySelected=skyObjects.at(-1).id;cloudSelected=cloudObjects.at(-1).id;objects=skyObjects;selected=skySelected;updateTimeUI();sync();render();let last=0;function animate(ms){if(last){const dt=Math.min(80,ms-last)/1000;rainClock+=dt;wetness=Math.max(0,Math.min(1,wetness+dt*(weatherIntensity()*.036-(weatherIntensity()===0?.006:0))));snowCover=Math.max(0,Math.min(1,snowCover+dt*(weather==='snow'?.018*snowStrength/65:-.003)));$('wetnessVal').textContent=weather==='snow'?'積雪 '+Math.round(snowCover*100)+'%':'濡れ '+Math.round(wetness*100)+'%';windT+=dt*windSpeed*.00014;skyDrift=(skyDrift+dt*skyRate/3600)%1;if(!timeStopped)timeOfDay=(timeOfDay+dt*1440/dayLength)%1440;if(ms-lastSceneFrame>85&&document.body.dataset.tab==='scene'&&latestPixels){renderScene();lastSceneFrame=ms}if(ms-lastSceneFrame>85&&document.body.dataset.tab!=='scene'&&!timeStopped)updateTimeUI();}last=ms;if(document.body.dataset.tab==='scene'&&ms-lastSceneFrame<100)updateTimeUI();requestAnimationFrame(animate)}requestAnimationFrame(animate)})();
 
-// Stable two-level navigation; do not reference symbols enclosed in the renderer IIFE.
+// v1.9 overlay navigation: preserve the renderer and all existing control listeners.
 (function(){
  const get=id=>document.getElementById(id);
- const buttons=[...document.querySelectorAll('.appFooter button')];
- const sub=[...document.querySelectorAll('.settingNav button')];
- const settings=get('settingsPanel'), saves=get('savePanel');
- const common=get('commonTools');
- // Move shared environment controls away from the color editor.
+ const menu=get('ambMenu'),trigger=get('menuTrigger'),close=get('menuClose');
+ const views=get('menuEditViews'),controls=get('menuControls');
+ // Reuse the real editors, not copies; canvas contexts and event handlers remain attached.
+ for(const id of ['areaView','gradientView'])views.appendChild(get(id));
+ const settings=get('settingsPanel'),saves=get('savePanel');
  for(const id of ['rainSound','windDir','windSpeed','timeOfDay','dayLength']){
-   const item=get(id),row=item&&item.closest('.toolLine');
-   if(row)settings.appendChild(row);
+   const item=get(id),row=item&&item.closest('.toolLine');if(row)settings.appendChild(row);
  }
  const help=document.querySelector('#commonTools .timeNote');if(help)settings.appendChild(help);
  const file=get('fileControls');if(file)saves.appendChild(file);
  const bottom=document.querySelector('#commonTools .bottomSmall');if(bottom)saves.appendChild(bottom);
- let setting='sky',editorTab='area';
- function chooseScene(){document.querySelector('.tabs button[data-tab="scene"]').click()}
- function openSetting(section){
-   setting=section;document.body.dataset.setting=section;
-   sub.forEach(b=>b.classList.toggle('active',b.dataset.setting===section));
-   get('activeSection').textContent=section.toUpperCase()+' · v1.8';
-   if(section==='sky'||section==='cloud'){
-     get(section==='sky'?'skyTarget':'cloudTarget').click();
-     document.querySelector('.tabs button[data-tab="'+editorTab+'"]').click();
-   }else chooseScene();
-   for(const id of ['commonTools','weatherDock','settingsPanel','savePanel'])get(id).scrollTop=0;
+ const tabs=document.querySelector('.tabs');
+ for(const item of [tabs,get('commonTools'),get('weatherDock'),settings,saves,get('starPanel')])controls.appendChild(item);
+ const categories=[...document.querySelectorAll('#menuCategories [data-category]')];
+ let category='quick',editorTab='area',internalScene=false;
+ function scene(){internalScene=true;document.querySelector('.tabs [data-tab="scene"]').click();internalScene=false;}
+ function changeCategory(next){
+   category=next;document.body.dataset.category=next;
+   categories.forEach(b=>b.classList.toggle('active',b.dataset.category===next));
+   get('menuSectionName').textContent=next.toUpperCase();
+   if(next==='sky'||next==='cloud'){
+     get(next==='sky'?'skyTarget':'cloudTarget').click();
+     document.querySelector('.tabs [data-tab="'+editorTab+'"]').click();
+   }else scene();
+   controls.scrollTop=0;
  }
- function openPage(page){
-   document.body.dataset.app=page;
-   buttons.forEach(b=>b.classList.toggle('active',b.dataset.app===page));
-   if(page==='ambience'){
-     get('activeSection').textContent='AMBIENCE · v1.8';
-     chooseScene();
-   }else openSetting(setting);
+ function setMenu(open){
+   document.body.classList.toggle('menuOpen',open);
+   menu.setAttribute('aria-hidden',String(!open));
+   trigger.setAttribute('aria-expanded',String(open));
+   trigger.setAttribute('aria-label',open?'メニューを閉じる':'メニューを開く');
+   if(!open)scene();
  }
- buttons.forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.app)));
- sub.forEach(b=>b.addEventListener('click',()=>openSetting(b.dataset.setting)));
- document.querySelectorAll('.tabs button[data-tab]').forEach(b=>b.addEventListener('click',()=>{
-   if(document.body.dataset.app==='settings'&&['sky','cloud'].includes(setting))editorTab=b.dataset.tab;
+ trigger.addEventListener('click',()=>setMenu(!document.body.classList.contains('menuOpen')));
+ close.addEventListener('click',()=>setMenu(false));
+ categories.forEach(b=>b.addEventListener('click',()=>changeCategory(b.dataset.category)));
+ document.querySelectorAll('.tabs [data-tab]').forEach(b=>b.addEventListener('click',()=>{
+   if(!internalScene&&(category==='sky'||category==='cloud'))editorTab=b.dataset.tab;
  }));
- openPage('ambience');
+ const defaults={color:'#f0f0ed',opacity:78,text:'#252528'};
+ const ids={color:get('panelColor'),opacity:get('panelOpacity'),text:get('panelText')};
+ const root=document.body;
+ function applyStyle(){
+   const h=ids.color.value;const vals=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+   root.style.setProperty('--menu-r',vals[0]);root.style.setProperty('--menu-g',vals[1]);root.style.setProperty('--menu-b',vals[2]);
+   root.style.setProperty('--menu-alpha',(Number(ids.opacity.value)/100).toFixed(2));
+   root.style.setProperty('--menu-text',ids.text.value);
+   get('panelOpacityVal').textContent=ids.opacity.value+'%';
+   try{localStorage.setItem('ambience_menu_palette',JSON.stringify({color:h,opacity:+ids.opacity.value,text:ids.text.value}))}catch(e){}
+ }
+ try{let saved=JSON.parse(localStorage.getItem('ambience_menu_palette')||'null');if(saved){for(const k of Object.keys(defaults))if(saved[k]!==undefined)ids[k].value=saved[k];}}catch(e){}
+ Object.values(ids).forEach(x=>x.addEventListener('input',applyStyle));
+ get('panelReset').addEventListener('click',()=>{for(const [k,v] of Object.entries(defaults))ids[k].value=v;applyStyle()});
+ applyStyle();changeCategory('quick');scene();setMenu(false);
 })();
 </script></body></html>
