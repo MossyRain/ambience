@@ -180,12 +180,12 @@ body.menuPreviewing #menuClose{display:none!important}
 body.menuPreviewing #ambMenu #menuActions{z-index:2}
 @media(max-height:680px){#menuActions{min-height:40px;padding-bottom:5px}#menuCategories{min-height:47px;padding-top:4px}}
 
-/* v1.9.6: 8px feather edge, fixed house scale in landscape and portrait */
+/* v1.9.7: 8px feather edge, fixed house scale in landscape and portrait */
 #ambMenu{-webkit-mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent);mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent)}
 #scene{object-fit:fill!important}
 #settingsPanel .appearanceRow:has(#panelOpacity){display:none}
 
-/* v1.9.6: safe editor top edge, independent preview control and touch responsiveness */
+/* v1.9.7: safe editor top edge, independent preview control and touch responsiveness */
 #menuWorkspace{padding-top:18px!important;box-sizing:border-box}
 #menuEditViews .view{padding-top:8px!important;box-sizing:border-box}
 #menuEditViews .viewTitle{min-height:25px;align-items:center;overflow:visible!important}
@@ -193,13 +193,22 @@ body.menuPreviewing #ambMenu #menuActions{z-index:2}
 #menuControls input[type="range"]{touch-action:pan-x}
 #menuCategories,#menuActions{position:relative;z-index:2}
 #menuPreview.floatingPreview{position:fixed!important;z-index:999!important;display:flex!important;visibility:visible!important;opacity:1!important;background:rgba(240,240,237,.35)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:auto!important}
-/* v1.9.6 — menu state is independent of editor tab; resilient touch controls */
+/* v1.9.7 — menu state is independent of editor tab; resilient touch controls */
 #menuTrigger{z-index:15!important;touch-action:manipulation!important;pointer-events:auto!important}
 #ambMenu{z-index:16!important}
 #menuCategories button,#menuActions button{touch-action:manipulation;pointer-events:auto}
 body.menuOpen #menuTrigger,body.menuPreviewing #menuTrigger{display:none!important}
 body.menuOpen #menuEditViews{contain:layout}
-</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.6</span></header>
+/* v1.9.7: narrow rounded translucent edge */
+#ambMenu{border-radius:18px!important;overflow:hidden!important;--edge-width:5px;
+-webkit-mask-image:linear-gradient(to right,transparent,black 5px,black calc(100% - 5px),transparent),linear-gradient(to bottom,transparent,black 5px,black calc(100% - 5px),transparent)!important;
+mask-image:linear-gradient(to right,transparent,black 5px,black calc(100% - 5px),transparent),linear-gradient(to bottom,transparent,black 5px,black calc(100% - 5px),transparent)!important;}
+body.menuPreviewing #ambMenu{-webkit-mask-image:none!important;mask-image:none!important}
+#starPanel .starControl{display:flex;gap:12px;align-items:center;min-height:48px}
+#starPanel .starControl label{flex:0 0 74px;font-size:13px}
+#starPanel .starControl input{flex:1;min-width:0}
+#starPanel .starControl output{min-width:42px;text-align:right;font-size:12px}
+</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.7</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -218,7 +227,11 @@ body.menuOpen #menuEditViews{contain:layout}
 <div class="hscroll" id="fileControls"><button id="savepng">画像保存</button><button id="savedata">設定保存</button><button id="loaddata">設定読込</button><button id="reset">初期化</button></div>
 <input id="fileinput" type="file" accept="application/json,.json" hidden>
 <div class="bottomSmall">天候と雨音は試作です。iPhoneでは「音をオン」を押すと再生します。地面や屋根の濡れは暫定です。</div></section>
-<section class="tools" id="settingsPanel" aria-label="共通設定"><p class="settingsHeading">時間と環境の設定</p><div class="appearanceOptions"><p class="settingsHeading">メニューの外観</p><div class="appearanceRow"><label for="panelColor">パネル色</label><input type="color" id="panelColor" value="#f0f0ed"></div><div class="appearanceRow"><label for="panelOpacity">縁のぼかし</label><input type="range" id="panelOpacity" min="0" max="100" value="35"><output id="panelOpacityVal">35%</output></div><div class="appearanceRow"><label for="panelText">文字色</label><input type="color" id="panelText" value="#252528"></div><button id="panelReset" type="button">初期の色に戻す</button></div></section><section class="tools" id="savePanel" aria-label="保存と読込"></section><section class="tools" id="starPanel"><p class="settingsHeading">Star</p><p class="weatherHint">星の編集は今後実装します。</p></section><section id="ambMenu" aria-label="Ambience メニュー" aria-hidden="true"><div id="menuWorkspace"><section id="quickPanel"><h2>Quick</h2><p>簡易操作はこれから検討します。</p><p>ここでは景観を眺めながら、必要な設定をすぐ操作できる構成を検討します。</p></section><div id="menuEditViews"></div><div id="menuControls"></div></div><nav id="menuCategories" aria-label="設定カテゴリー"><button type="button" data-category="quick" class="active"><span class="catIcon">⌘</span></button><button type="button" data-category="sky"><span class="catIcon">◒</span></button><button type="button" data-category="cloud"><span class="catIcon">☁</span></button><button type="button" data-category="star"><span class="catIcon">✧</span></button><button type="button" data-category="weather"><span class="catIcon">☔</span></button><button type="button" data-category="other"><span class="catIcon">⚙</span></button><button type="button" data-category="save"><span class="catIcon">▢</span></button></nav><div id="menuActions" aria-label="プレビューと閉じる"><button id="menuPreview" type="button" aria-label="景観をプレビュー" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3.1"/></svg></button><button id="menuClose" type="button" aria-label="メニューを閉じる"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19"/></svg></button></div></section><button type="button" id="menuTrigger" aria-label="メニューを開く" aria-expanded="false"><span></span><span></span><span></span></button></main><nav class="appFooter" aria-label="アプリのメインメニュー"><button type="button" class="active" data-app="ambience">Ambience</button><button type="button" data-app="settings">Setting</button></nav><div class="sheetMask" id="colorMask"></div><section class="colorSheet" id="colorSheet" aria-label="線形グラデーションの色設定"><div class="sheetBar"><b>領域のグラデーション</b><button id="closeColor">完了</button></div><div class="colorLine"><label>開始色 <input type="color" id="startColor"></label><label>終了色 <input type="color" id="endColor"></label><button id="swapColors">色を交換</button></div><div class="sheetHint">領域表示ではプレビューの2点を動かし、方向と色の移行幅を編集できます。</div><div class="sheetLine"><button id="resetDirection">方向を初期化</button><span id="gradientReadout">方向 0°</span></div></section><div class="modal" id="layerModal" aria-hidden="true"><div class="dialog"><div class="dialogTitle"><span>色面の重なり順</span><button id="closeLayers">閉じる</button></div><div class="groupHeading">上側が最前面。色面を選択して上下に移動します。</div><div class="layers" id="layers"></div><div class="subButtons"><button onclick="document.getElementById('up').click()">前へ</button><button onclick="document.getElementById('down').click()">後ろへ</button></div></div></div><script>
+<section class="tools" id="settingsPanel" aria-label="共通設定"><p class="settingsHeading">時間と環境の設定</p><div class="appearanceOptions"><p class="settingsHeading">メニューの外観</p><div class="appearanceRow"><label for="panelColor">パネル色</label><input type="color" id="panelColor" value="#f0f0ed"></div><div class="appearanceRow"><label for="panelOpacity">縁のぼかし</label><input type="range" id="panelOpacity" min="0" max="100" value="35"><output id="panelOpacityVal">35%</output></div><div class="appearanceRow"><label for="panelText">文字色</label><input type="color" id="panelText" value="#252528"></div><button id="panelReset" type="button">初期の色に戻す</button></div><div style="text-align:center;padding:22px 0 10px;opacity:.55;font-size:12px;letter-spacing:.04em">Ambience · Version 1.9.7</div></section><section class="tools" id="savePanel" aria-label="保存と読込"></section><section class="tools" id="starPanel" aria-label="星の設定">
+<div class="starControl"><label for="starDensity">星の量</label><input type="range" id="starDensity" min="0" max="100" value="45"><output id="starDensityVal">45%</output></div>
+<div class="starControl"><label for="starBrightness">明るさ</label><input type="range" id="starBrightness" min="0" max="100" value="65"><output id="starBrightnessVal">65%</output></div>
+<div class="starControl"><label for="starTwinkle">瞬き</label><input type="range" id="starTwinkle" min="0" max="100" value="30"><output id="starTwinkleVal">30%</output></div>
+</section><section id="ambMenu" aria-label="Ambience メニュー" aria-hidden="true"><div id="menuWorkspace"><section id="quickPanel"><h2>Quick</h2><p>簡易操作はこれから検討します。</p><p>ここでは景観を眺めながら、必要な設定をすぐ操作できる構成を検討します。</p></section><div id="menuEditViews"></div><div id="menuControls"></div></div><nav id="menuCategories" aria-label="設定カテゴリー"><button type="button" data-category="quick" class="active"><span class="catIcon">⌘</span></button><button type="button" data-category="sky"><span class="catIcon">◒</span></button><button type="button" data-category="cloud"><span class="catIcon">☁</span></button><button type="button" data-category="star"><span class="catIcon">✧</span></button><button type="button" data-category="weather"><span class="catIcon">☔</span></button><button type="button" data-category="other"><span class="catIcon">⚙</span></button><button type="button" data-category="save"><span class="catIcon">▢</span></button></nav><div id="menuActions" aria-label="プレビューと閉じる"><button id="menuPreview" type="button" aria-label="景観をプレビュー" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.6-6 9.5-6 9.5 6 9.5 6-3.6 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3.1"/></svg></button><button id="menuClose" type="button" aria-label="メニューを閉じる"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19"/></svg></button></div></section><button type="button" id="menuTrigger" aria-label="メニューを開く" aria-expanded="false"><span></span><span></span><span></span></button></main><nav class="appFooter" aria-label="アプリのメインメニュー"><button type="button" class="active" data-app="ambience">Ambience</button><button type="button" data-app="settings">Setting</button></nav><div class="sheetMask" id="colorMask"></div><section class="colorSheet" id="colorSheet" aria-label="線形グラデーションの色設定"><div class="sheetBar"><b>領域のグラデーション</b><button id="closeColor">完了</button></div><div class="colorLine"><label>開始色 <input type="color" id="startColor"></label><label>終了色 <input type="color" id="endColor"></label><button id="swapColors">色を交換</button></div><div class="sheetHint">領域表示ではプレビューの2点を動かし、方向と色の移行幅を編集できます。</div><div class="sheetLine"><button id="resetDirection">方向を初期化</button><span id="gradientReadout">方向 0°</span></div></section><div class="modal" id="layerModal" aria-hidden="true"><div class="dialog"><div class="dialogTitle"><span>色面の重なり順</span><button id="closeLayers">閉じる</button></div><div class="groupHeading">上側が最前面。色面を選択して上下に移動します。</div><div class="layers" id="layers"></div><div class="subButtons"><button onclick="document.getElementById('up').click()">前へ</button><button onclick="document.getElementById('down').click()">後ろへ</button></div></div></div><script>
 (()=>{'use strict';const $=id=>document.getElementById(id);const edit=$('edit'),res=$('result'),scene=$('scene'),ec=edit.getContext('2d'),rc=res.getContext('2d'),sc=scene.getContext('2d');const W=360,H=180;const field=document.createElement('canvas');field.width=W;field.height=H;const fc=field.getContext('2d',{willReadFrequently:true});let sphereView=false;let colorEditing=false;let handleDrag=null;let objects=[],selected=null,activeLayer='sky',skyObjects=[],cloudObjects=[],skySelected=null,cloudSelected=null,cloudAmount=45,cloudThickness=55,mode='select',draft=null,drag=null,shift=0,blur=140,skyShift=0,cloudShift=0,skyBlur=140,cloudBlur=140,windDir=30,windSpeed=15,windT=0,nextId=1,timeOfDay=1020,timeStopped=false,dayLength=3600,skyDrift=0,skyRate=.35,lastSceneFrame=0,weather="clear",wetness=0,rainClock=0,snowCover=0,lightningFlash=0,rainStrength=100,snowStrength=65,thunderStrength=50,weatherWind=0;const shapes=[['select','選択'],['rect','矩形'],['round','角丸'],['circle','円'],['ellipse','楕円'],['free','自由線']];const presets=[[
  ['rect',.5,.5,1.05,1.05,'#9596cf'],['ellipse',.2,.35,.56,.62,'#e990aa'],['ellipse',.78,.28,.53,.48,'#6cbbba'],['ellipse',.39,.82,.66,.4,'#eeba80'],['ellipse',.95,.86,.5,.43,'#6568ab']],
  [['rect',.5,.5,1.05,1.05,'#252e5e'],['ellipse',.28,.36,.7,.54,'#e887ac'],['ellipse',.78,.66,.68,.61,'#f2b273'],['ellipse',.76,.12,.46,.36,'#a6b3da']],
@@ -588,6 +601,26 @@ function drawWeather(w,h){
  }
  sc.restore();
 }
+// Stable seeded star field; stars remain in the same sky coordinates over time.
+const starPoints=(()=>{let seed=274361;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};return Array.from({length:205},()=>({u:rand(),v:rand(),size:.38+rand()*.85,phase:rand()*Math.PI*2,speed:.35+rand()*1.25,glow:rand()}));})();
+let starDensity=45,starBrightness=65,starTwinkle=30;
+function drawStars(w,h,night){
+ if(night<.03||starDensity<=0||starBrightness<=0)return;
+ const amount=Math.round(starDensity/100*starPoints.length),light=night*starBrightness/100;
+ const now=performance.now()*.001, drift=((skyDrift*.55)%1+1)%1;
+ sc.save();sc.beginPath();sc.rect(0,0,w,h*.77);sc.clip();
+ for(let i=0;i<amount;i++){
+  const p=starPoints[i],x=((p.u-drift+1)%1)*w,y=p.v*h*.73;
+  const twinkle=1-starTwinkle/100*.42*(1+Math.sin(now*p.speed+p.phase));
+  const alpha=Math.min(.9,Math.max(0,light*twinkle*(.48+p.glow*.5)));
+  if(alpha<.008)continue;
+  const r=p.size*Math.min(1.25,w/720+0.3);
+  sc.fillStyle=`rgba(250,248,247,${alpha.toFixed(3)})`;
+  sc.beginPath();sc.arc(x,y,r,0,Math.PI*2);sc.fill();
+  if(p.glow>.95){sc.fillStyle=`rgba(235,232,255,${(alpha*.13).toFixed(3)})`;sc.beginPath();sc.arc(x,y,r*3.2,0,Math.PI*2);sc.fill();}
+ }
+ sc.restore();
+}
 function renderScene(){
  if(!latestPixels)return;
  const w=scene.width,h=scene.height;
@@ -692,6 +725,8 @@ function renderScene(){
   sc.beginPath();sc.arc(px,py,radius,0,Math.PI*2);sc.fillStyle=css(sunHue);sc.fill();
   sc.restore();
  }
+ // Stars are drawn behind clouds, tied to sky drift and gently twinkling.
+ drawStars(w,h,night);
  // The actual cloud alpha overlays the solar disk. Thick/overcast clouds hide it.
  drawCloudOverlay(w,h);
  // Late-day light travels through the cloud volume. This light uses the
@@ -852,6 +887,12 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
 // v1.9 overlay navigation: preserve the renderer and all existing control listeners.
 (function(){
  const get=id=>document.getElementById(id);
+ try{let saved=JSON.parse(localStorage.getItem('ambience_stars')||'null');if(saved){starDensity=+saved.density||0;starBrightness=+saved.brightness||0;starTwinkle=+saved.twinkle||0;}}catch(e){}
+ for(const [id,key] of [['starDensity','density'],['starBrightness','brightness'],['starTwinkle','twinkle']]){
+  const input=get(id);const value=key==='density'?starDensity:key==='brightness'?starBrightness:starTwinkle;
+  input.value=value;get(id+'Val').textContent=value+'%';
+  input.addEventListener('input',()=>{const val=+input.value;if(key==='density')starDensity=val;else if(key==='brightness')starBrightness=val;else starTwinkle=val;get(id+'Val').textContent=val+'%';try{localStorage.setItem('ambience_stars',JSON.stringify({density:starDensity,brightness:starBrightness,twinkle:starTwinkle}))}catch(e){}renderScene()});
+ }
  const menu=get('ambMenu'),trigger=get('menuTrigger'),close=get('menuClose'),preview=get('menuPreview');
  const views=get('menuEditViews'),controls=get('menuControls');
  // Reuse the real editors, not copies; canvas contexts and event handlers remain attached.
@@ -917,7 +958,7 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
  function applyStyle(){
    const h=ids.color.value;const vals=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
    root.style.setProperty('--menu-r',vals[0]);root.style.setProperty('--menu-g',vals[1]);root.style.setProperty('--menu-b',vals[2]);
-   root.style.setProperty('--menu-alpha',1);root.style.setProperty('--edge-width','8px');
+   root.style.setProperty('--menu-alpha',1);root.style.setProperty('--edge-width','5px');
    root.style.setProperty('--menu-text',ids.text.value);
    get('panelOpacityVal').textContent=ids.opacity.value+'%';
    try{localStorage.setItem('ambience_menu_palette',JSON.stringify({color:h,opacity:+ids.opacity.value,text:ids.text.value}))}catch(e){}
