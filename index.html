@@ -180,12 +180,12 @@ body.menuPreviewing #menuClose{display:none!important}
 body.menuPreviewing #ambMenu #menuActions{z-index:2}
 @media(max-height:680px){#menuActions{min-height:40px;padding-bottom:5px}#menuCategories{min-height:47px;padding-top:4px}}
 
-/* v1.9.5: 8px feather edge, fixed house scale in landscape and portrait */
+/* v1.9.6: 8px feather edge, fixed house scale in landscape and portrait */
 #ambMenu{-webkit-mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent);mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent)}
 #scene{object-fit:fill!important}
 #settingsPanel .appearanceRow:has(#panelOpacity){display:none}
 
-/* v1.9.5: safe editor top edge, independent preview control and touch responsiveness */
+/* v1.9.6: safe editor top edge, independent preview control and touch responsiveness */
 #menuWorkspace{padding-top:18px!important;box-sizing:border-box}
 #menuEditViews .view{padding-top:8px!important;box-sizing:border-box}
 #menuEditViews .viewTitle{min-height:25px;align-items:center;overflow:visible!important}
@@ -193,7 +193,13 @@ body.menuPreviewing #ambMenu #menuActions{z-index:2}
 #menuControls input[type="range"]{touch-action:pan-x}
 #menuCategories,#menuActions{position:relative;z-index:2}
 #menuPreview.floatingPreview{position:fixed!important;z-index:999!important;display:flex!important;visibility:visible!important;opacity:1!important;background:rgba(240,240,237,.35)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:auto!important}
-</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.5</span></header>
+/* v1.9.6 — menu state is independent of editor tab; resilient touch controls */
+#menuTrigger{z-index:15!important;touch-action:manipulation!important;pointer-events:auto!important}
+#ambMenu{z-index:16!important}
+#menuCategories button,#menuActions button{touch-action:manipulation;pointer-events:auto}
+body.menuOpen #menuTrigger,body.menuPreviewing #menuTrigger{display:none!important}
+body.menuOpen #menuEditViews{contain:layout}
+</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.6</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -817,7 +823,7 @@ $('editColorMode').addEventListener('click',()=>setEditMode('color'));
 $('editWeatherMode').addEventListener('click',()=>setEditMode('weather'));
 setEditMode('color');
 const tabs=[...document.querySelectorAll('.tabs button[data-tab]')];
-function showTab(tab){if(colorEditing)closeColors();document.body.dataset.tab=tab;tabs.forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-selected',String(b.dataset.tab===tab))});sync();setTimeout(()=>{renderEdit();if(tab==='gradient')fieldRender();if(tab==='scene')renderScene()},0)}
+function showTab(tab){if(colorEditing)closeColors();document.body.dataset.tab=tab;tabs.forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-selected',String(b.dataset.tab===tab))});sync();setTimeout(()=>{renderEdit();if(tab==='gradient'&&!latestPixels)render();if(tab==='scene'&&latestPixels)renderScene()},0)}
 tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 const modal=$('layerModal');function openLayers(){sync();modal.classList.add('open');modal.setAttribute('aria-hidden','false')}
 function closeLayers(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
@@ -841,7 +847,7 @@ function resizeWorld(){
 }
 window.addEventListener('resize',resizeWorld,{passive:true});
 window.addEventListener('orientationchange',()=>setTimeout(resizeWorld,120),{passive:true});
-skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.05,'#d7c1df'),make('ellipse',.48,.49,.56,.36,'#f9e0cf')];skySelected=skyObjects.at(-1).id;cloudSelected=cloudObjects.at(-1).id;objects=skyObjects;selected=skySelected;updateTimeUI();sync();resizeWorld();render();let last=0;function animate(ms){if(last){const dt=Math.min(80,ms-last)/1000;rainClock+=dt;wetness=Math.max(0,Math.min(1,wetness+dt*(weatherIntensity()*.036-(weatherIntensity()===0?.006:0))));snowCover=Math.max(0,Math.min(1,snowCover+dt*(weather==='snow'?.018*snowStrength/65:-.003)));$('wetnessVal').textContent=weather==='snow'?'積雪 '+Math.round(snowCover*100)+'%':'濡れ '+Math.round(wetness*100)+'%';windT+=dt*(8+Math.abs(weatherWind)*.55)*.000055;skyDrift=(skyDrift+dt*skyRate/3600)%1;if(!timeStopped)timeOfDay=(timeOfDay+dt*1440/dayLength)%1440;if(ms-lastSceneFrame>85&&document.body.dataset.tab==='scene'&&latestPixels){renderScene();lastSceneFrame=ms}if(ms-lastSceneFrame>85&&document.body.dataset.tab!=='scene'&&!timeStopped)updateTimeUI();}last=ms;if(document.body.dataset.tab==='scene'&&ms-lastSceneFrame<100)updateTimeUI();requestAnimationFrame(animate)}requestAnimationFrame(animate)})();
+skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.05,'#d7c1df'),make('ellipse',.48,.49,.56,.36,'#f9e0cf')];skySelected=skyObjects.at(-1).id;cloudSelected=cloudObjects.at(-1).id;objects=skyObjects;selected=skySelected;updateTimeUI();sync();resizeWorld();render();let last=0;function animate(ms){if(last){const dt=Math.min(80,ms-last)/1000;rainClock+=dt;wetness=Math.max(0,Math.min(1,wetness+dt*(weatherIntensity()*.036-(weatherIntensity()===0?.006:0))));snowCover=Math.max(0,Math.min(1,snowCover+dt*(weather==='snow'?.018*snowStrength/65:-.003)));$('wetnessVal').textContent=weather==='snow'?'積雪 '+Math.round(snowCover*100)+'%':'濡れ '+Math.round(wetness*100)+'%';windT+=dt*(8+Math.abs(weatherWind)*.55)*.000055;skyDrift=(skyDrift+dt*skyRate/3600)%1;if(!timeStopped)timeOfDay=(timeOfDay+dt*1440/dayLength)%1440;if(ms-lastSceneFrame>100&&latestPixels&&!document.hidden){try{renderScene();lastSceneFrame=ms}catch(err){console.error("Scene frame failed",err);lastSceneFrame=ms}}if(ms-lastSceneFrame>85&&document.body.dataset.tab!=='scene'&&!timeStopped)updateTimeUI();}last=ms;if(document.body.dataset.tab==='scene'&&ms-lastSceneFrame<100)updateTimeUI();requestAnimationFrame(animate)}requestAnimationFrame(animate)})();
 
 // v1.9 overlay navigation: preserve the renderer and all existing control listeners.
 (function(){
@@ -878,7 +884,8 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
  }
  preview.addEventListener('click',()=>setPreview(!previewing));
  get('scene').addEventListener('click',()=>{if(previewing)setPreview(false)});
- function scene(){internalScene=true;document.querySelector('.tabs [data-tab="scene"]').click();internalScene=false;}
+ function scene(){internalScene=true;showSceneWithoutChangingEditor();internalScene=false;}
+ function showSceneWithoutChangingEditor(){if(latestPixels)renderScene();}
  function changeCategory(next){
    category=next;document.body.dataset.category=next;
    categories.forEach(b=>b.classList.toggle('active',b.dataset.category===next));
@@ -886,8 +893,9 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
    if(next==='sky'||next==='cloud'){
      get(next==='sky'?'skyTarget':'cloudTarget').click();
      document.querySelector('.tabs [data-tab="'+editorTab+'"]').click();
-   }else scene();
+   }else {showSceneWithoutChangingEditor();}
    controls.scrollTop=0;
+   if(next==='sky'||next==='cloud')requestAnimationFrame(()=>{renderEdit();if(!latestPixels)render()});
  }
  function setMenu(open){
    setPreview(false);
@@ -895,7 +903,7 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
    menu.setAttribute('aria-hidden',String(!open));
    trigger.setAttribute('aria-expanded',String(open));
    trigger.setAttribute('aria-label',open?'メニューを閉じる':'メニューを開く');
-   if(!open)scene();
+   if(open){if(category==='sky'||category==='cloud'){requestAnimationFrame(()=>{renderEdit();if(!latestPixels)render()})}else if(latestPixels)renderScene();} 
  }
  trigger.addEventListener('click',()=>setMenu(!document.body.classList.contains('menuOpen')));
  close.addEventListener('click',()=>setMenu(false));
@@ -917,6 +925,6 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
  try{let saved=JSON.parse(localStorage.getItem('ambience_menu_palette')||'null');if(saved){for(const k of Object.keys(defaults))if(saved[k]!==undefined)ids[k].value=saved[k];}}catch(e){}
  Object.values(ids).forEach(x=>x.addEventListener('input',applyStyle));
  get('panelReset').addEventListener('click',()=>{for(const [k,v] of Object.entries(defaults))ids[k].value=v;applyStyle()});
- applyStyle();changeCategory('quick');scene();setMenu(false);
+ applyStyle();changeCategory('quick');showSceneWithoutChangingEditor();setMenu(false);
 })();
 </script></body></html>
