@@ -136,7 +136,7 @@ body.menuOpen[data-category="save"] #menuControls #savePanel{display:block!impor
 body.menuOpen[data-category="star"] #menuControls #starPanel{display:block!important}
 
 /* v1.9.2 interface and weather revision */
-#ambMenu{inset:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 14px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 14px);max-width:none;margin:0;border:0;border-radius:12px;box-shadow:none;background:rgb(var(--menu-r),var(--menu-g),var(--menu-b));-webkit-mask-image:linear-gradient(to right,transparent,black var(--edge-width,14px),black calc(100% - var(--edge-width,14px)),transparent),linear-gradient(to bottom,transparent,black var(--edge-width,14px),black calc(100% - var(--edge-width,14px)),transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,black var(--edge-width,14px),black calc(100% - var(--edge-width,14px)),transparent),linear-gradient(to bottom,transparent,black var(--edge-width,14px),black calc(100% - var(--edge-width,14px)),transparent);mask-composite:intersect;backdrop-filter:none;-webkit-backdrop-filter:none}
+#ambMenu{inset:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 14px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 14px);max-width:none;margin:0;border:0;border-radius:12px;box-shadow:none;background:rgb(var(--menu-r),var(--menu-g),var(--menu-b));-webkit-mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent);mask-composite:intersect;backdrop-filter:none;-webkit-backdrop-filter:none}
 .menuTop{min-height:39px;padding:7px 14px 0;justify-content:space-between}
 #menuPreview{display:flex;align-items:center;justify-content:center;width:38px;height:32px;background:transparent;border:0;color:var(--menu-text);font-size:23px;padding:0}
 #menuClose{margin-left:auto}
@@ -179,7 +179,12 @@ body.menuPreviewing #menuPreview{pointer-events:auto!important;visibility:visibl
 body.menuPreviewing #menuClose{display:none!important}
 body.menuPreviewing #ambMenu #menuActions{z-index:2}
 @media(max-height:680px){#menuActions{min-height:40px;padding-bottom:5px}#menuCategories{min-height:47px;padding-top:4px}}
-</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.3</span></header>
+
+/* v1.9.4: 8px feather edge, fixed house scale in landscape and portrait */
+#ambMenu{-webkit-mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent);mask-image:linear-gradient(to right,transparent,black 8px,black calc(100% - 8px),transparent),linear-gradient(to bottom,transparent,black 8px,black calc(100% - 8px),transparent)}
+#scene{object-fit:fill!important}
+#settingsPanel .appearanceRow:has(#panelOpacity){display:none}
+</style><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><link rel="icon" type="image/png" href="./favicon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Ambience"></head><body data-tab="area" data-app="ambience" data-setting="sky"><main><header class="top"><span class="brand">Ambience</span><span class="tag" id="activeSection">AMBIENCE · v1.9.4</span></header>
 <section class="view" id="areaView"><div class="viewTitle"><span>色面を描く・動かす</span><button id="layerOpen">重なり順</button></div><canvas id="edit" width="720" height="360"></canvas></section>
 <section class="view" id="gradientView"><div class="viewTitle"><span>グラデーションのプレビュー</span><button type="button" id="sphereToggle">球面で確認</button></div><canvas id="result" width="720" height="360"></canvas></section>
 <section class="view" id="sceneView"><div class="viewTitle"><span>空と小さな家 · 天球照明プレビュー</span><span>固定視点</span></div><canvas id="scene" width="720" height="410"></canvas></section>
@@ -471,7 +476,7 @@ function stormFlash(t){
 }
 function drawSnowField(w,h){
  if(snowCover<.005)return;
- sc.save();sc.beginPath();sc.moveTo(0,h*.874);sc.bezierCurveTo(w*.18,h*.813,w*.31,h*.763,w*.51,h*.775);sc.bezierCurveTo(w*.69,h*.769,w*.80,h*.824,w,h*.867);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath();sc.clip();
+ sc.save();sc.beginPath();sc.moveTo(0,h*.788);sc.bezierCurveTo(w*.18,h*.710,w*.31,h*.699,w*.51,h*.722);sc.bezierCurveTo(w*.69,h*.712,w*.80,h*.735,w,h*.789);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath();sc.clip();
  const g=sc.createLinearGradient(0,h*.76,0,h);g.addColorStop(0,`rgba(242,246,253,${.66*snowCover})`);g.addColorStop(.75,`rgba(235,241,250,${.87*snowCover})`);g.addColorStop(1,`rgba(222,231,246,${.90*snowCover})`);
  sc.fillStyle=g;sc.fillRect(0,h*.76,w,h*.24);sc.restore();
 }
@@ -537,7 +542,7 @@ function drawWeather(w,h){
   sc.beginPath();sc.moveTo(x,y);sc.lineTo(x+length*lean,y+length);sc.stroke();
  }
  // Soft wet-ground veil, physically provisional until terrain shading is upgraded.
- const ridge=()=>{sc.moveTo(0,h*.874);sc.bezierCurveTo(w*.18,h*.813,w*.31,h*.763,w*.51,h*.775);sc.bezierCurveTo(w*.69,h*.769,w*.80,h*.824,w,h*.867);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath()};
+ const ridge=()=>{sc.moveTo(0,h*.788);sc.bezierCurveTo(w*.18,h*.710,w*.31,h*.699,w*.51,h*.722);sc.bezierCurveTo(w*.69,h*.712,w*.80,h*.735,w,h*.789);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath()};
  sc.beginPath();ridge();sc.clip();sc.fillStyle=`rgba(49,77,104,${(.15*wetness).toFixed(3)})`;sc.fillRect(0,h*.75,w,h*.25);sc.restore();
  // The sea is distant: no individually visible water rings.
  // Sparse impact spray on the roof, only in heavy rain.
@@ -646,18 +651,18 @@ function renderScene(){
    return lit.map(Math.round);
  };
  const fill=(path,color)=>{sc.fillStyle=css(color);sc.beginPath();path();sc.fill()};
- const horizonY=h*.745;
+ const horizonY=h*.615;
  // Sunset: the sun enters briefly from the left and descends diagonally to the
  // right toward the left half of the sea horizon. The morning sun stays offscreen.
  // No artificial fading: visibility changes through screen/horizon clipping and cloud cover.
  if(phase>=.714&&phase<=.752){
   const t=(phase-.714)/(.752-.714);
-  const px=w*(.085+.105*t), py=h*(.43+.315*t);
+  const px=w*(.085+.105*t), py=h*(.35+.265*t);
   const radius=w*.0135;
   const solarTint=pick(.19+.09*t,.60+.08*t);
   const sunHue=[255,248,232].map((c,i)=>Math.round(lerp(c,solarTint[i],.48+.30*t)));
   // Small and restrained aureole, rather than a large circular glowing disk.
-  sc.save();sc.beginPath();sc.rect(0,0,w,h*.745);sc.clip();
+  sc.save();sc.beginPath();sc.rect(0,0,w,h*.615);sc.clip();
   const r=radius*3.2;
   const halo=sc.createRadialGradient(px,py,radius*.65,px,py,r);
   halo.addColorStop(0,'rgba('+sunHue.join(',')+',0.13)');
@@ -676,7 +681,7 @@ function renderScene(){
    const glow=sc.createRadialGradient(cx,cy,0,cx,cy,w*.69);
    glow.addColorStop(0,`rgba(${solarColor.map(x=>Math.round(x)).join(',')},${(.66*twilightWeight).toFixed(3)})`);
    glow.addColorStop(1,`rgba(${solarColor.map(x=>Math.round(x)).join(',')},0)`);
-   sc.fillStyle=glow;sc.fillRect(0,0,w,h*.745);sc.restore();
+   sc.fillStyle=glow;sc.fillRect(0,0,w,h*.615);sc.restore();
  }
  // Ocean is behind the uneven curved ridge, not a straight band in front of it.
  const sea=sc.createLinearGradient(0,horizonY,0,h);
@@ -687,7 +692,7 @@ function renderScene(){
  // Low-angle reflection is spatially concentrated and softly broken by the water.
  if(twilightWeight>.02 && daylight>.005){
   const x=reflectionX;
-  const glow=sc.createRadialGradient(x,h*.754,2,x,h*.80,w*.18);
+  const glow=sc.createRadialGradient(x,h*.624,2,x,h*.68,w*.18);
   const rgbLight=solarColor.map(Math.round).join(',');
   glow.addColorStop(0,`rgba(${rgbLight},${(.72*twilightWeight).toFixed(3)})`);
   glow.addColorStop(1,`rgba(${rgbLight},0)`);
@@ -699,15 +704,15 @@ function renderScene(){
  for(let i=0;i<19;i++){let y=horizonY+7+i*5.4;let x=(i*79)%w;sc.beginPath();sc.moveTo(x,y);sc.lineTo(Math.min(w,x+38+i*2.1),y);sc.stroke()}sc.globalAlpha=1;
  sc.save();sc.beginPath();sc.rect(0,horizonY,w,h-horizonY);sc.clip();drawProjectedShadow(w,h,'sea');sc.restore();
  // Rounded hill skyline: its crest occludes the center of the ocean.
- const ridge=()=>{sc.moveTo(0,h*.874);sc.bezierCurveTo(w*.18,h*.813,w*.31,h*.763,w*.51,h*.775);sc.bezierCurveTo(w*.69,h*.769,w*.80,h*.824,w,h*.867);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath()};
- const hillGrad=sc.createLinearGradient(w*.12,h*.75,w*.65,h*1.13);
+ const ridge=()=>{sc.moveTo(0,h*.788);sc.bezierCurveTo(w*.18,h*.710,w*.31,h*.699,w*.51,h*.722);sc.bezierCurveTo(w*.69,h*.712,w*.80,h*.735,w,h*.789);sc.lineTo(w,h);sc.lineTo(0,h);sc.closePath()};
+ const hillGrad=sc.createLinearGradient(w*.12,h*.71,w*.65,h*1.13);
  hillGrad.addColorStop(0,css(applyLight([138,171,130],norm(-.24,.55,1),back,1.0)));
  hillGrad.addColorStop(.48,css(applyLight([122,158,114],norm(.15,-.24,1),frontLeft,1.0)));
  hillGrad.addColorStop(1,css(applyLight([88,124,92],norm(.32,-.72,1),front,1.0)));
  sc.beginPath();ridge();sc.fillStyle=hillGrad;sc.fill();sc.save();sc.beginPath();ridge();sc.clip();
  // Gentle reflected pools of light across the grass.
  for(let i=0;i<4;i++){
-  let x=[.20,.43,.69,.88][i]*w,y=[.89,.82,.86,.92][i]*h,r=w*[.24,.21,.28,.20][i];
+  let x=[.20,.43,.69,.88][i]*w,y=[.86,.76,.83,.90][i]*h,r=w*[.24,.21,.28,.20][i];
   let g=sc.createRadialGradient(x,y,0,x,y,r);
   let light=[frontLeft,back,frontRight,front][i];g.addColorStop(0,'rgba('+light.join(',')+',0.20)');g.addColorStop(1,'rgba('+light.join(',')+',0)');
   sc.fillStyle=g;sc.fillRect(x-r,y-r,r*2,r*2);
@@ -719,7 +724,7 @@ function renderScene(){
   const color=solarColor.map(Math.round).join(',');
   patch.addColorStop(0,`rgba(${color},${(.96*twilightWeight*(.42+.58*cloudDim)).toFixed(3)})`);
   patch.addColorStop(1,`rgba(${color},0)`);
-  sc.fillStyle=patch;sc.fillRect(0,h*.74,w,h*.26);
+  sc.fillStyle=patch;sc.fillRect(0,h*.70,w,h*.30);
  }
  if(twilightWeight>.025){
   const sweep=sc.createLinearGradient(isMorning?w*.88:w*.10,h*.78,isMorning?w*.30:w*.64,h*.96);
@@ -728,7 +733,7 @@ function renderScene(){
   sweep.addColorStop(.52,`rgba(${hillRGB},${(.22*twilightWeight).toFixed(3)})`);
   sweep.addColorStop(1,`rgba(${hillRGB},${(.42*twilightWeight).toFixed(3)})`);
   sc.globalCompositeOperation='screen';
-  sc.fillStyle=sweep;sc.fillRect(0,h*.74,w,h*.26);
+  sc.fillStyle=sweep;sc.fillRect(0,h*.70,w,h*.30);
   sc.globalCompositeOperation='source-over';
  }
  // Tiny specks of grass provide texture without pixel-art styling.
@@ -749,7 +754,7 @@ function renderScene(){
   sc.moveTo(x0,y0);sc.quadraticCurveTo(x0+dx*.55,y0+dy*.6,x0+dx,y0+dy);sc.stroke();sc.restore();
  }
  // Cottage: simple volume with independent roof, front and side lighting.
- const cx=w*.49,top=h*.781,unit=w/720;
+ const cx=w*.49,top=h*.781,unit=1;
  sc.save();sc.translate(cx,top);sc.scale(unit,unit);
  const buildingShadow=shadowStrengthAt(.49,.83);
  // Distinct normals ensure no side is lit solely because it is afternoon.
@@ -800,7 +805,19 @@ edit.addEventListener('pointermove',e=>{if(pressStart&&Math.hypot(e.clientX-pres
 ['pointerup','pointercancel'].forEach(k=>edit.addEventListener(k,()=>{clearTimeout(pressTimer);pressStart=null;pressTimer=null},true));
 // Re-render after switching tabs; settings shared across all three views.
 showTab('area');
-skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.05,'#d7c1df'),make('ellipse',.48,.49,.56,.36,'#f9e0cf')];skySelected=skyObjects.at(-1).id;cloudSelected=cloudObjects.at(-1).id;objects=skyObjects;selected=skySelected;updateTimeUI();sync();render();let last=0;function animate(ms){if(last){const dt=Math.min(80,ms-last)/1000;rainClock+=dt;wetness=Math.max(0,Math.min(1,wetness+dt*(weatherIntensity()*.036-(weatherIntensity()===0?.006:0))));snowCover=Math.max(0,Math.min(1,snowCover+dt*(weather==='snow'?.018*snowStrength/65:-.003)));$('wetnessVal').textContent=weather==='snow'?'積雪 '+Math.round(snowCover*100)+'%':'濡れ '+Math.round(wetness*100)+'%';windT+=dt*(8+Math.abs(weatherWind)*.55)*.000055;skyDrift=(skyDrift+dt*skyRate/3600)%1;if(!timeStopped)timeOfDay=(timeOfDay+dt*1440/dayLength)%1440;if(ms-lastSceneFrame>85&&document.body.dataset.tab==='scene'&&latestPixels){renderScene();lastSceneFrame=ms}if(ms-lastSceneFrame>85&&document.body.dataset.tab!=='scene'&&!timeStopped)updateTimeUI();}last=ms;if(document.body.dataset.tab==='scene'&&ms-lastSceneFrame<100)updateTimeUI();requestAnimationFrame(animate)}requestAnimationFrame(animate)})();
+// The cottage uses a fixed world-unit size. Resize the drawing area, not the geometry.
+function resizeWorld(){
+ const box=scene.getBoundingClientRect();
+ if(!box.width||!box.height)return;
+ const scale=.90;
+ const newW=Math.max(240,Math.round(box.width/scale));
+ const newH=Math.max(240,Math.round(box.height/scale));
+ if(scene.width!==newW||scene.height!==newH){scene.width=newW;scene.height=newH;}
+ if(latestPixels)renderScene();
+}
+window.addEventListener('resize',resizeWorld,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(resizeWorld,120),{passive:true});
+skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.05,'#d7c1df'),make('ellipse',.48,.49,.56,.36,'#f9e0cf')];skySelected=skyObjects.at(-1).id;cloudSelected=cloudObjects.at(-1).id;objects=skyObjects;selected=skySelected;updateTimeUI();sync();resizeWorld();render();let last=0;function animate(ms){if(last){const dt=Math.min(80,ms-last)/1000;rainClock+=dt;wetness=Math.max(0,Math.min(1,wetness+dt*(weatherIntensity()*.036-(weatherIntensity()===0?.006:0))));snowCover=Math.max(0,Math.min(1,snowCover+dt*(weather==='snow'?.018*snowStrength/65:-.003)));$('wetnessVal').textContent=weather==='snow'?'積雪 '+Math.round(snowCover*100)+'%':'濡れ '+Math.round(wetness*100)+'%';windT+=dt*(8+Math.abs(weatherWind)*.55)*.000055;skyDrift=(skyDrift+dt*skyRate/3600)%1;if(!timeStopped)timeOfDay=(timeOfDay+dt*1440/dayLength)%1440;if(ms-lastSceneFrame>85&&document.body.dataset.tab==='scene'&&latestPixels){renderScene();lastSceneFrame=ms}if(ms-lastSceneFrame>85&&document.body.dataset.tab!=='scene'&&!timeStopped)updateTimeUI();}last=ms;if(document.body.dataset.tab==='scene'&&ms-lastSceneFrame<100)updateTimeUI();requestAnimationFrame(animate)}requestAnimationFrame(animate)})();
 
 // v1.9 overlay navigation: preserve the renderer and all existing control listeners.
 (function(){
@@ -855,7 +872,7 @@ skyObjects=presets[0].map(v=>make(...v));cloudObjects=[make('rect',.5,.5,1.05,1.
  function applyStyle(){
    const h=ids.color.value;const vals=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
    root.style.setProperty('--menu-r',vals[0]);root.style.setProperty('--menu-g',vals[1]);root.style.setProperty('--menu-b',vals[2]);
-   root.style.setProperty('--menu-alpha',1);root.style.setProperty('--edge-width',(4+Number(ids.opacity.value)*.32).toFixed(1)+'px');
+   root.style.setProperty('--menu-alpha',1);root.style.setProperty('--edge-width','8px');
    root.style.setProperty('--menu-text',ids.text.value);
    get('panelOpacityVal').textContent=ids.opacity.value+'%';
    try{localStorage.setItem('ambience_menu_palette',JSON.stringify({color:h,opacity:+ids.opacity.value,text:ids.text.value}))}catch(e){}
