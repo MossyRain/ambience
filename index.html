@@ -1,6 +1,6 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — 景観描画技術検証</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 02</title><style>
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:38px;height:38px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:5;padding:4px}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:8;transition:opacity .2s,transform .2s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;pointer-events:none;transform:translateY(10px)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:none;font-size:24px;font-weight:200;color:#454853;line-height:1}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:none}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 TECHNICAL STUDY</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">景観と照明の技術検証です。現行の色彩編集・天候・Quick機能はこの版にはまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：家・丘の受光方向／海の反射の移動／縦横回転で家・丘・焚き火場が伸縮しないこと。3D形状と雲は初期の仮モデルです。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 02</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">景観と照明の技術検証です。現行の色彩編集・天候・Quick機能はこの版にはまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：朝は右手前、夕方は左奥の太陽／家の屋根の受光と丘への影／海の見え方／横画面でも空が十分見えること。雲は仮描画です。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
@@ -13,7 +13,7 @@ let state={time:17.5,skyMix:.70,cloud:.35,preset:'rose'},W=390,H=844,dpr=1,tick=
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));const lerp=(a,b,t)=>a+(b-a)*t;
 const palettes={rose:[[87,91,150],[146,123,178],[226,155,167],[244,180,133]],blue:[[51,111,181],[107,165,217],[173,214,229],[229,228,213]],violet:[[54,66,118],[110,77,153],[210,103,159],[90,177,159]]};
 const mix=(a,b,t)=>a.map((v,i)=>lerp(v,b[i],t));const css=(c,a=1)=>`rgba(${c.map(x=>Math.round(clamp(x,0,255))).join(',')},${a})`;
-function dayParams(){const angle=(state.time-6)/12*Math.PI,alt=Math.sin(angle),light=clamp((alt+.15)/.48),warm=clamp(1-Math.abs(alt)/.85)*light,night=1-clamp((alt+.23)/.33);let x=Math.cos(angle)*.78;return {alt,light,warm,night,sunX:-x, sunY:clamp(.73-alt*.45,.13,.93)};}
+function dayParams(){const angle=(state.time-6)/12*Math.PI,alt=Math.sin(angle),light=clamp((alt+.15)/.48),warm=clamp(1-Math.abs(alt)/.85)*light,night=1-clamp((alt+.23)/.33);let x=Math.cos(angle);return {alt,light,warm,night,sunX:x, sunY:clamp(.70-alt*.62,.02,.86)};}
 function sampleSky(y){const p=palettes[state.preset];let s=clamp(y);let v=s<.37?mix(p[0],p[1],s/.37):s<.75?mix(p[1],p[2],(s-.37)/.38):mix(p[2],p[3],(s-.75)/.25);const d=dayParams();return mix(v,[9,14,35],d.night*.93);}
 function hillHeight(x,z){return -.35+1.72*Math.exp(-x*x/230-(z+9)*(z+9)/125)+.10*Math.sin(x*.22+z*.16);}
 function v3sub(a,b){return a.map((x,i)=>x-b[i]);}function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}function norm(v){let l=Math.hypot(...v)||1;return v.map(x=>x/l);}function dot(a,b){return a.reduce((s,v,i)=>s+v*b[i],0);}
@@ -21,11 +21,11 @@ function perspectiveOrtho(l,r,b,t,n,f){return [2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-
 function lookAt(e,t){let z=norm(v3sub(e,t)),x=norm(cross([0,1,0],z)),y=cross(z,x);return [x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,e),-dot(y,e),-dot(z,e),1];}
 function mul(a,b){let r=new Array(16).fill(0);for(let c=0;c<4;c++)for(let k=0;k<4;k++)for(let j=0;j<4;j++)r[c*4+j]+=a[k*4+j]*b[c*4+k];return r;}
 const vert=`attribute vec3 aPosition;attribute vec3 aNormal;attribute vec3 aColor;uniform mat4 uVP;varying vec3 vNormal;varying vec3 vColor;varying vec3 vPos;void main(){vNormal=aNormal;vColor=aColor;vPos=aPosition;gl_Position=uVP*vec4(aPosition,1.);}`;
-const frag=`precision mediump float;varying vec3 vNormal;varying vec3 vColor;varying vec3 vPos;uniform vec3 uSun;uniform vec3 uLightColor;uniform vec3 uAmbient;uniform float uSkyMix;uniform float uDay;void main(){vec3 n=normalize(vNormal);float nd=max(dot(n,uSun),0.);float shade=.40+nd*.88*uDay;vec3 light=mix(vec3(1.),uAmbient,uSkyMix*.80);vec3 col=vColor*light*shade;col+=vColor*uLightColor*nd*.43*uDay;col+=vColor*uAmbient*.11;gl_FragColor=vec4(pow(max(col,vec3(0.)),vec3(.88)),1.);}`;
+const frag=`precision mediump float;varying vec3 vNormal;varying vec3 vColor;varying vec3 vPos;uniform vec3 uSun;uniform vec3 uLightColor;uniform vec3 uAmbient;uniform float uSkyMix;uniform float uDay;void main(){vec3 n=normalize(vNormal);float nd=max(dot(n,uSun),0.);float shade=.34+nd*.96*uDay;vec3 light=mix(vec3(1.),uAmbient,uSkyMix*.80);vec3 col=vColor*light*shade;col+=vColor*uLightColor*nd*.43*uDay;col+=vColor*uAmbient*.15;gl_FragColor=vec4(pow(max(col,vec3(0.)),vec3(.88)),1.);}`;
 function shader(type,src){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 let program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vert));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,frag));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
 let loc={pos:gl.getAttribLocation(program,'aPosition'),normal:gl.getAttribLocation(program,'aNormal'),color:gl.getAttribLocation(program,'aColor'),vp:gl.getUniformLocation(program,'uVP'),sun:gl.getUniformLocation(program,'uSun'),light:gl.getUniformLocation(program,'uLightColor'),ambient:gl.getUniformLocation(program,'uAmbient'),skyMix:gl.getUniformLocation(program,'uSkyMix'),day:gl.getUniformLocation(program,'uDay')};
-const mesh={p:[],n:[],c:[]};function tri(a,b,c,color){let n=norm(cross(v3sub(b,a),v3sub(c,a)));for(let p of [a,b,c]){mesh.p.push(...p);mesh.n.push(...n);mesh.c.push(...color);}}function quad(a,b,c,d,color){tri(a,b,c,color);tri(a,c,d,color);}function box(x,y,z,w,h,depth,color){let X=x-w/2,A=x+w/2,Z=z-depth/2,B=z+depth/2,Y=y+h;quad([X,y,B],[A,y,B],[A,Y,B],[X,Y,B],color);quad([A,y,B],[A,y,Z],[A,Y,Z],[A,Y,B],color.map(v=>v*.89));quad([X,y,Z],[X,y,B],[X,Y,B],[X,Y,Z],color.map(v=>v*.92));quad([A,y,Z],[X,y,Z],[X,Y,Z],[A,Y,Z],color);quad([X,Y,B],[A,Y,B],[A,Y,Z],[X,Y,Z],color);}
+const mesh={p:[],n:[],c:[]};function tri(a,b,c,color){let n=norm(cross(v3sub(b,a),v3sub(c,a)));if(Math.abs(n[1])>.32 && n[1]<0)n=n.map(v=>-v);for(let p of [a,b,c]){mesh.p.push(...p);mesh.n.push(...n);mesh.c.push(...color);}}function quad(a,b,c,d,color){tri(a,b,c,color);tri(a,c,d,color);}function box(x,y,z,w,h,depth,color){let X=x-w/2,A=x+w/2,Z=z-depth/2,B=z+depth/2,Y=y+h;quad([X,y,B],[A,y,B],[A,Y,B],[X,Y,B],color);quad([A,y,B],[A,y,Z],[A,Y,Z],[A,Y,B],color.map(v=>v*.89));quad([X,y,Z],[X,y,B],[X,Y,B],[X,Y,Z],color.map(v=>v*.92));quad([A,y,Z],[X,y,Z],[X,Y,Z],[A,Y,Z],color);quad([X,Y,B],[A,Y,B],[A,Y,Z],[X,Y,Z],color);}
 // Fixed world coordinates: resizing must never modify geometry.
 function generateWorld(){for(let iz=0;iz<55;iz++){let z0=-15+iz*.8,z1=z0+.8;for(let ix=0;ix<100;ix++){let x0=-45+ix*.9,x1=x0+.9;let p=[[x0,hillHeight(x0,z0),z0],[x1,hillHeight(x1,z0),z0],[x1,hillHeight(x1,z1),z1],[x0,hillHeight(x0,z1),z1]];const varr=Math.sin(x0*.18+z0*.23)*.014;quad(...p,[.45+varr,.56+varr,.43+varr]);}}
 // cottage: center toward foreground, realistic geometric faces with two roof slopes
@@ -48,20 +48,147 @@ const fx=4.1,fz=1.35,fy=hillHeight(fx,fz);for(let i=0;i<15;i++){const a=i*Math.P
 for(let i=0;i<19;i++){const x=2.9+(i*1.127%6.5),z=-.8+(i*2.9%9),y=hillHeight(x,z);if(i%5===0)box(x,y,z,.32,.10,.28,[.56,.57,.52]);}
 }
 generateWorld();let buffer=gl.createBuffer(), count=mesh.p.length/3;const data=new Float32Array(count*9);for(let i=0;i<count;i++){for(let c=0;c<3;c++){data[i*9+c]=mesh.p[i*3+c];data[i*9+c+3]=mesh.n[i*3+c];data[i*9+c+6]=mesh.c[i*3+c];}}gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);for(let [key,ofs] of [['pos',0],['normal',3],['color',6]]){gl.enableVertexAttribArray(loc[key]);gl.vertexAttribPointer(loc[key],3,gl.FLOAT,false,36,ofs*4);}
+
+// Soft projected building shadow (prototype): cast house + roof corners toward the sun
+// onto the same world terrain. The world positions never depend on the viewport.
+const shadowV=`attribute vec3 aPosition;attribute float aFade;uniform mat4 uVP;varying float vFade;void main(){vFade=aFade;gl_Position=uVP*vec4(aPosition,1.);}`;
+const shadowF=`precision mediump float;varying float vFade;uniform float uOpacity;void main(){gl_FragColor=vec4(.12,.17,.19,uOpacity*vFade);}`;
+let sp=gl.createProgram();gl.attachShader(sp,shader(gl.VERTEX_SHADER,shadowV));gl.attachShader(sp,shader(gl.FRAGMENT_SHADER,shadowF));gl.linkProgram(sp);
+if(!gl.getProgramParameter(sp,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(sp));
+const shLoc={pos:gl.getAttribLocation(sp,'aPosition'),fade:gl.getAttribLocation(sp,'aFade'),vp:gl.getUniformLocation(sp,'uVP'),opacity:gl.getUniformLocation(sp,'uOpacity')};
+const shadowBuffer=gl.createBuffer();
+function projectGround(p,sun){let [x,y,z]=p;if(y<=hillHeight(x,z)+.04)return [x,hillHeight(x,z)+.052,z];
+ const dy=Math.max(.075,sun[1]);let t=(y-hillHeight(x,z))/dy;
+ for(let i=0;i<8;i++){
+  let xx=x-sun[0]*t,zz=z-sun[2]*t;
+  let next=Math.max(0,(y-hillHeight(xx,zz))/dy);
+  t=t*.45+next*.55;
+ }
+ t=Math.min(t,30);x-=sun[0]*t;z-=sun[2]*t;
+ return [x,hillHeight(x,z)+.068,z];
+}
+function buildShadow(sun){let y=hillHeight(0,0);
+ let pts=[];
+ for(let xx of [-1.48,1.48])for(let zz of [-1.34,1.34]){
+    pts.push(projectGround([xx,y+.03,zz],sun));
+    pts.push(projectGround([xx,y+1.65,zz],sun));
+ }
+ for(let xx of [-.05,.05])for(let zz of [-1.34,1.34])pts.push(projectGround([xx,y+2.54,zz],sun));
+ // Convex hull in XZ, sorted monotonic chain
+ pts.sort((a,b)=>a[0]-b[0]||a[2]-b[2]);
+ const cross2=(a,b,c)=>(b[0]-a[0])*(c[2]-a[2])-(b[2]-a[2])*(c[0]-a[0]);
+ let lower=[],upper=[];for(let p of pts){while(lower.length>1&&cross2(lower[lower.length-2],lower[lower.length-1],p)<=0)lower.pop();lower.push(p);}
+ for(let p of [...pts].reverse()){while(upper.length>1&&cross2(upper[upper.length-2],upper[upper.length-1],p)<=0)upper.pop();upper.push(p);}
+ let hull=lower.slice(0,-1).concat(upper.slice(0,-1));if(hull.length<3)return null;
+ let center=[hull.reduce((s,p)=>s+p[0],0)/hull.length,0,hull.reduce((s,p)=>s+p[2],0)/hull.length];
+ center[1]=hillHeight(center[0],center[2])+.08;
+ let out=[];const add=(p,f)=>out.push(p[0],p[1],p[2],f);
+ for(let i=0;i<hull.length;i++){
+   const a=hull[i],b=hull[(i+1)%hull.length];add(center,1);add(a,1);add(b,1);
+   const fa=1.12,fb=1.12;
+   let ea=[center[0]+(a[0]-center[0])*fa,0,center[2]+(a[2]-center[2])*fa];
+   let eb=[center[0]+(b[0]-center[0])*fb,0,center[2]+(b[2]-center[2])*fb];
+   ea[1]=hillHeight(ea[0],ea[2])+.075;eb[1]=hillHeight(eb[0],eb[2])+.075;
+   add(a,1);add(ea,0);add(b,1);add(b,1);add(ea,0);add(eb,0);
+ }
+ return new Float32Array(out);
+}
+function drawShadow(sun,vp,day){if(day<.04)return;
+ const data=buildShadow(sun);if(!data)return;
+ gl.useProgram(sp);gl.bindBuffer(gl.ARRAY_BUFFER,shadowBuffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.DYNAMIC_DRAW);
+ gl.enableVertexAttribArray(shLoc.pos);gl.enableVertexAttribArray(shLoc.fade);
+ gl.vertexAttribPointer(shLoc.pos,3,gl.FLOAT,false,16,0);
+ gl.vertexAttribPointer(shLoc.fade,1,gl.FLOAT,false,16,12);
+ gl.uniformMatrix4fv(shLoc.vp,false,new Float32Array(vp));gl.uniform1f(shLoc.opacity,Math.min(.36,day*.35));
+ gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
+ gl.drawArrays(gl.TRIANGLES,0,data.length/4);
+ gl.depthMask(true);gl.disable(gl.BLEND);
+ gl.disableVertexAttribArray(shLoc.fade);
+}
 gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);
 function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,1.5);for(let c of [sky,canvas]){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);}sc.setTransform(dpr,0,0,dpr,0,0);gl.viewport(0,0,canvas.width,canvas.height);}resize();addEventListener('resize',resize,{passive:true});
-function skyDraw(t){const d=dayParams(),p=palettes[state.preset];let bg=sc.createLinearGradient(0,0,0,H);for(let j=0;j<=14;j++){let f=j/14,b=sampleSky(f);bg.addColorStop(f,css(b));}sc.fillStyle=bg;sc.fillRect(0,0,W,H);
-// sea starts at a world-consistent approximate horizon; scene composited on top
-let hy=H*(H>W? .715:.365);let sea=sc.createLinearGradient(0,hy,0,H);sea.addColorStop(0,css(mix(sampleSky(.68),[62,112,133],.40)));sea.addColorStop(1,css(mix(sampleSky(.61),[43,83,111],.65)));sc.fillStyle=sea;sc.fillRect(0,hy,W,H-hy);
-// broad weak reflection at high altitude, tight column as sun reaches horizon
-if(d.alt>-.12){let sx=W*(.5+d.sunX*.48),low=1-clamp(d.alt),width=lerp(W*.32,W*.045,low),g=sc.createRadialGradient(sx,hy+20,2,sx,hy+28,Math.max(30,width));let glint=css(mix(sampleSky(.83),[255,236,194],.58),clamp(.09+low*.42));g.addColorStop(0,glint);g.addColorStop(1,'rgba(255,228,180,0)');sc.fillStyle=g;sc.fillRect(sx-width*2,hy,W>width*4?width*4:W,H-hy);}
-// stars, deterministic stable positions
-if(d.night>.12){for(let i=0;i<125;i++){let x=((Math.sin(i*74.345)*5371)%1+1)%1,y=((Math.sin(i*28.87)*4171)%1+1)%1*.69;let a=clamp(d.night*(.25+.65*(.5+.5*Math.sin(t*.0005+i*4.9))));sc.fillStyle=`rgba(242,238,251,${a})`;sc.beginPath();sc.arc(x*W,y*H,(i%9===0?1.2:.55),0,Math.PI*2);sc.fill();}}
-// subtle slow cloud bands only in prototype, silhouette shifts with time
-for(let i=0;i<8;i++){let phase=(i*.329+t*.000002*(.5+i%3))%1,x=((phase*1.5-.25)*W),cy=H*(.17+(i%5)*.082),rw=W*(.14+(i%4)*.055),rh=H*(.028+i%3*.008);let cloud=sc.createRadialGradient(x,cy,0,x,cy,rw);let c=mix(sampleSky(cy/H),[222,214,220],.25);cloud.addColorStop(0,css(c,state.cloud*.39));cloud.addColorStop(.7,css(c,state.cloud*.18));cloud.addColorStop(1,css(c,0));sc.save();sc.translate(x,cy);sc.scale(1,rh/rw);sc.fillStyle=cloud;sc.beginPath();sc.arc(0,0,rw,0,Math.PI*2);sc.fill();sc.restore();}
-if(d.alt>-.12){let sx=W*(.5+d.sunX*.48),sy=H*d.sunY,rr=H*.018;let halo=sc.createRadialGradient(sx,sy,0,sx,sy,rr*5);halo.addColorStop(0,'rgba(255,242,213,.55)');halo.addColorStop(.20,'rgba(255,234,208,.13)');halo.addColorStop(1,'rgba(255,234,208,0)');sc.fillStyle=halo;sc.fillRect(sx-rr*5,sy-rr*5,rr*10,rr*10);sc.fillStyle='rgba(255,244,222,.92)';sc.beginPath();sc.arc(sx,sy,rr,0,Math.PI*2);sc.fill();}
+function skyDraw(t){
+ const d=dayParams();
+ let bg=sc.createLinearGradient(0,0,0,H);
+ for(let j=0;j<=20;j++){let f=j/20;bg.addColorStop(f,css(sampleSky(f)));}
+ sc.fillStyle=bg;sc.fillRect(0,0,W,H);
+ // An ocean behind the fixed world-space hill. Not stretched by device aspect ratio.
+ const hy=H*(W>H?.49:.625),oceanEnd=H;
+ let sea=sc.createLinearGradient(0,hy,0,oceanEnd);
+ sea.addColorStop(0,css(mix(sampleSky(.69),[77,120,146],.46)));
+ sea.addColorStop(.47,css(mix(sampleSky(.65),[50,97,133],.53)));
+ sea.addColorStop(1,css(mix(sampleSky(.52),[36,77,119],.65)));
+ sc.fillStyle=sea;sc.fillRect(0,hy,W,H-hy);
+ // Faint parallel ripples: distant sea has texture but not rain rings.
+ sc.save();sc.beginPath();sc.rect(0,hy,W,H-hy);sc.clip();
+ for(let i=0;i<140;i++){
+   let v=((Math.sin(i*91.37)*1729.3)%1+1)%1,u=((Math.sin(i*24.19)*3901)%1+1)%1;
+   let y=hy+(H-hy)*Math.pow(v,.75),x=u*W;
+   let len=(4+v*11)*(W>H?1.05:1);
+   sc.strokeStyle=`rgba(233,224,214,${.028+v*.042})`;sc.lineWidth=.55;
+   sc.beginPath();sc.moveTo(x,y);sc.lineTo(x+len,y);sc.stroke();
+ }
+ // Solar reflection: broad, weak at high altitude; localized at low altitude.
+ if(d.alt>-.08 && d.light>.08){
+   let theta=(state.time-6)/12*Math.PI,phase=(state.time-6)/12;
+   let sunX=W*(1.14-.91*clamp(phase));
+   let altitude=clamp(d.alt);
+   let strength=Math.pow(1-altitude,1.7)*.43+.025;
+   let width=W*(.36*altitude+.065*(1-altitude));
+   let top=hy+2,span=Math.max(24,H-hy);
+   sc.save();sc.globalCompositeOperation='screen';
+   let rg=sc.createRadialGradient(sunX,top+span*.04,1,sunX,top+span*.25,Math.max(28,width));
+   rg.addColorStop(0,`rgba(255,219,164,${strength})`);
+   rg.addColorStop(.48,`rgba(245,210,181,${strength*.35})`);
+   rg.addColorStop(1,'rgba(255,222,191,0)');
+   sc.fillStyle=rg;sc.fillRect(Math.max(0,sunX-width*2),top,Math.min(W,sunX+width*2)-Math.max(0,sunX-width*2),span);
+   if(altitude<.37){
+      for(let i=0;i<34;i++){
+        let r=((Math.sin(i*87.66+10.8)*1234)%1+1)%1;
+        let yy=hy+6+span*((i+.5)/34);
+        let xx=sunX+Math.sin(i*17.3)*width*(.10+.48*yy/H);
+        sc.strokeStyle=`rgba(255,230,190,${strength*(.22+.28*r)})`;sc.lineWidth=.6+r;
+        sc.beginPath();sc.moveTo(xx-width*(.10+r*.10),yy);sc.lineTo(xx+width*(.10+r*.10),yy);sc.stroke();
+      }
+   }
+   sc.restore();
+ }
+ sc.restore();
+ // Stable stars, not coupled to aspect-driven stretching.
+ if(d.night>.12){for(let i=0;i<125;i++){
+   let x=((Math.sin(i*74.345)*5371)%1+1)%1,y=(((Math.sin(i*28.87)*4171)%1+1)%1)*.64;
+   let a=clamp(d.night*(.25+.65*(.5+.5*Math.sin(t*.0005+i*4.9))));
+   sc.fillStyle=`rgba(242,238,251,${a})`;sc.beginPath();sc.arc(x*W,y*H,i%9===0?1.2:.55,0,Math.PI*2);sc.fill();
+ }}
+ // Explicit prototype clouds; keep behind the 3D scene and independent of terrain.
+ for(let i=0;i<9;i++){
+   let phase=(i*.329+t*.0000012*(.5+i%3))%1;
+   let x=((phase*1.55-.20)*W),cy=H*(.13+(i%5)*.066);
+   let rw=Math.max(60, Math.min(W,H)*(.22+(i%4)*.08)),rh=rw*(.16+(i%3)*.025);
+   sc.save();sc.translate(x,cy);sc.scale(1,rh/rw);
+   let g=sc.createRadialGradient(0,0,rw*.10,0,0,rw);
+   let c=mix(sampleSky(cy/H),[229,223,228],.29);
+   g.addColorStop(0,css(c,state.cloud*.52));g.addColorStop(.68,css(c,state.cloud*.25));g.addColorStop(1,css(c,0));
+   sc.fillStyle=g;sc.beginPath();sc.arc(0,0,rw,0,Math.PI*2);sc.fill();sc.restore();
+ }
+ // The sunrise is mostly off-screen front/right. Sunset appears briefly at left/back.
+ if(d.alt>-.075 && d.alt<.45){
+   let q=clamp((state.time-6)/12),sx=W*(1.15-.92*q),sy=hy-H*.19*Math.sin(Math.PI*q);
+   if(q>.46 || sx<W*.98){
+     let rr=Math.min(W,H)*.015;
+     let halo=sc.createRadialGradient(sx,sy,0,sx,sy,rr*4);
+     halo.addColorStop(0,'rgba(255,241,214,.48)');halo.addColorStop(.2,'rgba(255,229,196,.15)');halo.addColorStop(1,'rgba(255,231,197,0)');
+     sc.fillStyle=halo;sc.fillRect(sx-rr*4,sy-rr*4,rr*8,rr*8);
+     sc.fillStyle='rgba(255,242,218,.95)';sc.beginPath();sc.arc(sx,sy,rr,0,Math.PI*2);sc.fill();
+   }
+ }
 }
-function sceneDraw(){const d=dayParams();const pixelPerUnit=27;let asp=W/H,scale=pixelPerUnit;const cam=lookAt([0,8.2,20],[0,0,-1]);const vw=W/scale,vh=H/scale;const desired=H>W?.80:.59;let offset=(desired-.5)*vh;const proj=perspectiveOrtho(-vw/2,vw/2,-vh/2+offset,vh/2+offset,-100,150);gl.uniformMatrix4fv(loc.vp,false,new Float32Array(mul(proj,cam)));const theta=(state.time-6)/12*Math.PI;let sun=norm([Math.cos(theta)*1.25,Math.max(.06,d.alt)*1.4,-.65]);const sampled=sampleSky(.73).map(v=>v/255);gl.uniform3fv(loc.sun,new Float32Array(sun));gl.uniform3fv(loc.ambient,new Float32Array(sampleSky(.4).map(v=>v/255)));gl.uniform3fv(loc.light,new Float32Array(mix([.96,.98,1.],sampled,d.warm*.85)));gl.uniform1f(loc.skyMix,state.skyMix);gl.uniform1f(loc.day,clamp(d.light*.82+.18));gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,count);}
+function sceneDraw(){gl.useProgram(program);const d=dayParams();const pixelPerUnit=27;let asp=W/H,scale=pixelPerUnit;const cam=lookAt([0,8.2,20],[0,0,-1]);const vw=W/scale,vh=H/scale;const desired=H>W?.82:.76;let offset=(desired-.5)*vh;const proj=perspectiveOrtho(-vw/2,vw/2,-vh/2+offset,vh/2+offset,-100,150);gl.uniformMatrix4fv(loc.vp,false,new Float32Array(mul(proj,cam)));const theta=(state.time-6)/12*Math.PI;let along=Math.cos(theta);let sun=norm([along*1.20,Math.max(.018,d.alt)*1.80,along*.96]);const sampled=sampleSky(.73).map(v=>v/255);gl.uniform3fv(loc.sun,new Float32Array(sun));gl.uniform3fv(loc.ambient,new Float32Array(sampleSky(.4).map(v=>v/255)));gl.uniform3fv(loc.light,new Float32Array(mix([.96,.98,1.],sampled,d.warm*.85)));gl.uniform1f(loc.skyMix,state.skyMix);gl.uniform1f(loc.day,clamp(d.light*.82+.18));gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+ for(let [key,ofs] of [['pos',0],['normal',3],['color',6]]){gl.enableVertexAttribArray(loc[key]);gl.vertexAttribPointer(loc[key],3,gl.FLOAT,false,36,ofs*4);}
+ gl.drawArrays(gl.TRIANGLES,0,count);
+ drawShadow(sun,mul(proj,cam),d.light);
+}
 let stopped=false;function loop(t){if(!stopped){if(t-last>33){last=t;tick=t;skyDraw(t);sceneDraw();}requestAnimationFrame(loop)}}requestAnimationFrame(loop);document.addEventListener('visibilitychange',()=>{last=0;});
 const panel=document.getElementById('panel');document.getElementById('menuButton').addEventListener('click',()=>panel.classList.remove('hide'));document.getElementById('close').addEventListener('click',()=>panel.classList.add('hide'));
 for(let [id,field,format] of [['time','time',v=>`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`],['skyMix','skyMix',v=>`${v}%`],['cloud','cloud',v=>`${v}%`]]){let el=document.getElementById(id);el.addEventListener('input',()=>{let value=+el.value;state[field]=field==='time'?value:value/100;document.getElementById(id+'Value').textContent=format(value);});}document.getElementById('preset').addEventListener('change',e=>state.preset=e.target.value);document.getElementById('reset').addEventListener('click',()=>{state.time=12;document.getElementById('time').value=12;document.getElementById('timeValue').textContent='12:00';});
