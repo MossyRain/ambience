@@ -1,13 +1,13 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 03</title><style>
-*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:38px;height:38px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:5;padding:4px}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:8;transition:opacity .2s,transform .2s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;pointer-events:none;transform:translateY(10px)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:none;font-size:24px;font-weight:200;color:#454853;line-height:1}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:none}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 03</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">提供いただいた家モデルと、丘・海の空間構成を検証しています。現行の色彩編集・天候・Quick機能はこの版にはまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：朝は右手前、夕方は左奥の太陽／家の屋根の受光と丘への影／海の見え方／横画面でも空が十分見えること。雲は仮描画です。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 04</title><style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:38px;height:38px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:5;padding:4px}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:8;transition:opacity .2s,transform .2s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;pointer-events:none;transform:translateY(10px)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:none;font-size:24px;font-weight:200;color:#454853;line-height:1}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:none}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 04</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">家モデルと、縦横共通のワールド座標・雲・海の表示を検証しています。現行の色彩編集・天候・Quick機能はこの版にはまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：朝は右手前、夕方は左奥の太陽／家の屋根の受光と丘への影／海の見え方／横画面でも空が十分見えること。雲は同一座標での仮描画です。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
 const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'low-power'});
 if(!gl){
  const warning=document.getElementById('error');warning.style.display='block';warning.textContent='この環境ではWebGLが使えないため、簡易2D表示です。3D照明の評価にはWebGL対応ブラウザが必要です。';
- let W=0,H=0;function fallback(){W=innerWidth;H=innerHeight;const dp=Math.min(devicePixelRatio||1,1.5);sky.width=W*dp;sky.height=H*dp;sc.setTransform(dp,0,0,dp,0,0);let g=sc.createLinearGradient(0,0,0,H);g.addColorStop(0,'#858eb7');g.addColorStop(.56,'#d4acc4');g.addColorStop(.74,'#e5b7ac');g.addColorStop(1,'#9eb7b0');sc.fillStyle=g;sc.fillRect(0,0,W,H);let hor=H*(H>W?.72:.35);sc.fillStyle='#859eaa';sc.fillRect(0,hor,W,H-hor);sc.fillStyle='#889a83';sc.beginPath();sc.moveTo(0,hor+H*.12);sc.quadraticCurveTo(W*.5,hor-H*.02,W,hor+H*.12);sc.lineTo(W,H);sc.lineTo(0,H);sc.fill();const sz=27,cx=W*.5,cy=H*(H>W?.83:.60);sc.save();sc.translate(cx,cy);sc.fillStyle='#d0c1ac';sc.fillRect(-32,-38,64,51);sc.fillStyle='#726678';sc.beginPath();sc.moveTo(-39,-37);sc.lineTo(0,-69);sc.lineTo(39,-37);sc.lineTo(31,-31);sc.lineTo(0,-56);sc.lineTo(-31,-31);sc.fill();sc.fillStyle='#4e4551';sc.fillRect(-5,-5,12,18);sc.fillStyle='#a48d7e';sc.fillRect(-28,-20,13,15);sc.fillRect(16,-20,13,15);sc.strokeStyle='#c4ad8e';sc.lineWidth=10;sc.beginPath();sc.moveTo(2,13);sc.quadraticCurveTo(-8,45,5,120);sc.stroke();sc.fillStyle='#77756e';sc.beginPath();sc.ellipse(110,10,21,10,0,0,Math.PI*2);sc.fill();sc.restore();}fallback();addEventListener('resize',fallback);const panel=document.getElementById('panel');document.getElementById('menuButton').onclick=()=>panel.classList.remove('hide');document.getElementById('close').onclick=()=>panel.classList.add('hide');return;
+ let W=0,H=0;function fallback(){W=innerWidth;H=innerHeight;const dp=Math.min(devicePixelRatio||1,1.5);sky.width=W*dp;sky.height=H*dp;sc.setTransform(dp,0,0,dp,0,0);let g=sc.createLinearGradient(0,0,0,H);g.addColorStop(0,'#858eb7');g.addColorStop(.56,'#d4acc4');g.addColorStop(.74,'#e5b7ac');g.addColorStop(1,'#9eb7b0');sc.fillStyle=g;sc.fillRect(0,0,W,H);let hor=H*.66;sc.fillStyle='#859eaa';sc.fillRect(0,hor,W,H-hor);sc.fillStyle='#889a83';sc.beginPath();sc.moveTo(0,hor+H*.12);sc.quadraticCurveTo(W*.5,hor-H*.02,W,hor+H*.12);sc.lineTo(W,H);sc.lineTo(0,H);sc.fill();const sz=27,cx=W*.5,cy=H*(H>W?.83:.60);sc.save();sc.translate(cx,cy);sc.fillStyle='#d0c1ac';sc.fillRect(-32,-38,64,51);sc.fillStyle='#726678';sc.beginPath();sc.moveTo(-39,-37);sc.lineTo(0,-69);sc.lineTo(39,-37);sc.lineTo(31,-31);sc.lineTo(0,-56);sc.lineTo(-31,-31);sc.fill();sc.fillStyle='#4e4551';sc.fillRect(-5,-5,12,18);sc.fillStyle='#a48d7e';sc.fillRect(-28,-20,13,15);sc.fillRect(16,-20,13,15);sc.strokeStyle='#c4ad8e';sc.lineWidth=10;sc.beginPath();sc.moveTo(2,13);sc.quadraticCurveTo(-8,45,5,120);sc.stroke();sc.fillStyle='#77756e';sc.beginPath();sc.ellipse(110,10,21,10,0,0,Math.PI*2);sc.fill();sc.restore();}fallback();addEventListener('resize',fallback);const panel=document.getElementById('panel');document.getElementById('menuButton').onclick=()=>panel.classList.remove('hide');document.getElementById('close').onclick=()=>panel.classList.add('hide');return;
  }
 let state={time:17.5,skyMix:.70,cloud:.35,preset:'rose'},W=390,H=844,dpr=1,tick=0,last=0;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));const lerp=(a,b,t)=>a+(b-a)*t;
@@ -17,13 +17,15 @@ function dayParams(){const angle=(state.time-6)/12*Math.PI,alt=Math.sin(angle),l
 function sampleSky(y){const p=palettes[state.preset];let s=clamp(y);let v=s<.37?mix(p[0],p[1],s/.37):s<.75?mix(p[1],p[2],(s-.37)/.38):mix(p[2],p[3],(s-.75)/.25);const d=dayParams();return mix(v,[9,14,35],d.night*.93);}
 // The sea begins behind a finite coastline. The hill is one fixed world-space surface;
 // its middle rises gently and both sides taper downward, independently of viewport.
-function coastZ(x){return -8.2 + .65*Math.exp(-x*x/185) + .30*Math.sin(x*.10+.5);}
+function coastZ(x){return -8.1 + .48*Math.exp(-x*x/280) + .20*Math.sin(x*.075+.5);}
 function hillHeight(x,z){
- const central=Math.exp(-x*x/320);
- const ridge=.68*central*Math.exp(-(((z+1.5)/12)**2));
- const shoulders=.085*Math.sin(x*.11+.4)*Math.exp(-(((z+3)/18)**2));
- const ground=.03+.06*Math.exp(-(((z-5)/16)**2));
- return ground+ridge+shoulders;
+ // One landscape, independent of orientation. Raised centre, slightly lowered shoulders.
+ const middle=Math.exp(-Math.pow(x/19.5,2));
+ const rear=.30 + 1.58*middle;
+ const rearInfluence=Math.exp(-Math.pow((z+8)/11,2));
+ const front=.09+.13*Math.exp(-Math.pow((z-3.5)/13,2));
+ const soft=.045*Math.sin(x*.12+.35)*Math.exp(-Math.pow((z+1.5)/17,2));
+ return front + rear*rearInfluence + soft;
 }
 function v3sub(a,b){return a.map((x,i)=>x-b[i]);}function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}function norm(v){let l=Math.hypot(...v)||1;return v.map(x=>x/l);}function dot(a,b){return a.reduce((s,v,i)=>s+v*b[i],0);}
 function perspectiveOrtho(l,r,b,t,n,f){return [2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1];}
@@ -146,91 +148,148 @@ function drawShadow(sun,vp,day){if(day<.04)return;
  gl.disableVertexAttribArray(shLoc.fade);
 }
 gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);
-function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,1.5);for(let c of [sky,canvas]){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);}sc.setTransform(dpr,0,0,dpr,0,0);gl.viewport(0,0,canvas.width,canvas.height);}resize();addEventListener('resize',resize,{passive:true});
+// World-space orthographic camera. 27 CSS pixels per unit for either orientation.
+// The target's world position is unchanged; only the crop varies.
+const PIXELS_PER_UNIT=27;
+const CAMERA_EYE=[0,8.2,20],CAMERA_LOOK=[0,0,-1];
+function getCamera(){
+ const view=lookAt(CAMERA_EYE,CAMERA_LOOK);
+ const vw=W/PIXELS_PER_UNIT,vh=H/PIXELS_PER_UNIT;
+ const p0=mulVec4(view,[0,hillHeight(0,0),0,1]);
+ // Keep house close to lower part of portrait; landscape still shows sky above house.
+ const targetHouseY=H>=W?.83:.80;
+ const centerY=p0[1]+(targetHouseY-.5)*vh;
+ const proj=perspectiveOrtho(-vw/2,vw/2,centerY-vh/2,centerY+vh/2,-100,150);
+ return {view,proj,vp:mul(proj,view)};
+}
+function mulVec4(m,v){return [0,1,2,3].map(r=>m[r]*v[0]+m[4+r]*v[1]+m[8+r]*v[2]+m[12+r]*v[3]);}
+function projectPoint(v,cam=getCamera()){
+ const p=mulVec4(cam.vp,[...v,1]);
+ return [W*(.5+.5*p[0]/p[3]),H*(.5-.5*p[1]/p[3])];
+}
+function horizonScreenY(cam){
+ // Same distant sea horizon in the fixed world, independently of viewport.
+ return projectPoint([0,-.22,-27],cam)[1];
+}
+let viewportPending=false;
+function scheduleResize(){if(viewportPending)return;viewportPending=true;requestAnimationFrame(()=>{viewportPending=false;resize();});}
+function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,1.5);for(let c of [sky,canvas]){c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);}sc.setTransform(dpr,0,0,dpr,0,0);gl.viewport(0,0,canvas.width,canvas.height);}resize();addEventListener('resize',scheduleResize,{passive:true});addEventListener('orientationchange',scheduleResize,{passive:true});
 function skyDraw(t){
- const d=dayParams();
- let bg=sc.createLinearGradient(0,0,0,H);
- for(let j=0;j<=20;j++){let f=j/20;bg.addColorStop(f,css(sampleSky(f)));}
- sc.fillStyle=bg;sc.fillRect(0,0,W,H);
- // An ocean behind the fixed world-space hill. Not stretched by device aspect ratio.
- const hy=H*(W>H?.45:.615),oceanEnd=H;
- let sea=sc.createLinearGradient(0,hy,0,oceanEnd);
- sea.addColorStop(0,css(mix(sampleSky(.69),[77,120,146],.46)));
- sea.addColorStop(.47,css(mix(sampleSky(.65),[50,97,133],.53)));
- sea.addColorStop(1,css(mix(sampleSky(.52),[36,77,119],.65)));
- sc.fillStyle=sea;sc.fillRect(0,hy,W,H-hy);
- // Faint parallel ripples: distant sea has texture but not rain rings.
- sc.save();sc.beginPath();sc.rect(0,hy,W,H-hy);sc.clip();
- for(let i=0;i<140;i++){
-   let v=((Math.sin(i*91.37)*1729.3)%1+1)%1,u=((Math.sin(i*24.19)*3901)%1+1)%1;
-   let y=hy+(H-hy)*Math.pow(v,.75),x=u*W;
-   let len=(4+v*11)*(W>H?1.05:1);
-   sc.strokeStyle=`rgba(233,224,214,${.028+v*.042})`;sc.lineWidth=.55;
-   sc.beginPath();sc.moveTo(x,y);sc.lineTo(x+len,y);sc.stroke();
+ const d=dayParams(),camera=getCamera();
+ const horizon=horizonScreenY(camera),worldX=x=>(x-W*.5)/PIXELS_PER_UNIT;
+ const fromWorldX=x=>W*.5+x*PIXELS_PER_UNIT;
+ // Gradient is anchored to horizon in world scale, NOT fitted to the screen height.
+ // In overlapping portrait/landscape regions, the colour field is therefore identical.
+ const colorAt=y=>sampleSky(clamp((y-horizon+790)/790,0,1));
+ const stops=Math.max(2,Math.ceil(H/10));
+ for(let k=0;k<stops;k++){
+   const y0=H*k/stops,y1=H*(k+1)/stops+1;
+   const grad=sc.createLinearGradient(0,y0,0,y1);
+   grad.addColorStop(0,css(colorAt(y0)));
+   grad.addColorStop(1,css(colorAt(y1)));
+   sc.fillStyle=grad;sc.fillRect(0,y0,W,y1-y0);
  }
- // Solar reflection: broad, weak at high altitude; localized at low altitude.
- if(d.alt>-.08 && d.light>.08){
-   let theta=(state.time-6)/12*Math.PI,phase=(state.time-6)/12;
-   let sunX=W*(1.14-.91*clamp(phase));
-   let altitude=clamp(d.alt);
-   let strength=Math.pow(1-altitude,1.7)*.43+.025;
-   let width=W*(.36*altitude+.065*(1-altitude));
-   let top=hy+2,span=Math.max(24,H-hy);
-   sc.save();sc.globalCompositeOperation='screen';
-   let rg=sc.createRadialGradient(sunX,top+span*.04,1,sunX,top+span*.25,Math.max(28,width));
-   rg.addColorStop(0,`rgba(255,219,164,${strength})`);
-   rg.addColorStop(.48,`rgba(245,210,181,${strength*.35})`);
-   rg.addColorStop(1,'rgba(255,222,191,0)');
-   sc.fillStyle=rg;sc.fillRect(Math.max(0,sunX-width*2),top,Math.min(W,sunX+width*2)-Math.max(0,sunX-width*2),span);
-   if(altitude<.37){
-      for(let i=0;i<34;i++){
-        let r=((Math.sin(i*87.66+10.8)*1234)%1+1)%1;
-        let yy=hy+6+span*((i+.5)/34);
-        let xx=sunX+Math.sin(i*17.3)*width*(.10+.48*yy/H);
-        sc.strokeStyle=`rgba(255,230,190,${strength*(.22+.28*r)})`;sc.lineWidth=.6+r;
-        sc.beginPath();sc.moveTo(xx-width*(.10+r*.10),yy);sc.lineTo(xx+width*(.10+r*.10),yy);sc.stroke();
-      }
+ // Distant sea drawn behind 3D terrain. Sea origin is a single world-space horizon.
+ if(horizon<H){
+   const yTop=Math.max(0,horizon);
+   let sea=sc.createLinearGradient(0,horizon,0,horizon+460);
+   sea.addColorStop(0,css(mix(colorAt(horizon+6),[92,131,155],.54)));
+   sea.addColorStop(.42,css(mix(colorAt(horizon+20),[66,108,135],.59)));
+   sea.addColorStop(1,css(mix(colorAt(horizon+65),[43,85,113],.64)));
+   sc.fillStyle=sea;sc.fillRect(0,yTop,W,H-yTop);
+   sc.save();sc.beginPath();sc.rect(0,yTop,W,H-yTop);sc.clip();
+   // Fixed world-space wave fragments, cropped by viewport without stretching.
+   for(let i=0;i<180;i++){
+     const xWorld=(Math.sin(i*91.37)*1471.91)%1*30;
+     const yWorld=((Math.sin(i*24.19)*8301.77)%1+1)%1;
+     const xx=fromWorldX(xWorld),yy=horizon+3+Math.pow(yWorld,.7)*350;
+     if(xx<-40||xx>W+40||yy<yTop||yy>H)continue;
+     sc.strokeStyle=`rgba(232,225,219,${.032+.04*yWorld})`;
+     sc.lineWidth=.55;sc.beginPath();sc.moveTo(xx,yy);sc.lineTo(xx+6+yWorld*10,yy);sc.stroke();
+   }
+   // Reflection center follows the sun in world coordinates. High sun = broad/faint.
+   if(d.alt>-.075 && d.light>.05){
+     const angle=(state.time-6)/12*Math.PI;
+     const sunWorldX=16-21*clamp((state.time-6)/12);
+     const sunX=fromWorldX(sunWorldX);
+     const altitude=clamp(d.alt),strength=Math.pow(1-altitude,1.8)*.38+.018;
+     const width=PIXELS_PER_UNIT*(.9+5.8*altitude),span=260;
+     sc.save();sc.globalCompositeOperation='screen';
+     const gg=sc.createRadialGradient(sunX,horizon+12,2,sunX,horizon+75,Math.max(25,width));
+     gg.addColorStop(0,`rgba(255,223,186,${strength})`);
+     gg.addColorStop(.5,`rgba(255,225,203,${strength*.27})`);
+     gg.addColorStop(1,'rgba(255,220,190,0)');
+     sc.fillStyle=gg;sc.fillRect(sunX-width*2,horizon,width*4,span);
+     if(altitude<.32){
+       for(let i=0;i<45;i++){
+         let v=((Math.sin(i*19.9)*177.31)%1+1)%1;
+         let yy=horizon+4+i*5.3,xx=sunX+Math.sin(i*8.9)*width*(.22+yy/800);
+         sc.strokeStyle=`rgba(255,228,190,${strength*(.24+.37*v)})`;
+         sc.lineWidth=.6+v;sc.beginPath();sc.moveTo(xx-width*(.06+.1*v),yy);sc.lineTo(xx+width*(.06+.1*v),yy);sc.stroke();
+       }
+     }
+     sc.restore();
    }
    sc.restore();
  }
- sc.restore();
- // Stable stars, not coupled to aspect-driven stretching.
- if(d.night>.12){for(let i=0;i<125;i++){
-   let x=((Math.sin(i*74.345)*5371)%1+1)%1,y=(((Math.sin(i*28.87)*4171)%1+1)%1)*.64;
-   let a=clamp(d.night*(.25+.65*(.5+.5*Math.sin(t*.0005+i*4.9))));
-   sc.fillStyle=`rgba(242,238,251,${a})`;sc.beginPath();sc.arc(x*W,y*H,i%9===0?1.2:.55,0,Math.PI*2);sc.fill();
+ // All sky features exist in fixed coordinates relative to one world horizon.
+ sc.save();sc.beginPath();sc.rect(0,0,W,Math.max(0,horizon));sc.clip();
+ if(d.night>.12){for(let i=0;i<150;i++){
+   const wx=(Math.sin(i*74.345)*5371)%65,above=80+(((Math.sin(i*28.87)*4171)%1+1)%1)*720;
+   const x=fromWorldX(wx),y=horizon-above;
+   const alpha=clamp(d.night*(.24+.65*(.5+.5*Math.sin(t*.0005+i*4.9))));
+   sc.fillStyle=`rgba(242,238,251,${alpha})`;
+   sc.beginPath();sc.arc(x,y,i%9===0?1.2:.55,0,Math.PI*2);sc.fill();
  }}
- // Explicit prototype clouds; keep behind the 3D scene and independent of terrain.
- for(let i=0;i<9;i++){
-   let phase=(i*.329+t*.0000012*(.5+i%3))%1;
-   let x=((phase*1.55-.20)*W),cy=H*(.13+(i%5)*.066);
-   let rw=Math.max(60, Math.min(W,H)*(.22+(i%4)*.08)),rh=rw*(.16+(i%3)*.025);
-   sc.save();sc.translate(x,cy);sc.scale(1,rh/rw);
-   let g=sc.createRadialGradient(0,0,rw*.10,0,0,rw);
-   let c=mix(sampleSky(cy/H),[229,223,228],.29);
-   g.addColorStop(0,css(c,state.cloud*.52));g.addColorStop(.68,css(c,state.cloud*.25));g.addColorStop(1,css(c,0));
+ // Deterministic cloud field; fixed world locations/sizes and steady drift.
+ // Turning a device changes only which portion of the SAME field is visible.
+ const elapsed=t*.000014;
+ for(let i=0;i<28;i++){
+   const seed=(Math.sin(i*89.1+4.55)*7301)%1;
+   const rxSeed=(Math.sin(i*47.31+11.33)*6311)%1;
+   const worldXPos=-43+i*3.35+seed*1.7;
+   const wx=worldXPos+elapsed*(.35+i%3*.09);
+   const above=35+((i*83.17+i*i*13.49)%600);
+   const depth=(i%4)/3;
+   const size=28+depth*39+Math.abs(rxSeed)*25;
+   const cx=fromWorldX(wx),cy=horizon-above;
+   const rw=size,rh=size*(.19+.07*((i*17)%5)/4);
+   if(cx+rw<-5||cx-rw>W+5||cy+rh<0||cy-rh>horizon)continue;
+   const tone=mix(colorAt(cy),[233,222,231],.27),alpha=state.cloud*(.27+.12*depth);
+   sc.save();sc.translate(cx,cy);sc.scale(1,rh/rw);
+   const g=sc.createRadialGradient(0,0,rw*.04,0,0,rw);
+   g.addColorStop(0,css(tone,alpha));g.addColorStop(.62,css(tone,alpha*.7));g.addColorStop(1,css(tone,0));
    sc.fillStyle=g;sc.beginPath();sc.arc(0,0,rw,0,Math.PI*2);sc.fill();sc.restore();
  }
- // The sunrise is mostly off-screen front/right. Sunset appears briefly at left/back.
- if(d.alt>-.075 && d.alt<.45){
-   let q=clamp((state.time-6)/12),sx=W*(1.15-.92*q),sy=hy-H*.19*Math.sin(Math.PI*q);
-   if(q>.46 || sx<W*.98){
-     let rr=Math.min(W,H)*.015;
+ // Sun's location is world-relative, not a percentage of viewport width.
+ if(d.alt>-.075&&d.alt<.45){
+   let q=clamp((state.time-6)/12),wx=16-21*q;
+   let sx=fromWorldX(wx),sy=horizon-d.alt*195;
+   if(q>.45||sx<W-10){
+     let rr=PIXELS_PER_UNIT*.32;
      let halo=sc.createRadialGradient(sx,sy,0,sx,sy,rr*4);
-     halo.addColorStop(0,'rgba(255,241,214,.48)');halo.addColorStop(.2,'rgba(255,229,196,.15)');halo.addColorStop(1,'rgba(255,231,197,0)');
+     halo.addColorStop(0,'rgba(255,241,214,.47)');halo.addColorStop(.2,'rgba(255,229,196,.13)');halo.addColorStop(1,'rgba(255,231,197,0)');
      sc.fillStyle=halo;sc.fillRect(sx-rr*4,sy-rr*4,rr*8,rr*8);
      sc.fillStyle='rgba(255,242,218,.95)';sc.beginPath();sc.arc(sx,sy,rr,0,Math.PI*2);sc.fill();
    }
  }
+ sc.restore();
 }
-function sceneDraw(){gl.useProgram(program);const d=dayParams();const pixelPerUnit=27;let asp=W/H,scale=pixelPerUnit;const cam=lookAt([0,8.2,20],[0,0,-1]);const vw=W/scale,vh=H/scale;const desired=H>W?.78:.74;let offset=(desired-.5)*vh;const proj=perspectiveOrtho(-vw/2,vw/2,-vh/2+offset,vh/2+offset,-100,150);gl.uniformMatrix4fv(loc.vp,false,new Float32Array(mul(proj,cam)));const theta=(state.time-6)/12*Math.PI;let along=Math.cos(theta);let sun=norm([along*1.20,Math.max(.018,d.alt)*1.80,along*.96]);const sampled=sampleSky(.73).map(v=>v/255);gl.uniform3fv(loc.sun,new Float32Array(sun));gl.uniform3fv(loc.ambient,new Float32Array(sampleSky(.4).map(v=>v/255)));gl.uniform3fv(loc.light,new Float32Array(mix([.96,.98,1.],sampled,d.warm*.85)));gl.uniform1f(loc.skyMix,state.skyMix);gl.uniform1f(loc.day,clamp(d.light*.82+.18));gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+function sceneDraw(){gl.useProgram(program);const d=dayParams();const camera=getCamera();const cam=camera.view;const proj=camera.proj;gl.uniformMatrix4fv(loc.vp,false,new Float32Array(mul(proj,cam)));const theta=(state.time-6)/12*Math.PI;let along=Math.cos(theta);let sun=norm([along*1.20,Math.max(.018,d.alt)*1.80,along*.96]);const sampled=sampleSky(.73).map(v=>v/255);gl.uniform3fv(loc.sun,new Float32Array(sun));gl.uniform3fv(loc.ambient,new Float32Array(sampleSky(.4).map(v=>v/255)));gl.uniform3fv(loc.light,new Float32Array(mix([.96,.98,1.],sampled,d.warm*.85)));gl.uniform1f(loc.skyMix,state.skyMix);gl.uniform1f(loc.day,clamp(d.light*.82+.18));gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
  for(let [key,ofs] of [['pos',0],['normal',3],['color',6]]){gl.enableVertexAttribArray(loc[key]);gl.vertexAttribPointer(loc[key],3,gl.FLOAT,false,36,ofs*4);}
  gl.drawArrays(gl.TRIANGLES,0,count);
  drawShadow(sun,mul(proj,cam),d.light);
 }
 let stopped=false;function loop(t){if(!stopped){if(t-last>33){last=t;tick=t;skyDraw(t);sceneDraw();}requestAnimationFrame(loop)}}requestAnimationFrame(loop);document.addEventListener('visibilitychange',()=>{last=0;});
-const panel=document.getElementById('panel');document.getElementById('menuButton').addEventListener('click',()=>panel.classList.remove('hide'));document.getElementById('close').addEventListener('click',()=>panel.classList.add('hide'));
+const panel=document.getElementById('panel');const openButton=document.getElementById('menuButton');
+let menuOpen=false;
+function setMenu(open){menuOpen=open;panel.classList.toggle('hide',!open);openButton.setAttribute('aria-expanded',String(open));}
+openButton.addEventListener('click',()=>setMenu(true));
+document.getElementById('close').addEventListener('click',()=>setMenu(false));
+// Resizing must not recreate the panel or reset its state.
+addEventListener('orientationchange',()=>requestAnimationFrame(()=>setMenu(menuOpen)),{passive:true});
+
 for(let [id,field,format] of [['time','time',v=>`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`],['skyMix','skyMix',v=>`${v}%`],['cloud','cloud',v=>`${v}%`]]){let el=document.getElementById(id);el.addEventListener('input',()=>{let value=+el.value;state[field]=field==='time'?value:value/100;document.getElementById(id+'Value').textContent=format(value);});}document.getElementById('preset').addEventListener('change',e=>state.preset=e.target.value);document.getElementById('reset').addEventListener('click',()=>{state.time=12;document.getElementById('time').value=12;document.getElementById('timeValue').textContent='12:00';});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();stopped=true;const n=document.getElementById('error');n.style.display='block';n.textContent='WebGLの描画コンテキストが失われました。ページを再読み込みしてください。';});
 })();
