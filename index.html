@@ -1,6 +1,6 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 06</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 07</title><style>
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:38px;height:38px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:5;padding:4px}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:8;transition:opacity .2s,transform .2s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;pointer-events:none;transform:translateY(10px)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:none;font-size:24px;font-weight:200;color:#454853;line-height:1}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:none}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 06</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">提供された家・丘の実メッシュに基づく陰影とシャドウマッピングを検証しています。現行の色彩編集・天候・Quick機能はこの版にはまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：朝夕の低い太陽ほど長い影／影は光源の反対方向にのみ落ちる／丘の曲面で影が変形する／丘そのものに柔らかな立体的な明暗が出ること。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 07</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">家と丘の3D形状、丘に沿う影、縞模様を抑えた陰影を検証しています。空の詳細編集・天候機能はまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：朝は右手前から日が昇り、夕日は画面左寄りに沈む／海は細め／丘と家に縞・点状ノイズが出ない／影は丘の丸みに沿って落ちる。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
@@ -37,10 +37,10 @@ uniform mat4 uLightVP;uniform sampler2D uShadowMap;uniform float uShadowTexel;
 float unpackDepth(vec4 c){return dot(c.rgb,vec3(1.,1./255.,1./65025.));}
 float shadowFactor(vec3 n,float nd){
   if(uShadowStrength<.001 || nd<=.0001)return 1.;
-  vec4 lightPos=uLightVP*vec4(vPos,1.);
+  vec4 lightPos=uLightVP*vec4(vPos+n*.035,1.);
   vec3 coord=lightPos.xyz/lightPos.w*.5+.5;
   if(coord.x<=.002||coord.x>=.998||coord.y<=.002||coord.y>=.998||coord.z<=0.||coord.z>=1.)return 1.;
-  float bias=max(.00035,.0022*(1.-nd));
+  float bias=max(.0008,.0025*(1.-nd));
   float acc=0.;
   for(int ix=-1;ix<=1;ix++)for(int iy=-1;iy<=1;iy++){
     vec2 uv=coord.xy+vec2(float(ix),float(iy))*uShadowTexel;
@@ -1989,8 +1989,10 @@ function unpackModel(encoded,kind){
   mesh.p.push(...p);mesh.n.push(...n);mesh.c.push(...color);
  }
 }
+let hillVertexCount=0;
 function generateWorld(){
- unpackModel(model0,0);unpackModel(model1,1);unpackModel(model2,2);
+ unpackModel(model0,0);hillVertexCount=mesh.p.length/3;
+ unpackModel(model1,1);unpackModel(model2,2);
  // Small path starts from the house and follows the uploaded hill curvature.
  for(let j=0;j<35;j++){
   const z0=1.5+j*.43,z1=z0+.43;
@@ -2008,10 +2010,10 @@ function generateWorld(){
 }
 generateWorld();let buffer=gl.createBuffer(), count=mesh.p.length/3;const data=new Float32Array(count*9);for(let i=0;i<count;i++){for(let c=0;c<3;c++){data[i*9+c]=mesh.p[i*3+c];data[i*9+c+3]=mesh.n[i*3+c];data[i*9+c+6]=mesh.c[i*3+c];}}gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);for(let [key,ofs] of [['pos',0],['normal',3],['color',6]]){gl.enableVertexAttribArray(loc[key]);gl.vertexAttribPointer(loc[key],3,gl.FLOAT,false,36,ofs*4);}
 
-// Study 06: real two-pass shadow mapping. Render ALL provided model triangles from
+// Study 07: real two-pass shadow mapping. Render ALL provided model triangles from
 // the sun into a depth-encoded RGBA texture, then compare from the scene fragment.
 // This uses the ACTUAL hill surface as the receiver, not an analytic surrogate.
-const SHADOW_RES=1024;
+const SHADOW_RES=1536;
 const depthVert=`attribute vec3 aPosition;uniform mat4 uLightVP;void main(){gl_Position=uLightVP*vec4(aPosition,1.);}`;
 const depthFrag=`precision highp float;
 vec3 encodeDepth(float d){
@@ -2062,7 +2064,9 @@ function renderShadowMap(lightVP){
  gl.enableVertexAttribArray(depthPos);
  gl.vertexAttribPointer(depthPos,3,gl.FLOAT,false,36,0);
  gl.uniformMatrix4fv(depthVP,false,new Float32Array(lightVP));
- gl.drawArrays(gl.TRIANGLES,0,count);
+ // The curved terrain receives the shadow but is not a caster in this pass.
+ // Removing its own depth map prevents shadow acne/ripple rings.
+ gl.drawArrays(gl.TRIANGLES,hillVertexCount,count-hillVertexCount);
  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
  gl.viewport(0,0,canvas.width,canvas.height);
 }
@@ -2088,7 +2092,7 @@ function projectPoint(v,cam=getCamera()){
 }
 function horizonScreenY(cam){
  // Same distant sea horizon in the fixed world, independently of viewport.
- return projectPoint([0,-1.35,-36],cam)[1];
+ return projectPoint([0,-4.35,-36],cam)[1];
 }
 let viewportPending=false;
 function scheduleResize(){if(viewportPending)return;viewportPending=true;requestAnimationFrame(()=>{viewportPending=false;resize();});}
@@ -2129,7 +2133,7 @@ function skyDraw(t){
    // Reflection center follows the sun in world coordinates. High sun = broad/faint.
    if(d.alt>-.075 && d.light>.05){
      const angle=(state.time-6)/12*Math.PI;
-     const sunWorldX=16-31*clamp((state.time-6)/12);
+     const sunWorldX=5.6-10.0*clamp((state.time-6)/12);
      const sunX=fromWorldX(sunWorldX);
      const altitude=clamp(d.alt),strength=Math.pow(1-altitude,2.0)*.58+.014;
      const width=PIXELS_PER_UNIT*(.65+6.0*altitude),span=240;
@@ -2182,7 +2186,7 @@ function skyDraw(t){
  }
  // Sun's location is world-relative, not a percentage of viewport width.
  if(d.alt>-.075&&d.alt<.45){
-   let q=clamp((state.time-6)/12),wx=16-31*q;
+   let q=clamp((state.time-6)/12),wx=5.6-10.0*q;
    let sx=fromWorldX(wx),sy=horizon-d.alt*195;
    if(q>.45||sx<W-10){
      let rr=PIXELS_PER_UNIT*.32;
@@ -2200,7 +2204,7 @@ function sceneDraw(){
  const along=Math.cos(theta);
  // At noon the sun leans 20 degrees left; at low altitudes its direction is
  // mostly horizontal. Never clamp its elevation to a high artificial minimum.
- const sun=norm([along*1.20-.655*Math.max(0,d.alt),Math.max(.0001,d.alt)*1.80,along*.96]);
+ const sun=norm([along*.86-.655*Math.max(0,d.alt),Math.max(.0001,d.alt)*1.80,along*1.35]);
  const lightVP=lightMatrix(sun);
  // A common sun direction drives terrain shading, house shading and real mesh shadows.
  const shadowStrength=framebufferOK?clamp(d.alt/.12)*clamp(d.light)*.91:0;
