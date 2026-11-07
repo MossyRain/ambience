@@ -1,14 +1,17 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 11</title><style>
-*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:48px;height:48px;border:0;background:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:100;padding:4px;pointer-events:auto;cursor:pointer;-webkit-transform:translateZ(0);transform:translateZ(0)}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:110;pointer-events:auto;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transition:opacity .14s,transform .14s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(10px)}#panel:not(.hide){visibility:visible;pointer-events:auto;transform:translateY(0)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:transparent;font-size:28px;font-weight:200;color:#454853;line-height:1;min-width:48px;min-height:48px;touch-action:manipulation;cursor:pointer;position:relative;z-index:2}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:pan-x}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 12</title><style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:48px;height:48px;border:0;background:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:100;padding:4px;pointer-events:auto;cursor:pointer}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:110;pointer-events:auto;touch-action:auto;overscroll-behavior:contain;transition:opacity .14s;max-height:min(580px,80dvh);overflow:hidden;display:flex;flex-direction:column}#panel.hide{opacity:0;visibility:hidden;pointer-events:none}#panel:not(.hide){visibility:visible;pointer-events:auto}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:transparent;font-size:28px;font-weight:200;color:#454853;line-height:1;min-width:48px;min-height:48px;touch-action:manipulation;cursor:pointer;position:relative;z-index:2}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:pan-x}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
 
 /* iOS Safari: do not select UI captions while dragging controls. */
 html,body,#panel,#hint,button,label,.control,.between,.notice,.head,.sub{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
 }
-input[type=range]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;pointer-events:auto;position:relative;z-index:1;min-height:32px}
+input[type=range]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:pan-x;pointer-events:auto;min-height:32px}
 input[type=text],textarea{ -webkit-user-select:text;user-select:text }
 #panel button,#panel select{touch-action:manipulation;pointer-events:auto}#panel .control{pointer-events:auto}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 11</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">Study 10の雲と海面反射を維持しながら、パネルの操作性と海の高さを検証します。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><div class="between"><label for="cloudThickness">雲の厚み</label><span id="cloudThicknessValue">45%</span></div><input id="cloudThickness" type="range" min="0" max="100" value="45"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認：スライダーや閉じるボタンを操作できる／画面回転後も再度開閉できる／海の水平線が低くなった／Study 10の雲・反射・3Dの影を維持。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
+#panel .head{flex-shrink:0;margin-bottom:4px}
+#panel .panelScroll{min-height:0;flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:auto;touch-action:pan-y;padding:0 1px 8px}
+#panel .panelScroll input[type=range]{touch-action:pan-x}
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 12</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><div class="panelScroll"><p class="sub">Study 11の景観を維持しながら、雲量の実面積、夜雲、スクロール後のタッチ位置、横画面での空70%を検証します。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><div class="between"><label for="cloudThickness">雲の厚み</label><span id="cloudThicknessValue">45%</span></div><input id="cloudThickness" type="range" min="0" max="100" value="45"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認：上下スクロール後のタッチ位置／横画面の空約70%／雲量70〜100%で空が白い膜にならない／夜雲が暗い／既存の海面反射・3Dの影を維持。</div><button id="reset">時刻を12:00に戻す</button></div></section><div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
@@ -2130,7 +2133,7 @@ function getCamera(){
  const vw=W/PIXELS_PER_UNIT,vh=H/PIXELS_PER_UNIT;
  const p0=mulVec4(view,[0,hillHeight(0,0),0,1]);
  // Keep house close to lower part of portrait; landscape still shows sky above house.
- const targetHouseY=H>=W?.88:.77;
+ const targetHouseY=H>=W?.88:.93; // landscape composition: sky near 70%
  const centerY=p0[1]+(targetHouseY-.5)*vh;
  const proj=perspectiveOrtho(-vw/2,vw/2,centerY-vh/2,centerY+vh/2,-100,150);
  return {view,proj,vp:mul(proj,view)};
@@ -2151,9 +2154,9 @@ function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,1.
 // softly lit lobes, rather than one blurred ellipse. Coverage changes population and
 // cluster width, NOT opacity. Thickness governs optical weight and shadow contrast.
 function cloudHash(a){let v=Math.sin(a*127.1+37.7)*43758.5453;return v-Math.floor(v);}
-function cloudShape(cx,cy,w,h,seed,tone,thickness,lightDir){
+function cloudShape(cx,cy,w,h,seed,tone,thickness,lightDir,night=0){
   const puffCount=7+Math.floor(cloudHash(seed+8)*5);
-  const alpha=.26+.67*thickness; // independent of cloud amount
+  const alpha=(.26+.67*thickness)*(1-.37*night); // independent of cloud amount
   // Distinct overlapping volumes, drifting in a shared cloud body.
   for(let j=0;j<puffCount;j++){
     const r=cloudHash(seed*17+j*3+11),r2=cloudHash(seed*13+j*9+19);
@@ -2161,8 +2164,8 @@ function cloudShape(cx,cy,w,h,seed,tone,thickness,lightDir){
     const rx=w*(.20+.17*cloudHash(seed+j*7+2));
     const ry=h*(.27+.25*cloudHash(seed+j*11+4));
     const light=clamp((.65-r2)*.65+.54+(lightDir<0?-.04:.04),.18,1);
-    const tint=mix(tone,[248,235,231],.26*light);
-    const dusk=mix(tint,[98,101,124],.42*thickness*(1-light));
+    const tint=mix(tone,[248,235,231],.26*light*(1-night*.91));
+    const dusk=mix(tint,[98,101,124],.42*thickness*(1-light)*(1-night*.6));
     sc.save();sc.translate(px,py);sc.scale(1,ry/rx);
     const grad=sc.createRadialGradient(-rx*.13,-rx*.18,rx*.05,0,0,rx);
     grad.addColorStop(0,css(dusk,alpha*(.80+.17*light)));
@@ -2172,37 +2175,73 @@ function cloudShape(cx,cy,w,h,seed,tone,thickness,lightDir){
     sc.fillStyle=grad;sc.beginPath();sc.arc(0,0,rx,0,Math.PI*2);sc.fill();sc.restore();
   }
 }
+// Coverage is an *area mask*, not a full-screen white fog. At high coverage a
+// deterministic, spatially varied cloud bank fills holes between the 3D-like puffs.
+// This low-resolution mask is cached briefly to limit work on iPhone Safari.
+let cloudBankCanvas=document.createElement('canvas'),cloudBankCtx=cloudBankCanvas.getContext('2d');
+let cloudBankCacheTime=-Infinity,cloudBankKey='';
+function smoothCloud(x){return x*x*(3-2*x);}
+function cloudNoise(ix,iy){return cloudHash(ix*127.91+iy*283.11+19.1);}
+function cloudValueNoise(x,y){
+ const ix=Math.floor(x),iy=Math.floor(y),fx=smoothCloud(x-ix),fy=smoothCloud(y-iy);
+ const a=lerp(cloudNoise(ix,iy),cloudNoise(ix+1,iy),fx);
+ const b=lerp(cloudNoise(ix,iy+1),cloudNoise(ix+1,iy+1),fx);
+ return lerp(a,b,fy);
+}
+function cloudBank(t,horizon,coverage,thickness,d,colorAt){
+ if(coverage<=.62 || horizon<=0)return;
+ const w=Math.max(2,Math.ceil(W/6)),h=Math.max(2,Math.ceil(Math.min(H,horizon)/6));
+ const key=[w,h,Math.round(horizon),Math.round(coverage*100),Math.round(thickness*100),state.preset,Math.round(d.night*25),Math.round(t/240)].join('/');
+ if(key!==cloudBankKey){
+   cloudBankKey=key;cloudBankCanvas.width=w;cloudBankCanvas.height=h;
+   const image=cloudBankCtx.createImageData(w,h),pixels=image.data;
+   const threshold=1.02-1.22*clamp((coverage-.62)/.38);
+   const overcastBlend=clamp((coverage-.62)/.25);
+   const drift=t*.000002;
+   for(let y=0;y<h;y++){
+     const screenY=y*6;const toneSource=colorAt(screenY);
+     let base=mix(toneSource,[189,191,199],.47+.19*thickness);
+     base=mix(base,[36,40,57],d.night*.80);
+     for(let x=0;x<w;x++){
+       // Anchored in a shared world coordinate system, independent of screen dimensions.
+       const wx=(x*6-W*.5)*.010+drift,wy=(horizon-screenY)*.010;
+       const n=.57*cloudValueNoise(wx*.90,wy*.90)+.30*cloudValueNoise(wx*2.05+31,wy*2.05+31)+.13*cloudValueNoise(wx*4.7-9,wy*4.7+2);
+       const edge=clamp((n-threshold+.070)/.14);
+       const alpha=edge*(.19+.61*thickness)*overcastBlend;
+       const shade=.78+.30*n;
+       const i=(y*w+x)*4;
+       pixels[i]=Math.round(base[0]*shade);
+       pixels[i+1]=Math.round(base[1]*shade);
+       pixels[i+2]=Math.round(base[2]*shade);
+       pixels[i+3]=Math.round(alpha*255);
+     }
+   }
+   cloudBankCtx.putImageData(image,0,0);
+ }
+ sc.drawImage(cloudBankCanvas,0,0,W,Math.min(H,horizon));
+}
 function drawCloudField(t,horizon,fromWorldX,colorAt,d){
-  const coverage=clamp(state.cloud),thickness=clamp(state.cloudThickness);
-  if(coverage<=.001)return;
-  // 100% = full overcast sky, including its distant background; thickness still varies.
-  if(coverage>.70){
-    const over=clamp((coverage-.70)/.30),yTop=Math.min(0,horizon-1100);
-    sc.save();
-    const g=sc.createLinearGradient(0,yTop,0,horizon);
-    const top=mix(colorAt(Math.max(0,yTop)),[198,201,213],.36+thickness*.3);
-    const bottom=mix(colorAt(horizon-25),[167,172,187],.36+thickness*.33);
-    g.addColorStop(0,css(top,over*(.35+.59*thickness)));
-    g.addColorStop(1,css(bottom,over*(.34+.6*thickness)));
-    sc.fillStyle=g;sc.fillRect(0,0,W,Math.max(0,horizon));sc.restore();
-  }
-  // 140 objects in a wide, fixed 3D-like cloud field, also covering landscape width.
-  // Relative object ordering is stable as the slider changes.
-  const count=140;
-  for(let i=0;i<count;i++){
-    const seed=i+1;
-    if(cloudHash(seed*41+.3)>Math.min(1,coverage*1.45))continue;
-    const depth=cloudHash(seed*7+3);
-    const xWorld=-76+cloudHash(seed*17+5)*152;
-    const rise=44+cloudHash(seed*29+9)*760;
-    const x=fromWorldX(xWorld)+(t*.0012)*(0.28+.20*depth);
-    const y=horizon-rise;
-    const w=40+115*depth+55*cloudHash(seed*23+2);
-    const h=w*(.19+.19*cloudHash(seed*37+7));
-    if(x+w<0||x-w>W||y+h<0||y-h>horizon)continue;
-    const tone=mix(colorAt(y),[218,217,228],.18+.24*thickness);
-    cloudShape(x,y,w*(.75+.35*coverage),h,seed,tone,thickness,d.sun.vector[0]);
-  }
+ const coverage=clamp(state.cloud),thickness=clamp(state.cloudThickness);
+ if(coverage<=.001)return;
+ // At 70%+ coverage, patches emerge through an irregular cloud mask, never a uniform white layer.
+ cloudBank(t,horizon,coverage,thickness,d,colorAt);
+ const count=140;
+ for(let i=0;i<count;i++){
+   const seed=i+1;
+   if(cloudHash(seed*41+.3)>Math.min(1,coverage*1.45))continue;
+   const depth=cloudHash(seed*7+3);
+   const xWorld=-76+cloudHash(seed*17+5)*152;
+   const rise=44+cloudHash(seed*29+9)*760;
+   const x=fromWorldX(xWorld)+(t*.0012)*(0.28+.20*depth);
+   const y=horizon-rise;
+   const w=40+115*depth+55*cloudHash(seed*23+2);
+   const h=w*(.19+.19*cloudHash(seed*37+7));
+   if(x+w<0||x-w>W||y+h<0||y-h>horizon)continue;
+   let tone=mix(colorAt(y),[218,217,228],.18+.24*thickness);
+   // At night clouds have very weak illumination, even if a bright sky palette is selected.
+   tone=mix(tone,[40,43,59],d.night*.80);
+   cloudShape(x,y,w*(.75+.30*coverage),h,seed,tone,thickness,d.sun.vector[0],d.night);
+ }
 }
 
 function skyDraw(t){
@@ -2328,52 +2367,26 @@ function setMenu(open){
  openButton.style.visibility=menuOpen?'hidden':'visible';
  openButton.style.pointerEvents=menuOpen?'none':'auto';
 }
-// iOS Safari: respond directly to touch-end as well as desktop click.
-// Suppress the synthetic click that follows touch-end so one tap never toggles twice.
-function bindTap(element,action){
- let lastTouch=-1e12;
- element.addEventListener('touchend',e=>{
-   if(e.changedTouches.length!==1)return;
-   e.preventDefault();e.stopPropagation();
-   lastTouch=Date.now();action();
- },{passive:false});
- element.addEventListener('click',e=>{
-   e.stopPropagation();
-   if(Date.now()-lastTouch<700)return;
-   action();
- });
-}
-bindTap(openButton,()=>setMenu(true));
-bindTap(closeButton,()=>setMenu(false));
-// Reestablish the displayed panel's hit testing after iOS screen rotation.
-// No touch-layer rebuild is performed; controls retain the same DOM nodes.
+// Safari-native hit-testing avoids custom clientX mapping after a scroll or rotation.
+// The fixed panel never transforms; only its inner content scrolls.
+openButton.addEventListener('click',()=>setMenu(true));
+closeButton.addEventListener('click',()=>setMenu(false));
 function refreshMenuHitTargets(){
  panel.style.pointerEvents=menuOpen?'auto':'none';
  openButton.style.pointerEvents=menuOpen?'none':'auto';
  openButton.style.visibility=menuOpen?'hidden':'visible';
  panel.classList.toggle('hide',!menuOpen);
 }
-addEventListener('orientationchange',()=>requestAnimationFrame(()=>requestAnimationFrame(refreshMenuHitTargets)),{passive:true});
+addEventListener('orientationchange',()=>requestAnimationFrame(refreshMenuHitTargets),{passive:true});
 if(window.visualViewport)window.visualViewport.addEventListener('resize',refreshMenuHitTargets,{passive:true});
 setMenu(false);
-
-for(let [id,field,format] of [['time','time',v=>`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`],['skyMix','skyMix',v=>`${v}%`],['cloud','cloud',v=>`${v}%`],['cloudThickness','cloudThickness',v=>`${v}%`]]){let el=document.getElementById(id);el.addEventListener('input',()=>{let value=+el.value;state[field]=field==='time'?value:value/100;document.getElementById(id+'Value').textContent=format(value);});}// Direct touch-driven range fallback for Safari Web Apps: start, drag, end.
-// Input events remain the single source of truth for all displayed values.
-for(const range of panel.querySelectorAll('input[type="range"]')){
- let dragging=false;
- const setFromTouch=(touch)=>{
-   const rect=range.getBoundingClientRect();
-   if(rect.width<=0)return;
-   const min=Number(range.min)||0,max=Number(range.max)||100,step=Number(range.step)||1;
-   let value=min+(max-min)*Math.max(0,Math.min(1,(touch.clientX-rect.left)/rect.width));
-   value=Math.round((value-min)/step)*step+min;
-   value=Math.min(max,Math.max(min,Number(value.toFixed(5))));
-   if(Number(range.value)!==value){range.value=String(value);range.dispatchEvent(new Event('input',{bubbles:true}));}
- };
- range.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;dragging=true;setFromTouch(e.touches[0]);e.preventDefault();},{passive:false});
- range.addEventListener('touchmove',e=>{if(!dragging||e.touches.length!==1)return;setFromTouch(e.touches[0]);e.preventDefault();},{passive:false});
- range.addEventListener('touchend',e=>{if(!dragging)return;dragging=false;if(e.changedTouches.length)setFromTouch(e.changedTouches[0]);e.preventDefault();},{passive:false});
- range.addEventListener('touchcancel',()=>{dragging=false;},{passive:true});
+for(let [id,field,format] of [['time','time',v=>`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`],['skyMix','skyMix',v=>`${v}%`],['cloud','cloud',v=>`${v}%`],['cloudThickness','cloudThickness',v=>`${v}%`]]){
+ const el=document.getElementById(id);
+ el.addEventListener('input',()=>{
+   const value=+el.value;
+   state[field]=field==='time'?value:value/100;
+   document.getElementById(id+'Value').textContent=format(value);
+ });
 }
 document.getElementById('preset').addEventListener('change',e=>state.preset=e.target.value);document.getElementById('reset').addEventListener('click',()=>{state.time=12;document.getElementById('time').value=12;document.getElementById('timeValue').textContent='12:00';});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();stopped=true;const n=document.getElementById('error');n.style.display='block';n.textContent='WebGLの描画コンテキストが失われました。ページを再読み込みしてください。';});
