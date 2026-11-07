@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 08</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 09</title><style>
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:38px;height:38px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:5;padding:4px}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:8;transition:opacity .2s,transform .2s;max-height:min(580px,80dvh);overflow:auto}#panel.hide{opacity:0;pointer-events:none;transform:translateY(10px)}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:none;font-size:24px;font-weight:200;color:#454853;line-height:1}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:pan-x}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
 
 /* iOS Safari: do not select UI captions while dragging controls. */
@@ -7,7 +7,7 @@ html,body,#panel,#hint,button,label,.control,.between,.notice,.head,.sub{
 }
 input[type=range]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:pan-x}
 input[type=text],textarea{ -webkit-user-select:text;user-select:text }
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 08</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">春分（北緯35°）の太陽軌道、滑らかな海の反射と丘に沿う3Dの影を検証します。空の詳細編集・天候機能はまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：春分・北緯35°・西北西カメラで太陽が連続移動する／夕日と反射は同じ光源位置／海の水平線は屋根と重ならない／丘の影と陰影の品質を維持。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 09</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><p class="sub">春分（北緯35°）の太陽軌道、海の反射幅、夜の海の暗さ、環境光を受けた柔らかな影を検証します。空の詳細編集・天候機能はまだ移植していません。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認ポイント：春分・北緯35°・西北西カメラで太陽が連続移動する／影に環境光が少し回る／夜の海が明るすぎない／海面反射のにじみ幅が少し細い。</div><button id="reset">時刻を12:00に戻す</button></section><div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
@@ -92,11 +92,11 @@ void main(){
   float nd=max(dot(n,uSun),0.);
   float shadow=shadowFactor(n,nd);
   // Ambient light softly lights the unlit side; direct light describes the real curved surface.
-  vec3 ambientTint=mix(vec3(.93,.95,1.),uAmbient,uSkyMix*.57);
-  vec3 directTint=mix(vec3(1.),uLightColor,.65);
-  float skyFill=.27+(.11*max(n.y,0.));
-  vec3 col=vColor*(ambientTint*skyFill + directTint*nd*.88*uDay*shadow);
-  col+=vColor*uAmbient*.07;
+  vec3 ambientTint=mix(vec3(.96,.97,1.),uAmbient,uSkyMix*.68);
+  vec3 directTint=mix(vec3(1.),uLightColor,.62);
+  float skyFill=.35+(.16*max(n.y,0.));
+  vec3 col=vColor*(ambientTint*skyFill + directTint*nd*.82*uDay*shadow);
+  col+=vColor*uAmbient*.10;
   gl_FragColor=vec4(pow(max(col,vec3(0.)),vec3(.89)),1.);
 }`;
 function shader(type,src){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
@@ -2048,7 +2048,7 @@ function generateWorld(){
 }
 generateWorld();let buffer=gl.createBuffer(), count=mesh.p.length/3;const data=new Float32Array(count*9);for(let i=0;i<count;i++){for(let c=0;c<3;c++){data[i*9+c]=mesh.p[i*3+c];data[i*9+c+3]=mesh.n[i*3+c];data[i*9+c+6]=mesh.c[i*3+c];}}gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);for(let [key,ofs] of [['pos',0],['normal',3],['color',6]]){gl.enableVertexAttribArray(loc[key]);gl.vertexAttribPointer(loc[key],3,gl.FLOAT,false,36,ofs*4);}
 
-// Study 08: real two-pass shadow mapping. Render ALL provided model triangles from
+// Study 09: real two-pass shadow mapping. Render ALL provided model triangles from
 // the sun into a depth-encoded RGBA texture, then compare from the scene fragment.
 // This uses the ACTUAL hill surface as the receiver, not an analytic surrogate.
 const SHADOW_RES=1536;
@@ -2153,19 +2153,23 @@ function skyDraw(t){
  // Distant sea drawn behind 3D terrain. Sea origin is a single world-space horizon.
  if(horizon<H){
    const yTop=Math.max(0,horizon);
+   const seaNight=clamp(d.night*.95);
+   const seaTop=mix(mix(colorAt(horizon+6),[92,131,155],.54),[10,18,30],seaNight*.78);
+   const seaMid=mix(mix(colorAt(horizon+20),[66,108,135],.59),[7,14,24],seaNight*.86);
+   const seaBottom=mix(mix(colorAt(horizon+65),[43,85,113],.64),[4,9,16],seaNight*.92);
    let sea=sc.createLinearGradient(0,horizon,0,horizon+460);
-   sea.addColorStop(0,css(mix(colorAt(horizon+6),[92,131,155],.54)));
-   sea.addColorStop(.42,css(mix(colorAt(horizon+20),[66,108,135],.59)));
-   sea.addColorStop(1,css(mix(colorAt(horizon+65),[43,85,113],.64)));
+   sea.addColorStop(0,css(seaTop));
+   sea.addColorStop(.42,css(seaMid));
+   sea.addColorStop(1,css(seaBottom));
    sc.fillStyle=sea;sc.fillRect(0,yTop,W,H-yTop);
    sc.save();sc.beginPath();sc.rect(0,yTop,W,H-yTop);sc.clip();
        // No drawn wave streaks or line segments: the sea is softly coloured by sky and sun.
     // Reflection follows the SAME physical solar vector as the visible sun and the 3D light.
     const reflected=skySunPosition(d.sun,horizon);
     if(d.alt>0 && reflected.visible && reflected.x>-330 && reflected.x<W+330){
-      const intensity=clamp(d.light)*(.12+.18*(1-clamp(d.alt/.65)));
-      const spread=92+125*clamp(d.alt/.75);
-      const glowHeight=125+75*clamp(d.alt/.75);
+      const intensity=clamp(d.light)*(.11+.16*(1-clamp(d.alt/.65)));
+      const spread=58+86*clamp(d.alt/.75);
+      const glowHeight=94+56*clamp(d.alt/.75);
       const cx=reflected.x, cy=horizon+8;
       sc.save();
       sc.globalCompositeOperation='screen';
@@ -2246,10 +2250,10 @@ function sceneDraw(){
  gl.uniformMatrix4fv(loc.vp,false,new Float32Array(camera.vp));
  gl.uniformMatrix4fv(loc.lightVP,false,new Float32Array(lightVP));
  gl.uniform3fv(loc.sun,new Float32Array(sun));
- gl.uniform3fv(loc.ambient,new Float32Array(sampleSky(.4).map(v=>v/255)));
+ gl.uniform3fv(loc.ambient,new Float32Array(mix([214,220,232],sampleSky(.46),.74).map(v=>v/255)));
  gl.uniform3fv(loc.light,new Float32Array(mix([.96,.98,1.],sampleSky(.73).map(v=>v/255),d.warm*.85)));
  gl.uniform1f(loc.skyMix,state.skyMix);
- gl.uniform1f(loc.day,clamp(d.light*.76+.12));
+ gl.uniform1f(loc.day,clamp(d.light*.72+.10));
  gl.uniform1f(loc.shadowStrength,shadowStrength);
  gl.uniform1f(loc.shadowTexel,1/SHADOW_RES);
  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,shadowMap);
