@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 17</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 18</title><style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:#a8a1ba;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -25,7 +25,7 @@ html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;backgrou
 #touchDot{position:fixed;width:18px;height:18px;border:2px solid #ff6655;border-radius:50%;transform:translate(-50%,-50%);z-index:311;pointer-events:none}
 @media(orientation:landscape){#panel{gap:1px;bottom:calc(62px + env(safe-area-inset-bottom));right:12px}#panel .choice{width:40px;height:40px;min-height:40px;font-size:22px}#menuButton{right:10px;bottom:calc(7px + env(safe-area-inset-bottom))}#adjustDock{left:10%;top:42%;width:min(43vw,490px)}}
 
-/* Study 17: monochrome controls, no blurred halo and no backing plate. */
+/* Study 18: monochrome controls, no blurred halo and no backing plate. */
 #menuButton,#panel .choice,#adjustDock{--ui-ink:#f5f5f3}
 #menuButton i{background:var(--ui-ink,#f5f5f3);box-shadow:none}
 #panel .choice{color:var(--ui-ink,#f5f5f3);text-shadow:none;opacity:.9}
@@ -39,7 +39,7 @@ html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;backgrou
 #adjustDock .between{padding-right:0;margin-bottom:3px}
 #adjustDock #reset{color:var(--ui-ink,#f5f5f3)}
 #adjustDock select{background:transparent;color:var(--ui-ink,#f5f5f3)}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 17</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide" aria-label="設定項目">
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 18</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide" aria-label="設定項目">
 <button type="button" class="choice" data-control="time" aria-label="時刻" title="時刻">◷</button>
 <button type="button" class="choice" data-control="skyMix" aria-label="空色の影響" title="空色の影響">◐</button>
 <button type="button" class="choice" data-control="cloud" aria-label="雲量" title="雲量">☁</button>
@@ -2228,113 +2228,116 @@ function cloudValueNoise(x,y){
  const b=lerp(cloudNoise(ix,iy+1),cloudNoise(ix+1,iy+1),fx);
  return lerp(a,b,fy);
 }
-// Study 17: perspective-projected, layered cloud coverage field. Coverage sets the fraction of sky occupied
+// Study 18: perspective-projected, layered cloud coverage field. Coverage sets the fraction of sky occupied
 // by cloud shapes, not their alpha. Cloud thickness alone controls optical density.
 // A per-frame noise histogram derives a threshold for the chosen coverage, so the
 // high-coverage range never degenerates into a uniform white translucent overlay.
 let cloudFieldCanvas=document.createElement('canvas');
 let cloudFieldCtx=cloudFieldCanvas.getContext('2d');
 let cloudFieldCacheKey='';
+// Cloud world-space geometry: distance changes the projected scale of EACH feature,
+// including billows and internal shadow, not just the outer cloud outline.
 function cloudFieldNoise(wx,wy){
-  const broad=cloudValueNoise(wx*.76,wy*.76);
-  const medium=cloudValueNoise(wx*1.83+11.3,wy*1.83-17.7);
-  const small=cloudValueNoise(wx*4.9-4.4,wy*4.9+7.1);
-  return broad*.62+medium*.28+small*.10;
+  const body=cloudValueNoise(wx*.67,wy*.67);
+  const lobe=cloudValueNoise(wx*1.58+11.3,wy*1.58-17.7);
+  const ragged=cloudValueNoise(wx*3.62-4.4,wy*3.62+7.1);
+  return body*.67+lobe*.27+ragged*.06;
 }
 function drawCloudField(t,horizon,fromWorldX,colorAt,d){
   const coverage=clamp(state.cloud),thickness=clamp(state.cloudThickness);
   const visibleH=Math.max(0,Math.min(H,horizon));
-  if(coverage<=.001 || visibleH<1)return;
-  const scale=Math.max(1.6,Math.sqrt(W*visibleH/280000));
+  if(coverage<=.001||visibleH<1){cloudFieldCanvas.width=1;cloudFieldCanvas.height=1;cloudFieldCacheKey='';return;}
+  // Study 17's high-resolution raster is retained. Cloud geometry and shading
+  // use the SAME perspective coordinates, so no screen-fixed texture is pasted on top.
+  const scale=Math.max(1.35,Math.sqrt(W*visibleH/380000));
   const w=Math.max(2,Math.ceil(W/scale)),h=Math.max(2,Math.ceil(visibleH/scale));
-  const timeSlice=Math.floor(t/520);
+  const timeSlice=Math.floor(t/640);
   const key=[w,h,Math.round(horizon),Math.round(coverage*100),Math.round(thickness*100),state.preset,Math.round(d.night*24),Math.round(state.time*10),timeSlice].join('/');
   if(key!==cloudFieldCacheKey){
-    cloudFieldCacheKey=key;cloudFieldCanvas.width=w;cloudFieldCanvas.height=h;
+    cloudFieldCacheKey=key;
+    cloudFieldCanvas.width=w;cloudFieldCanvas.height=h;
     const image=cloudFieldCtx.createImageData(w,h),pixels=image.data;
-    const field=new Float32Array(w*h);
+    const field=new Float32Array(w*h),xs=new Float32Array(w*h),ys=new Float32Array(w*h);
     const bins=new Uint32Array(256);
     const drift=t*.0000012;
-    // Cloud field coordinates are anchored to the world horizon.
-    for(let j=0;j<h;j++)for(let i=0;i<w;i++){
-      // Project a near-horizontal cloud deck through a perspective camera.
-      // Close/high cloud formations occupy a LARGE angle; distant clouds
-      // approach the horizon and become small, dense, and slow.
+    for(let j=0;j<h;j++){
       const above=Math.max(0,horizon-j*scale);
-      const depthScale=.010*(1+315/(above+44));
-      const wx=(i*scale-W*.5)*depthScale+drift*(.32+above/720);
+      const distanceFactor=.010*(1+315/(above+44));
       const wy=11.5*Math.log1p(above/68);
-      const v=cloudFieldNoise(wx,wy);
-      field[j*w+i]=v;bins[Math.max(0,Math.min(255,Math.floor(v*255)))]++;
+      for(let i=0;i<w;i++){
+        const wx=(i*scale-W*.5)*distanceFactor+drift*(.32+above/720);
+        const idx=j*w+i,v=cloudFieldNoise(wx,wy);
+        field[idx]=v;xs[idx]=wx;ys[idx]=wy;
+        bins[Math.max(0,Math.min(255,Math.floor(v*255)))]++;
+      }
     }
-    // Quantile threshold: a cloud setting of 80% gives ~80% cloud coverage.
     let count=0,cut=255;
     const clearTarget=Math.round(w*h*(1-coverage));
-    for(let b=0;b<256;b++){
-      count+=bins[b];
-      if(count>=clearTarget){cut=b;break;}
-    }
+    for(let b=0;b<256;b++){count+=bins[b];if(count>=clearTarget){cut=b;break;}}
     if(coverage>=.999)cut=-20;
     if(coverage<=.001)cut=300;
-    const edgeWidth=17; // Contour antialiasing without a whole-sky haze.
-    const dayFactor=1-d.night;
-    // A displaced second layer and a small-scale height field provide independent
-    // sun-facing lobes, dark underbellies and overlap shading inside each cloud bank.
-    // These are not additional white overlays, so coverage remains independent of opacity.
     const getField=(x,y)=>field[Math.max(0,Math.min(h-1,y))*w+Math.max(0,Math.min(w-1,x))];
-    // Continuous lateral sun component: avoids a one-frame left/right flip.
-    const sunSide=clamp(d.sun.vector[0]*1.7,-1,1);
-    const skyIllum=.40+.60*clamp(d.sun.vector[1]*1.5+.15);
+    const sunX=d.sun.vector[0],sunUp=d.sun.vector[1];
+    const sunStrength=clamp((sunUp+.11)/.45);
+    const night=clamp(d.night);
     for(let j=0;j<h;j++){
       const screenY=Math.min(visibleH,j*scale);
-      const baseSky=colorAt(screenY);
-      const baseColor=mix(baseSky,[227,224,230],.34+.30*thickness);
-      const cloudColor=mix(baseColor,[42,45,60],d.night*.83);
+      const skyTone=colorAt(screenY);
+      // Night clouds remain dark regardless of the configured sky palette.
+      const daylightCloud=mix(skyTone,[231,229,233],.40+.24*thickness);
+      const cloudBase=mix(daylightCloud,[39,43,61],night*.91);
+      const daylightAmbient=mix(skyTone,[218,221,228],.33);
+      const ambient=mix(daylightAmbient,[35,40,57],night*.89);
       for(let i=0;i<w;i++){
-        const idx=j*w+i;
-        const n=field[idx];
-        const cloudDistance=(n*255-cut)/edgeWidth;
-        const boundary=clamp(.5+cloudDistance);
-        const covered=boundary*boundary*(3-2*boundary);
-        // Smooth surface gradients act as a normal on the cloud bank's billows.
-        const nx=getField(i+2,j)-getField(i-2,j);
-        const ny=getField(i,j+2)-getField(i,j-2);
-        const relief=clamp(.57+sunSide*nx*3.0-ny*2.4,.14,1.);
-        // Upwind highlights and underside shading change with the lobe's relief.
-        const topLight=.59+.39*relief;
-        const underside=.89+.11*clamp(.54-ny*2.2);
-        const volumeShade=(.80+.20*topLight)*underside;
-        const localDetail=cloudValueNoise(i*.18+13.7,j*.16-5.6);
-        const billow=.96+.07*localDetail;
-        // Neighboring overlap contributes *shadows*, not a flat white haze.
-        const upperCover=clamp((getField(i,j-5)*255-cut)/edgeWidth+.5);
-        const underShadow=(1.-.075*upperCover*clamp(ny*5+.2));
-        const softSun=clamp(d.sun.vector[1]*.95+.2);
-        const sculpted=.87+.13*clamp(relief*softSun+.22);
-        // A sky-lit underside: soften contrast and colour the shadow from the atmosphere,
-        // rather than multiplying a grey cloud into near-black patches.
-        const shade=clamp(volumeShade*billow*underShadow*sculpted,.72,1.04);
-        // Approximate Beer's law through the cloud: thicker lobes block more light.
-        const depth=thickness*(.7+1.0*localDetail+.60*clamp(n*2));
-        const weight=1-Math.exp(-3.6*depth);
-        const alpha=covered*weight;
+        const idx=j*w+i,n=field[idx];
+        const dist=(n*255-cut);
+        // Shape opacity is confined to the cloud body: only the outer fringe
+        // lets the sky show through, except for deliberately very thin cloud.
+        const edge=clamp(.5+dist/11.5);
+        const body=edge*edge*(3-2*edge);
+        if(body<=0){pixels[idx*4+3]=0;continue;}
+        const wx=xs[idx],wy=ys[idx];
+        // World-space billows appear finer at a distance and broader near the viewer.
+        // Avoid high-frequency noise in screen coordinates that reads as wallpaper.
+        const lobes=cloudValueNoise(wx*1.31+23.1,wy*1.31-13.7);
+        const detail=cloudValueNoise(wx*2.43-11.2,wy*2.43+31.4);
+        const depthCore=clamp((dist+8)/38);
+        const localMass=clamp(.57+.40*lobes+.23*detail);
+        const opticalWeight=clamp(.27+thickness*1.95);
+        const opacity=(1-Math.exp(-3.8*opticalWeight*localMass*(.60+.40*depthCore)));
+        // Thick/normal clouds are largely opaque inside. Thin wisps can transmit.
+        const opaqueCore=clamp((thickness-.08)*3.9);
+        const alpha=body*(opacity*(1-opaqueCore)+(.93+.06*localMass)*opaqueCore);
+        // A broad normal field (not pixel-scale texture) gives a coherent lit side.
+        // Sun illumination evolves continuously, with no 08:30 sign switch.
+        const nx=(getField(i+5,j)-getField(i-5,j));
+        const ny=(getField(i,j-5)-getField(i,j+5));
+        const near=clamp((horizon-screenY)/440);
+        const diff=(sunX*nx*1.25+sunUp*ny*.82);
+        const sunlight=clamp(.48+diff*2.65);
+        // Thickness strengthens dark relief and consolidates the silhouette:
+        // from diffuse fair-weather cloud to sculpted rain-cloud banks.
+        const rain=thickness*thickness;
+        const massShade=(.58-lobes)*.27 + (.50-detail)*.10;
+        const shading=clamp(1-(.045+.25*rain)*(.57-sunlight)-(.06+.23*rain)*massShade,
+                            .69,1.09);
+        const skyFill=.16+.13*(1-rain);
+        const lit=clamp((shading*(.92+.08*sunStrength))*(1-.05*night),.68,1.12);
+        // Shadow side reflects ambient hues rather than neutral black.
+        const ambientMix=skyFill+(.11+.09*rain)*(1-sunlight);
+        const col=mix(cloudBase.map(v=>v*lit),ambient,ambientMix);
+        const warm=clamp(d.warm)*sunlight*(1-night)*.085;
         const p=idx*4;
-        const warmTop=.10*dayFactor*relief*clamp((d.sun.vector[1]+.08)*2.);
-        const ambientSky=baseSky;
-        const cloudLit=[cloudColor[0]*shade+warmTop*19,cloudColor[1]*shade+warmTop*10,cloudColor[2]*shade];
-        const reflectedAmbient=.25*thickness;
-        const finalCloud=mix(cloudLit,mix(ambientSky,[224,222,230],.25),reflectedAmbient);
-        pixels[p]=Math.round(clamp(finalCloud[0],0,255));
-        pixels[p+1]=Math.round(clamp(finalCloud[1],0,255));
-        pixels[p+2]=Math.round(clamp(finalCloud[2],0,255));
-        pixels[p+3]=Math.round(255*alpha);
+        pixels[p]=Math.round(clamp(col[0]+warm*37,0,255));
+        pixels[p+1]=Math.round(clamp(col[1]+warm*19,0,255));
+        pixels[p+2]=Math.round(clamp(col[2]+warm*10,0,255));
+        pixels[p+3]=Math.round(255*clamp(alpha));
       }
     }
     cloudFieldCtx.putImageData(image,0,0);
   }
   sc.drawImage(cloudFieldCanvas,0,0,W,visibleH);
 }
-
 
 // Sun and sea-glow share cloud opacity. Read last completed cloud field; at
 // most one cached frame of delay, so a covered disc no longer leaves a glowing sea.
@@ -2469,7 +2472,7 @@ function sceneDraw(){
  gl.drawArrays(gl.TRIANGLES,hillVertexCount,count-hillVertexCount);
 }
 let stopped=false;function loop(t){if(!stopped){if(t-last>33){last=t;tick=t;skyDraw(t);sceneDraw();if(t-lastInk>480){lastInk=t;refreshUiInk();}}requestAnimationFrame(loop)}}requestAnimationFrame(loop);document.addEventListener('visibilitychange',()=>{last=0;});
-// Study 17: floating icon menu, no white panel and no scrolling.
+// Study 18: floating icon menu, no white panel and no scrolling.
 // Each icon opens one unobtrusive slider over the sky. Native controls handle hit tests.
 const panel=document.getElementById('panel'),dock=document.getElementById('adjustDock');
 const menuButton=document.getElementById('menuButton');
