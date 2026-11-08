@@ -1,65 +1,36 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 15</title><style>
-*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:48px;height:48px;border:0;background:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:100;padding:4px;pointer-events:auto;cursor:pointer}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:110;pointer-events:auto;touch-action:auto;overscroll-behavior:contain;transition:opacity .14s;max-height:min(580px,80dvh);overflow:hidden;display:flex;flex-direction:column}#panel.hide{opacity:0;visibility:hidden;pointer-events:none}#panel:not(.hide){visibility:visible;pointer-events:auto}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:transparent;font-size:28px;font-weight:200;color:#454853;line-height:1;min-width:48px;min-height:48px;touch-action:manipulation;cursor:pointer;position:relative;z-index:2}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:pan-x}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
-
-/* iOS Safari: do not select UI captions while dragging controls. */
-html,body,#panel,#hint,button,label,.control,.between,.notice,.head,.sub{
-  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
-}
-input[type=range]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:pan-x;pointer-events:auto;min-height:32px}
-input[type=text],textarea{ -webkit-user-select:text;user-select:text }
-#panel button,#panel select{touch-action:manipulation;pointer-events:auto}#panel .control{pointer-events:auto}
-#panel .head{flex-shrink:0;margin-bottom:4px}
-#panel .panelScroll{min-height:0;flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:auto;touch-action:pan-y;padding:0 1px 8px}
-#panel .panelScroll input[type=range]{touch-action:pan-x}
-
-/* Study 13: keep UI touch targets in a stable coordinate space on iOS Safari. */
-html,body{position:relative;width:100%;height:100%;overscroll-behavior:none}
-#panel{transform:none!important;will-change:auto;isolation:auto;contain:none}
-#panel .panelScroll{position:relative;transform:none!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#panel .panelScroll input[type=range]{touch-action:pan-x}
-#panel.hide{display:none!important}
-@media (orientation:portrait){#panel{bottom:calc(16px + env(safe-area-inset-bottom));max-height:min(580px,calc(100dvh - 42px))}}
-
-/* Study 15: minimal controls. No scrolling/transformed panel, no cached hit rectangles. */
-html,body{width:100%;height:100%;height:100dvh;overflow:hidden;position:static!important;overscroll-behavior:none}
-#menuButton{position:fixed;right:17px;bottom:calc(18px + env(safe-area-inset-bottom));width:52px;height:52px;z-index:150;pointer-events:auto;touch-action:manipulation;transform:none!important}
-#panel,#adjustDock{position:fixed;left:16px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));top:auto;max-width:440px;width:auto;max-height:none;margin:0 auto;padding:17px 17px 14px;background:rgba(245,244,241,.94);border-radius:16px;box-shadow:0 8px 24px rgba(15,20,27,.15);overflow:visible;display:block;transform:none!important;transition:none!important;contain:none!important;will-change:auto;z-index:160;pointer-events:auto;touch-action:manipulation}
-#panel.hide,#adjustDock.hide{display:none!important;visibility:hidden!important;pointer-events:none!important}
-#panel .head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
-#panel .head b{font-size:12px;font-weight:500;letter-spacing:.15em}
-#panel .head button,#adjustDock .head button{border:none;background:transparent;color:#40434d;min-width:40px;min-height:40px;font-size:25px;touch-action:manipulation}
-#panel .choiceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-#panel .choice{border:1px solid rgba(90,92,100,.18);border-radius:11px;min-height:64px;padding:10px 5px;background:rgba(255,255,255,.46);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#3b3e45;font:inherit;font-size:12px;touch-action:manipulation}
-#panel .choice svg{height:19px;width:19px;stroke:#565964;stroke-width:1.5;fill:none}
-#panel .mini-foot{font-size:10px;color:#767781;margin-top:12px;line-height:1.5}
-#adjustDock .head{margin:0 0 4px;display:flex;align-items:center;justify-content:space-between;min-height:36px}
-#adjustDock .head b{font-size:12px;font-weight:500;letter-spacing:.11em}
-#adjustDock .control{margin:8px 1px 1px}
-#adjustDock .between{margin-bottom:4px}
-#adjustDock input[type=range]{display:block;width:100%;min-height:35px;height:35px;touch-action:pan-x;pointer-events:auto}
-#adjustDock select{min-height:42px;width:100%;touch-action:manipulation}
-#adjustDock #reset{display:block;margin-top:8px}
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 16</title><style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:#a8a1ba;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+#menuButton{position:fixed;right:20px;bottom:calc(22px + env(safe-area-inset-bottom));width:52px;height:52px;padding:10px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:220;touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
+#menuButton i{width:27px;height:2px;background:rgba(37,40,47,.87);box-shadow:0 0 4px #fff9;display:block;border-radius:2px}
+#panel{position:fixed;right:20px;bottom:calc(84px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:8px;z-index:205;background:transparent;border:0;box-shadow:none;padding:0;width:52px;max-height:calc(100dvh - 130px);overflow:visible;pointer-events:auto}
+#panel.hide,#adjustDock.hide,#touchDiagnostic.hide,#touchDot.hide{display:none!important}
+#panel .choice{display:flex;align-items:center;justify-content:center;width:49px;height:49px;min-height:49px;padding:0;border:0;border-radius:0;background:transparent;color:#303541;box-shadow:none;font-size:25px;font-weight:400;line-height:1;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;text-shadow:0 0 5px #fffc,0 1px 6px #fff8;opacity:.79}
+#panel .choice.active{opacity:1;color:#151d2c;text-shadow:0 0 5px #fff,0 0 10px #fff}
+#panel .choice small{display:none}
+#adjustDock{position:fixed;left:8%;top:43%;width:min(75vw,430px);z-index:215;padding:0;background:transparent;border:0;box-shadow:none;border-radius:0;transform:none;pointer-events:auto;touch-action:manipulation}
+#adjustDock .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;max-width:100%}
+#adjustDock .head b{font-size:13px;font-weight:550;letter-spacing:.08em;color:#222935;text-shadow:0 0 5px #fffd}
+#adjustDock button{background:transparent;border:0;color:#202833;cursor:pointer;min-width:38px;min-height:38px;font-size:23px;text-shadow:0 0 5px #fff}
+#adjustDock .control{margin:0}
+#adjustDock .between{display:flex;justify-content:space-between;font-size:12px;color:#2a303b;text-shadow:0 0 5px #fffd;margin-bottom:2px}
+#adjustDock input[type=range]{display:block;width:100%;height:37px;min-height:37px;touch-action:pan-x;accent-color:#39414f;cursor:pointer}
+#adjustDock select{display:block;width:100%;min-height:42px;touch-action:manipulation;border:1px solid #53596675;border-radius:7px;background:#f2f2f2db;color:#2b3038;padding:7px}
+#adjustDock #reset{font-size:11px;text-decoration:underline;min-height:35px;display:block}
 #controlTemplates{display:none!important}
-#touchDebugButton{background:none;border:none;padding:0;text-decoration:underline;color:#626672;font-size:10px;touch-action:manipulation}
-#touchDiagnostic{position:fixed;left:8px;top:calc(36px + env(safe-area-inset-top));z-index:300;background:rgba(0,0,0,.75);color:#fff;border-radius:8px;padding:7px 9px;font:10px/1.6 ui-monospace,monospace;max-width:280px;white-space:pre-wrap;pointer-events:none}
-#touchDiagnostic.hide{display:none}
-#touchDot{position:fixed;width:18px;height:18px;border:2px solid #f55;border-radius:50%;transform:translate(-50%,-50%);z-index:301;pointer-events:none}
-#touchDot.hide{display:none}
-@media (orientation:landscape) and (max-height:550px){
-  #menuButton{bottom:12px;right:12px}
-  #panel,#adjustDock{left:auto;right:58px;bottom:10px;top:auto;width:min(410px,calc(100vw - 82px));max-height:calc(100dvh - 20px)}
-  #panel .choice{min-height:51px}
-  #panel .choiceGrid{gap:5px}
-}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 15</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide" aria-label="設定項目"><div class="head"><b>AMBIENCE / SETTINGS</b><button aria-label="閉じる" id="close" type="button">×</button></div>
-  <div class="choiceGrid">
-    <button type="button" class="choice" data-control="time">◷<span>時刻</span></button>
-    <button type="button" class="choice" data-control="skyMix">◐<span>天球色の影響</span></button>
-    <button type="button" class="choice" data-control="cloud">☁<span>雲量</span></button>
-    <button type="button" class="choice" data-control="cloudThickness">≋<span>雲の厚み</span></button>
-    <button type="button" class="choice" data-control="preset">◫<span>空の色彩</span></button>
-  </div>
-  <div class="mini-foot">項目を選ぶと操作部だけを表示します。<button type="button" id="touchDebugButton">タッチ診断：OFF</button></div>
+#hint{position:fixed;top:calc(16px + env(safe-area-inset-top));left:20px;pointer-events:none;font-size:10px;letter-spacing:.14em;color:#30313a99}
+#error{position:fixed;top:65px;left:12px;right:12px;background:#252837;color:white;border-radius:9px;padding:10px;font-size:12px;display:none;z-index:400}
+#touchDiagnostic{position:fixed;top:calc(34px + env(safe-area-inset-top));left:8px;z-index:310;background:#000b;color:white;padding:7px 9px;font:10px/1.5 monospace;max-width:280px;white-space:pre-wrap;pointer-events:none}
+#touchDot{position:fixed;width:18px;height:18px;border:2px solid #ff6655;border-radius:50%;transform:translate(-50%,-50%);z-index:311;pointer-events:none}
+@media(orientation:landscape){#panel{gap:1px;bottom:calc(62px + env(safe-area-inset-bottom));right:12px}#panel .choice{width:40px;height:40px;min-height:40px;font-size:22px}#menuButton{right:10px;bottom:calc(7px + env(safe-area-inset-bottom))}#adjustDock{left:10%;top:42%;width:min(43vw,490px)}}
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 16</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide" aria-label="設定項目">
+<button type="button" class="choice" data-control="time" aria-label="時刻" title="時刻">◷</button>
+<button type="button" class="choice" data-control="skyMix" aria-label="空色の影響" title="空色の影響">◐</button>
+<button type="button" class="choice" data-control="cloud" aria-label="雲量" title="雲量">☁</button>
+<button type="button" class="choice" data-control="cloudThickness" aria-label="雲の厚み" title="雲の厚み">≋</button>
+<button type="button" class="choice" data-control="preset" aria-label="空の色彩" title="空の色彩">◫</button>
+<button type="button" class="choice" id="touchDebugButton" aria-label="タッチ診断" title="タッチ診断">⊕</button>
 </section>
 <section id="adjustDock" class="hide" aria-label="項目の調整"><div class="head"><b id="adjustTitle">雲量</b><button type="button" id="done" aria-label="調整を閉じる">×</button></div><div id="controlHost"></div></section>
 <div id="controlTemplates">
@@ -78,10 +49,9 @@ const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha
 if(!gl){
  const warning=document.getElementById('error');warning.style.display='block';warning.textContent='この環境ではWebGLが使えないため、簡易2D表示です。3D照明の評価にはWebGL対応ブラウザが必要です。';
  let W=0,H=0;function fallback(){W=innerWidth;H=innerHeight;const dp=Math.min(devicePixelRatio||1,1.5);sky.width=W*dp;sky.height=H*dp;sc.setTransform(dp,0,0,dp,0,0);let g=sc.createLinearGradient(0,0,0,H);g.addColorStop(0,'#858eb7');g.addColorStop(.56,'#d4acc4');g.addColorStop(.74,'#e5b7ac');g.addColorStop(1,'#9eb7b0');sc.fillStyle=g;sc.fillRect(0,0,W,H);let hor=H*.66;sc.fillStyle='#859eaa';sc.fillRect(0,hor,W,H-hor);sc.fillStyle='#889a83';sc.beginPath();sc.moveTo(0,hor+H*.12);sc.quadraticCurveTo(W*.5,hor-H*.02,W,hor+H*.12);sc.lineTo(W,H);sc.lineTo(0,H);sc.fill();const sz=27,cx=W*.5,cy=H*(H>W?.83:.60);sc.save();sc.translate(cx,cy);sc.fillStyle='#d0c1ac';sc.fillRect(-32,-38,64,51);sc.fillStyle='#726678';sc.beginPath();sc.moveTo(-39,-37);sc.lineTo(0,-69);sc.lineTo(39,-37);sc.lineTo(31,-31);sc.lineTo(0,-56);sc.lineTo(-31,-31);sc.fill();sc.fillStyle='#4e4551';sc.fillRect(-5,-5,12,18);sc.fillStyle='#a48d7e';sc.fillRect(-28,-20,13,15);sc.fillRect(16,-20,13,15);sc.strokeStyle='#c4ad8e';sc.lineWidth=10;sc.beginPath();sc.moveTo(2,13);sc.quadraticCurveTo(-8,45,5,120);sc.stroke();sc.fillStyle='#77756e';sc.beginPath();sc.ellipse(110,10,21,10,0,0,Math.PI*2);sc.fill();sc.restore();}fallback();addEventListener('resize',fallback);const panel=document.getElementById('panel'),dock=document.getElementById('adjustDock'),host=document.getElementById('controlHost');
- document.getElementById('menuButton').onclick=()=>panel.classList.remove('hide');
- document.getElementById('close').onclick=()=>panel.classList.add('hide');
+ document.getElementById('menuButton').onclick=()=>panel.classList.toggle('hide');
  document.getElementById('done').onclick=()=>dock.classList.add('hide');
- panel.querySelectorAll('[data-control]').forEach(btn=>btn.onclick=()=>{panel.classList.add('hide');dock.classList.remove('hide');host.replaceChildren(document.querySelector('#controlTemplates [data-name="'+btn.dataset.control+'"]'));document.getElementById('adjustTitle').textContent=btn.textContent;const ctl=host.querySelector('input,select');if(ctl&&ctl.type==='range')ctl.oninput=()=>{const value=host.querySelector('[id$="Value"]');if(value)value.textContent=ctl.id==='time'?Number(ctl.value).toFixed(2):ctl.value+'%';};});
+ panel.querySelectorAll('[data-control]').forEach(btn=>btn.onclick=()=>{dock.classList.remove('hide');host.replaceChildren(document.querySelector('#controlTemplates [data-name="'+btn.dataset.control+'"]'));document.getElementById('adjustTitle').textContent=btn.getAttribute('aria-label')||btn.textContent;const ctl=host.querySelector('input,select');if(ctl&&ctl.type==='range')ctl.oninput=()=>{const value=host.querySelector('[id$="Value"]');if(value)value.textContent=ctl.id==='time'?Number(ctl.value).toFixed(2):ctl.value+'%';};});
  return;
  }
 let state={time:17.5,skyMix:.70,cloud:.35,cloudThickness:.45,preset:'rose'},W=390,H=844,dpr=1,tick=0,last=0;
@@ -2243,7 +2213,7 @@ function cloudValueNoise(x,y){
  const b=lerp(cloudNoise(ix,iy+1),cloudNoise(ix+1,iy+1),fx);
  return lerp(a,b,fy);
 }
-// Study 14: layered volumetric-looking coverage field. Coverage sets the fraction of sky occupied
+// Study 16: perspective-projected, layered cloud coverage field. Coverage sets the fraction of sky occupied
 // by cloud shapes, not their alpha. Cloud thickness alone controls optical density.
 // A per-frame noise histogram derives a threshold for the chosen coverage, so the
 // high-coverage range never degenerates into a uniform white translucent overlay.
@@ -2271,8 +2241,13 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
     const drift=t*.0000012;
     // Cloud field coordinates are anchored to the world horizon.
     for(let j=0;j<h;j++)for(let i=0;i<w;i++){
-      const wx=(i*scale-W*.5)*.016+drift;
-      const wy=(horizon-j*scale)*.016;
+      // Project a near-horizontal cloud deck through a perspective camera.
+      // Close/high cloud formations occupy a LARGE angle; distant clouds
+      // approach the horizon and become small, dense, and slow.
+      const above=Math.max(0,horizon-j*scale);
+      const depthScale=.010*(1+315/(above+44));
+      const wx=(i*scale-W*.5)*depthScale+drift*(.32+above/720);
+      const wy=11.5*Math.log1p(above/68);
       const v=cloudFieldNoise(wx,wy);
       field[j*w+i]=v;bins[Math.max(0,Math.min(255,Math.floor(v*255)))]++;
     }
@@ -2285,7 +2260,7 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
     }
     if(coverage>=.999)cut=-20;
     if(coverage<=.001)cut=300;
-    const edgeWidth=12; // Feather the contours, never the complete sky.
+    const edgeWidth=17; // Contour antialiasing without a whole-sky haze.
     const dayFactor=1-d.night;
     // A displaced second layer and a small-scale height field provide independent
     // sun-facing lobes, dark underbellies and overlap shading inside each cloud bank.
@@ -2456,8 +2431,8 @@ function sceneDraw(){
  gl.drawArrays(gl.TRIANGLES,hillVertexCount,count-hillVertexCount);
 }
 let stopped=false;function loop(t){if(!stopped){if(t-last>33){last=t;tick=t;skyDraw(t);sceneDraw();}requestAnimationFrame(loop)}}requestAnimationFrame(loop);document.addEventListener('visibilitychange',()=>{last=0;});
-// Study 15 UI experiment: a small fixed control dock with NO scrolling or transforms.
-// Keep the entire scene visible. Browsers perform native range/select hit testing.
+// Study 16: floating icon menu, no white panel and no scrolling.
+// Each icon opens one unobtrusive slider over the sky. Native controls handle hit tests.
 const panel=document.getElementById('panel'),dock=document.getElementById('adjustDock');
 const menuButton=document.getElementById('menuButton');
 const host=document.getElementById('controlHost');
@@ -2465,37 +2440,38 @@ const templates=document.getElementById('controlTemplates');
 const labels={time:'時刻',skyMix:'天球色の影響',cloud:'雲量',cloudThickness:'雲の厚み',preset:'空の色彩'};
 let openControl=null;
 function returnControl(){while(host.firstChild)templates.appendChild(host.firstChild);}
-function showMenu(){returnControl();openControl=null;panel.classList.remove('hide');dock.classList.add('hide');menuButton.style.display='none';}
-function hideUI(){panel.classList.add('hide');dock.classList.add('hide');returnControl();openControl=null;menuButton.style.display='flex';}
+function hideUI(){panel.classList.add('hide');dock.classList.add('hide');returnControl();openControl=null;panel.querySelectorAll('.active').forEach(e=>e.classList.remove('active'));}
+function toggleMenu(){if(!panel.classList.contains('hide')){hideUI();}else{panel.classList.remove('hide');}}
 function openSetting(name){
  const item=templates.querySelector('[data-name="'+name+'"]');if(!item)return;
- openControl=name;host.replaceChildren(item);
+ if(openControl===name){returnControl();openControl=null;dock.classList.add('hide');panel.querySelectorAll('.active').forEach(e=>e.classList.remove('active'));return;}
+ returnControl();openControl=name;host.replaceChildren(item);
  document.getElementById('adjustTitle').textContent=labels[name];
- panel.classList.add('hide');dock.classList.remove('hide');menuButton.style.display='none';
+ dock.classList.remove('hide');
+ panel.querySelectorAll('[data-control]').forEach(button=>button.classList.toggle('active',button.dataset.control===name));
  hookSetting(name);
 }
 function hookSetting(name){
  if(name==='preset'){
    const select=host.querySelector('#preset');select.value=state.preset;
-   select.onchange=()=>{state.preset=select.value};return;
+   select.onchange=()=>{state.preset=select.value;};return;
  }
  const el=host.querySelector('#'+name);
- let val=name==='time'?state.time:Math.round(state[name]*100);
+ const val=name==='time'?state.time:Math.round(state[name]*100);
  el.value=val;
  const fmt=(v)=>name==='time'?`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)%60).padStart(2,'0')}`:`${Math.round(v)}%`;
  host.querySelector('#'+name+'Value').textContent=fmt(val);
- el.addEventListener('input',()=>{const v=Number(el.value);state[name]=name==='time'?v:v/100;host.querySelector('#'+name+'Value').textContent=fmt(v);},{passive:true});
+ el.oninput=()=>{const v=Number(el.value);state[name]=name==='time'?v:v/100;host.querySelector('#'+name+'Value').textContent=fmt(v);};
  if(name==='time')host.querySelector('#reset').onclick=()=>{el.value=12;state.time=12;host.querySelector('#timeValue').textContent='12:00';};
 }
-menuButton.addEventListener('click',showMenu);
-document.getElementById('close').addEventListener('click',hideUI);
-document.getElementById('done').addEventListener('click',hideUI);
+menuButton.addEventListener('click',toggleMenu);
+document.getElementById('done').addEventListener('click',()=>{returnControl();openControl=null;dock.classList.add('hide');panel.querySelectorAll('.active').forEach(e=>e.classList.remove('active'));});
 panel.querySelectorAll('[data-control]').forEach(button=>button.addEventListener('click',()=>openSetting(button.dataset.control)));
 // Diagnostic toggle: compare raw pointer coordinates, viewport, and elementFromPoint
 // after portrait-landscape-portrait. Display only when explicitly enabled.
 let touchDebug=false;
 const diagnostic=document.getElementById('touchDiagnostic'),touchDot=document.getElementById('touchDot'),debugButton=document.getElementById('touchDebugButton');
-debugButton.addEventListener('click',()=>{touchDebug=!touchDebug;debugButton.textContent='タッチ診断：'+(touchDebug?'ON':'OFF');diagnostic.classList.toggle('hide',!touchDebug);touchDot.classList.toggle('hide',!touchDebug);});
+debugButton.addEventListener('click',()=>{touchDebug=!touchDebug;debugButton.style.opacity=touchDebug?'1':'.79';diagnostic.classList.toggle('hide',!touchDebug);touchDot.classList.toggle('hide',!touchDebug);});
 document.addEventListener('pointerdown',e=>{
  if(!touchDebug)return;
  const vv=window.visualViewport;
