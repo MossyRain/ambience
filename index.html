@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 14</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#b4bbcd"><title>Ambience 2.0 — Technical Study 15</title><style>
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#b8b5c8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#30313a}#sky,#gl{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}#gl{pointer-events:none}#menuButton{position:fixed;right:24px;bottom:calc(26px + env(safe-area-inset-bottom));width:48px;height:48px;border:0;background:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:100;padding:4px;pointer-events:auto;cursor:pointer}#menuButton i{display:block;width:24px;height:1.6px;background:#34343b;box-shadow:0 0 3px #fffc}#panel{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:18px;right:18px;max-width:440px;margin:auto;background:rgba(245,244,241,.96);padding:23px 22px 16px;border-radius:18px;box-shadow:0 12px 38px #272b3025;z-index:110;pointer-events:auto;touch-action:auto;overscroll-behavior:contain;transition:opacity .14s;max-height:min(580px,80dvh);overflow:hidden;display:flex;flex-direction:column}#panel.hide{opacity:0;visibility:hidden;pointer-events:none}#panel:not(.hide){visibility:visible;pointer-events:auto}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.head b{font-weight:500;font-size:13px;letter-spacing:.13em}.head button{border:0;background:transparent;font-size:28px;font-weight:200;color:#454853;line-height:1;min-width:48px;min-height:48px;touch-action:manipulation;cursor:pointer;position:relative;z-index:2}h2{font-size:12px;letter-spacing:.09em;font-weight:550;margin:16px 0 9px}.sub{font-size:11px;line-height:1.6;color:#777984;margin:0 0 18px}.control{margin:15px 0}.between{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.between span:last-child{color:#777}input[type=range]{width:100%;accent-color:#4e5460;height:22px;margin:0;touch-action:pan-x}select{width:100%;padding:9px 12px;border:1px solid #cbcdcd;background:#fff;border-radius:8px;color:#333;font-size:13px}.pill{font-size:11px;background:#deded9;padding:5px 9px;border-radius:20px}.notice{background:#e9e9e5;font-size:11px;line-height:1.65;border-radius:8px;padding:10px 12px;color:#62656e;margin-top:17px}#error{position:fixed;top:10px;left:10px;right:10px;background:#2d2d33;color:white;padding:14px;border-radius:6px;display:none;z-index:12;font-size:12px;pointer-events:none}#hint{position:fixed;top:16px;left:20px;color:#2e3139aa;font-size:10px;letter-spacing:.12em;pointer-events:none}#reset{border:0;background:transparent;text-decoration:underline;color:#667;font-size:11px;padding:5px 0}@media (orientation:landscape) and (max-height:550px){#panel{max-width:420px;left:auto;right:50px;bottom:12px;top:12px;max-height:calc(100dvh - 24px)}#menuButton{bottom:18px;right:10px}#hint{top:12px}}
 
 /* iOS Safari: do not select UI captions while dragging controls. */
@@ -19,21 +19,69 @@ html,body{position:relative;width:100%;height:100%;overscroll-behavior:none}
 #panel .panelScroll input[type=range]{touch-action:pan-x}
 #panel.hide{display:none!important}
 @media (orientation:portrait){#panel{bottom:calc(16px + env(safe-area-inset-bottom));max-height:min(580px,calc(100dvh - 42px))}}
-</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 14</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide"><div class="head"><b>LIGHT & WORLD</b><button aria-label="閉じる" id="close">×</button></div><div class="panelScroll"><p class="sub">Study 13の景観を維持し、重層的な雲の陰影、夜の丘の明度、画面回転後のタッチ判定を検証します。</p><div class="control"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"></div><div class="control"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div><div class="control"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div><div class="control"><div class="between"><label for="cloudThickness">雲の厚み</label><span id="cloudThicknessValue">45%</span></div><input id="cloudThickness" type="range" min="0" max="100" value="45"></div><div class="control"><h2>空の色彩プリセット（検証用）</h2><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div><div class="notice">確認：画面回転・スクロール後もタッチ位置が正確／雲量70〜100%でも面積が増える／夜の丘を少し明るく／夜雲・横構図・海面反射は維持。</div><button id="reset">時刻を12:00に戻す</button></div></section><div id="error"></div>
+
+/* Study 15: minimal controls. No scrolling/transformed panel, no cached hit rectangles. */
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden;position:static!important;overscroll-behavior:none}
+#menuButton{position:fixed;right:17px;bottom:calc(18px + env(safe-area-inset-bottom));width:52px;height:52px;z-index:150;pointer-events:auto;touch-action:manipulation;transform:none!important}
+#panel,#adjustDock{position:fixed;left:16px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));top:auto;max-width:440px;width:auto;max-height:none;margin:0 auto;padding:17px 17px 14px;background:rgba(245,244,241,.94);border-radius:16px;box-shadow:0 8px 24px rgba(15,20,27,.15);overflow:visible;display:block;transform:none!important;transition:none!important;contain:none!important;will-change:auto;z-index:160;pointer-events:auto;touch-action:manipulation}
+#panel.hide,#adjustDock.hide{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#panel .head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
+#panel .head b{font-size:12px;font-weight:500;letter-spacing:.15em}
+#panel .head button,#adjustDock .head button{border:none;background:transparent;color:#40434d;min-width:40px;min-height:40px;font-size:25px;touch-action:manipulation}
+#panel .choiceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+#panel .choice{border:1px solid rgba(90,92,100,.18);border-radius:11px;min-height:64px;padding:10px 5px;background:rgba(255,255,255,.46);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#3b3e45;font:inherit;font-size:12px;touch-action:manipulation}
+#panel .choice svg{height:19px;width:19px;stroke:#565964;stroke-width:1.5;fill:none}
+#panel .mini-foot{font-size:10px;color:#767781;margin-top:12px;line-height:1.5}
+#adjustDock .head{margin:0 0 4px;display:flex;align-items:center;justify-content:space-between;min-height:36px}
+#adjustDock .head b{font-size:12px;font-weight:500;letter-spacing:.11em}
+#adjustDock .control{margin:8px 1px 1px}
+#adjustDock .between{margin-bottom:4px}
+#adjustDock input[type=range]{display:block;width:100%;min-height:35px;height:35px;touch-action:pan-x;pointer-events:auto}
+#adjustDock select{min-height:42px;width:100%;touch-action:manipulation}
+#adjustDock #reset{display:block;margin-top:8px}
+#controlTemplates{display:none!important}
+#touchDebugButton{background:none;border:none;padding:0;text-decoration:underline;color:#626672;font-size:10px;touch-action:manipulation}
+#touchDiagnostic{position:fixed;left:8px;top:calc(36px + env(safe-area-inset-top));z-index:300;background:rgba(0,0,0,.75);color:#fff;border-radius:8px;padding:7px 9px;font:10px/1.6 ui-monospace,monospace;max-width:280px;white-space:pre-wrap;pointer-events:none}
+#touchDiagnostic.hide{display:none}
+#touchDot{position:fixed;width:18px;height:18px;border:2px solid #f55;border-radius:50%;transform:translate(-50%,-50%);z-index:301;pointer-events:none}
+#touchDot.hide{display:none}
+@media (orientation:landscape) and (max-height:550px){
+  #menuButton{bottom:12px;right:12px}
+  #panel,#adjustDock{left:auto;right:58px;bottom:10px;top:auto;width:min(410px,calc(100vw - 82px));max-height:calc(100dvh - 20px)}
+  #panel .choice{min-height:51px}
+  #panel .choiceGrid{gap:5px}
+}
+</style></head><body><canvas id="sky"></canvas><canvas id="gl"></canvas><span id="hint">AMBIENCE / 2.0 STUDY 15</span><button aria-label="設定を開く" id="menuButton"><i></i><i></i><i></i></button><section id="panel" class="hide" aria-label="設定項目"><div class="head"><b>AMBIENCE / SETTINGS</b><button aria-label="閉じる" id="close" type="button">×</button></div>
+  <div class="choiceGrid">
+    <button type="button" class="choice" data-control="time">◷<span>時刻</span></button>
+    <button type="button" class="choice" data-control="skyMix">◐<span>天球色の影響</span></button>
+    <button type="button" class="choice" data-control="cloud">☁<span>雲量</span></button>
+    <button type="button" class="choice" data-control="cloudThickness">≋<span>雲の厚み</span></button>
+    <button type="button" class="choice" data-control="preset">◫<span>空の色彩</span></button>
+  </div>
+  <div class="mini-foot">項目を選ぶと操作部だけを表示します。<button type="button" id="touchDebugButton">タッチ診断：OFF</button></div>
+</section>
+<section id="adjustDock" class="hide" aria-label="項目の調整"><div class="head"><b id="adjustTitle">雲量</b><button type="button" id="done" aria-label="調整を閉じる">×</button></div><div id="controlHost"></div></section>
+<div id="controlTemplates">
+<div class="control" data-name="time"><div class="between"><label for="time">時刻</label><span id="timeValue">17:30</span></div><input id="time" type="range" min="0" max="24" step=".05" value="17.5"><button id="reset" type="button">時刻を12:00に戻す</button></div>
+<div class="control" data-name="skyMix"><div class="between"><label for="skyMix">天球からの色の影響</label><span id="skyMixValue">70%</span></div><input id="skyMix" type="range" min="0" max="100" step="1" value="70"></div>
+<div class="control" data-name="cloud"><div class="between"><label for="cloud">雲量</label><span id="cloudValue">35%</span></div><input id="cloud" type="range" min="0" max="100" value="35"></div>
+<div class="control" data-name="cloudThickness"><div class="between"><label for="cloudThickness">雲の厚み</label><span id="cloudThicknessValue">45%</span></div><input id="cloudThickness" type="range" min="0" max="100" value="45"></div>
+<div class="control" data-name="preset"><label for="preset">空の色彩プリセット</label><select id="preset"><option value="rose">薄紫・桃色の夕空</option><option value="blue">青空</option><option value="violet">紫・青緑の抽象空</option></select></div>
+</div>
+<div id="touchDiagnostic" class="hide" aria-live="off"></div><div id="touchDot" class="hide"></div>
+<div id="error"></div>
 <script>
 (()=>{'use strict';
 const sky=document.getElementById('sky'),sc=sky.getContext('2d',{alpha:false}),canvas=document.getElementById('gl');
 const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false,powerPreference:'low-power'});
 if(!gl){
  const warning=document.getElementById('error');warning.style.display='block';warning.textContent='この環境ではWebGLが使えないため、簡易2D表示です。3D照明の評価にはWebGL対応ブラウザが必要です。';
- let W=0,H=0;function fallback(){W=innerWidth;H=innerHeight;const dp=Math.min(devicePixelRatio||1,1.5);sky.width=W*dp;sky.height=H*dp;sc.setTransform(dp,0,0,dp,0,0);let g=sc.createLinearGradient(0,0,0,H);g.addColorStop(0,'#858eb7');g.addColorStop(.56,'#d4acc4');g.addColorStop(.74,'#e5b7ac');g.addColorStop(1,'#9eb7b0');sc.fillStyle=g;sc.fillRect(0,0,W,H);let hor=H*.66;sc.fillStyle='#859eaa';sc.fillRect(0,hor,W,H-hor);sc.fillStyle='#889a83';sc.beginPath();sc.moveTo(0,hor+H*.12);sc.quadraticCurveTo(W*.5,hor-H*.02,W,hor+H*.12);sc.lineTo(W,H);sc.lineTo(0,H);sc.fill();const sz=27,cx=W*.5,cy=H*(H>W?.83:.60);sc.save();sc.translate(cx,cy);sc.fillStyle='#d0c1ac';sc.fillRect(-32,-38,64,51);sc.fillStyle='#726678';sc.beginPath();sc.moveTo(-39,-37);sc.lineTo(0,-69);sc.lineTo(39,-37);sc.lineTo(31,-31);sc.lineTo(0,-56);sc.lineTo(-31,-31);sc.fill();sc.fillStyle='#4e4551';sc.fillRect(-5,-5,12,18);sc.fillStyle='#a48d7e';sc.fillRect(-28,-20,13,15);sc.fillRect(16,-20,13,15);sc.strokeStyle='#c4ad8e';sc.lineWidth=10;sc.beginPath();sc.moveTo(2,13);sc.quadraticCurveTo(-8,45,5,120);sc.stroke();sc.fillStyle='#77756e';sc.beginPath();sc.ellipse(110,10,21,10,0,0,Math.PI*2);sc.fill();sc.restore();}fallback();addEventListener('resize',fallback);const panel=document.getElementById('panel'),openBtn=document.getElementById('menuButton'),closeBtn=document.getElementById('close');
- function toggleFallback(open){panel.classList.toggle('hide',!open);panel.style.pointerEvents=open?'auto':'none';openBtn.style.visibility=open?'hidden':'visible';}
- openBtn.addEventListener('click',()=>toggleFallback(true));closeBtn.addEventListener('click',()=>toggleFallback(false));
- for(const id of ['time','skyMix','cloud','cloudThickness']){
-  const input=document.getElementById(id),output=document.getElementById(id+'Value');
-  input.addEventListener('input',()=>{const v=+input.value;output.textContent=id==='time'?`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`:`${v}%`;});
- }
- document.getElementById('reset').addEventListener('click',()=>{const input=document.getElementById('time');input.value='12';input.dispatchEvent(new Event('input',{bubbles:true}));});
+ let W=0,H=0;function fallback(){W=innerWidth;H=innerHeight;const dp=Math.min(devicePixelRatio||1,1.5);sky.width=W*dp;sky.height=H*dp;sc.setTransform(dp,0,0,dp,0,0);let g=sc.createLinearGradient(0,0,0,H);g.addColorStop(0,'#858eb7');g.addColorStop(.56,'#d4acc4');g.addColorStop(.74,'#e5b7ac');g.addColorStop(1,'#9eb7b0');sc.fillStyle=g;sc.fillRect(0,0,W,H);let hor=H*.66;sc.fillStyle='#859eaa';sc.fillRect(0,hor,W,H-hor);sc.fillStyle='#889a83';sc.beginPath();sc.moveTo(0,hor+H*.12);sc.quadraticCurveTo(W*.5,hor-H*.02,W,hor+H*.12);sc.lineTo(W,H);sc.lineTo(0,H);sc.fill();const sz=27,cx=W*.5,cy=H*(H>W?.83:.60);sc.save();sc.translate(cx,cy);sc.fillStyle='#d0c1ac';sc.fillRect(-32,-38,64,51);sc.fillStyle='#726678';sc.beginPath();sc.moveTo(-39,-37);sc.lineTo(0,-69);sc.lineTo(39,-37);sc.lineTo(31,-31);sc.lineTo(0,-56);sc.lineTo(-31,-31);sc.fill();sc.fillStyle='#4e4551';sc.fillRect(-5,-5,12,18);sc.fillStyle='#a48d7e';sc.fillRect(-28,-20,13,15);sc.fillRect(16,-20,13,15);sc.strokeStyle='#c4ad8e';sc.lineWidth=10;sc.beginPath();sc.moveTo(2,13);sc.quadraticCurveTo(-8,45,5,120);sc.stroke();sc.fillStyle='#77756e';sc.beginPath();sc.ellipse(110,10,21,10,0,0,Math.PI*2);sc.fill();sc.restore();}fallback();addEventListener('resize',fallback);const panel=document.getElementById('panel'),dock=document.getElementById('adjustDock'),host=document.getElementById('controlHost');
+ document.getElementById('menuButton').onclick=()=>panel.classList.remove('hide');
+ document.getElementById('close').onclick=()=>panel.classList.add('hide');
+ document.getElementById('done').onclick=()=>dock.classList.add('hide');
+ panel.querySelectorAll('[data-control]').forEach(btn=>btn.onclick=()=>{panel.classList.add('hide');dock.classList.remove('hide');host.replaceChildren(document.querySelector('#controlTemplates [data-name="'+btn.dataset.control+'"]'));document.getElementById('adjustTitle').textContent=btn.textContent;const ctl=host.querySelector('input,select');if(ctl&&ctl.type==='range')ctl.oninput=()=>{const value=host.querySelector('[id$="Value"]');if(value)value.textContent=ctl.id==='time'?Number(ctl.value).toFixed(2):ctl.value+'%';};});
  return;
  }
 let state={time:17.5,skyMix:.70,cloud:.35,cloudThickness:.45,preset:'rose'},W=390,H=844,dpr=1,tick=0,last=0;
@@ -2214,7 +2262,7 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
   if(coverage<=.001 || visibleH<1)return;
   const scale=4, w=Math.max(2,Math.ceil(W/scale)),h=Math.max(2,Math.ceil(visibleH/scale));
   const timeSlice=Math.floor(t/280);
-  const key=[w,h,Math.round(horizon),Math.round(coverage*100),Math.round(thickness*100),state.preset,Math.round(d.night*24),timeSlice].join('/');
+  const key=[w,h,Math.round(horizon),Math.round(coverage*100),Math.round(thickness*100),state.preset,Math.round(d.night*24),Math.round(state.time*10),timeSlice].join('/');
   if(key!==cloudFieldCacheKey){
     cloudFieldCacheKey=key;cloudFieldCanvas.width=w;cloudFieldCanvas.height=h;
     const image=cloudFieldCtx.createImageData(w,h),pixels=image.data;
@@ -2247,7 +2295,7 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
     for(let j=0;j<h;j++){
       const screenY=Math.min(visibleH,j*scale);
       const baseSky=colorAt(screenY);
-      const baseColor=mix(baseSky,[225,221,228],.20+.24*thickness);
+      const baseColor=mix(baseSky,[227,224,230],.34+.30*thickness);
       const cloudColor=mix(baseColor,[42,45,60],d.night*.83);
       for(let i=0;i<w;i++){
         const idx=j*w+i;
@@ -2258,7 +2306,7 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
         // Smooth surface gradients act as a normal on the cloud bank's billows.
         const nx=getField(i+2,j)-getField(i-2,j);
         const ny=getField(i,j+2)-getField(i,j-2);
-        const relief=clamp(.52+sunSide*nx*2.2-ny*2.9,.05,.98);
+        const relief=clamp(.47+sunSide*nx*5.3-ny*5.5,.04,1.);
         // Upwind highlights and underside shading change with the lobe's relief.
         const topLight=.40+.55*relief;
         const underside=.77+.23*clamp(.54-ny*2.8);
@@ -2268,8 +2316,12 @@ function drawCloudField(t,horizon,fromWorldX,colorAt,d){
         // Neighboring overlap contributes *shadows*, not a flat white haze.
         const upperCover=clamp((getField(i,j-5)*255-cut)/edgeWidth+.5);
         const underShadow=(.99-.15*upperCover*clamp(ny*5+.2));
-        const shade=volumeShade*billow*underShadow;
-        const weight=.25+.70*thickness;
+        const softSun=clamp(d.sun.vector[1]*.95+.2);
+        const sculpted=.57+.45*clamp(relief*softSun+.22);
+        const shade=volumeShade*billow*underShadow*sculpted;
+        // Approximate Beer's law through the cloud: thicker lobes block more light.
+        const depth=thickness*(.7+1.0*localDetail+.60*clamp(n*2));
+        const weight=1-Math.exp(-3.6*depth);
         const alpha=covered*weight;
         const p=idx*4;
         const warmTop=.10*dayFactor*relief*clamp((d.sun.vector[1]+.08)*2.);
@@ -2347,8 +2399,7 @@ function skyDraw(t){
  }}
  // Clouds: count/coverage is independent of opacity, which is controlled by thickness.
  // A stable world-anchored field is cropped (not reshaped) when the device rotates.
- drawCloudField(t, horizon, fromWorldX, colorAt, d);
-   // The disc follows the equinox solar vector; it is never time-switched.
+ // The disc follows the equinox solar vector; it is never time-switched.
   const disc=skySunPosition(d.sun,horizon);
   if(disc.visible && d.alt>-.025){
     const sx=disc.x,sy=disc.y,rr=PIXELS_PER_UNIT*.32;
@@ -2361,6 +2412,9 @@ function skyDraw(t){
       sc.fillStyle='rgba(255,242,218,.96)';sc.beginPath();sc.arc(sx,sy,rr,0,Math.PI*2);sc.fill();
     }
   }
+  // Atmospheric clouds are in FRONT of the sun; thickness controls transmittance.
+  // Opaque banks hide the solar disc rather than allowing it to shine through unchanged.
+  drawCloudField(t, horizon, fromWorldX, colorAt, d);
  sc.restore();
 }
 function sceneDraw(){
@@ -2395,96 +2449,65 @@ function sceneDraw(){
  gl.uniform1i(loc.shadowMap,0);
  // At night keep the house dark while lifting the curved hillside just enough
  // to distinguish its silhouette. Both still use the same sky-tinted ambient.
- const nightLift=.048*(1-clamp((d.alt+.09)/.25));
+ const nightLift=.145*(1-clamp((d.alt+.09)/.25));
  gl.uniform1f(loc.groundAmbient,groundAmbient+nightLift);
  gl.drawArrays(gl.TRIANGLES,0,hillVertexCount);
  gl.uniform1f(loc.groundAmbient,groundAmbient);
  gl.drawArrays(gl.TRIANGLES,hillVertexCount,count-hillVertexCount);
 }
 let stopped=false;function loop(t){if(!stopped){if(t-last>33){last=t;tick=t;skyDraw(t);sceneDraw();}requestAnimationFrame(loop)}}requestAnimationFrame(loop);document.addEventListener('visibilitychange',()=>{last=0;});
-// Safari sometimes retains a stale composited hit-test surface after returning
-// from landscape to portrait. Re-mount the menu's DOM on orientation changes;
-// this invalidates the native hit-test layer without changing the visual scene.
-let panel=document.getElementById('panel');
-let openButton=document.getElementById('menuButton');
-let closeButton=document.getElementById('close');
-let scrollRegion=panel.querySelector('.panelScroll');
-let menuOpen=false;
-function setMenu(open){
-  menuOpen=Boolean(open);
-  panel.classList.toggle('hide',!menuOpen);
-  panel.style.pointerEvents=menuOpen?'auto':'none';
-  panel.setAttribute('aria-hidden',String(!menuOpen));
-  openButton.setAttribute('aria-expanded',String(menuOpen));
-  openButton.style.visibility=menuOpen?'hidden':'visible';
-  openButton.style.pointerEvents=menuOpen?'none':'auto';
+// Study 15 UI experiment: a small fixed control dock with NO scrolling or transforms.
+// Keep the entire scene visible. Browsers perform native range/select hit testing.
+const panel=document.getElementById('panel'),dock=document.getElementById('adjustDock');
+const menuButton=document.getElementById('menuButton');
+const host=document.getElementById('controlHost');
+const templates=document.getElementById('controlTemplates');
+const labels={time:'時刻',skyMix:'天球色の影響',cloud:'雲量',cloudThickness:'雲の厚み',preset:'空の色彩'};
+let openControl=null;
+function returnControl(){while(host.firstChild)templates.appendChild(host.firstChild);}
+function showMenu(){returnControl();openControl=null;panel.classList.remove('hide');dock.classList.add('hide');menuButton.style.display='none';}
+function hideUI(){panel.classList.add('hide');dock.classList.add('hide');returnControl();openControl=null;menuButton.style.display='flex';}
+function openSetting(name){
+ const item=templates.querySelector('[data-name="'+name+'"]');if(!item)return;
+ openControl=name;host.replaceChildren(item);
+ document.getElementById('adjustTitle').textContent=labels[name];
+ panel.classList.add('hide');dock.classList.remove('hide');menuButton.style.display='none';
+ hookSetting(name);
 }
-function connectMenuButtons(){
-  openButton.onclick=()=>setMenu(true);
-  closeButton.onclick=()=>setMenu(false);
+function hookSetting(name){
+ if(name==='preset'){
+   const select=host.querySelector('#preset');select.value=state.preset;
+   select.onchange=()=>{state.preset=select.value};return;
+ }
+ const el=host.querySelector('#'+name);
+ let val=name==='time'?state.time:Math.round(state[name]*100);
+ el.value=val;
+ const fmt=(v)=>name==='time'?`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)%60).padStart(2,'0')}`:`${Math.round(v)}%`;
+ host.querySelector('#'+name+'Value').textContent=fmt(val);
+ el.addEventListener('input',()=>{const v=Number(el.value);state[name]=name==='time'?v:v/100;host.querySelector('#'+name+'Value').textContent=fmt(v);},{passive:true});
+ if(name==='time')host.querySelector('#reset').onclick=()=>{el.value=12;state.time=12;host.querySelector('#timeValue').textContent='12:00';};
 }
-function connectInputControls(){
-  for(const [id,field,format] of [
-    ['time','time',v=>`${String(Math.floor(v)).padStart(2,'0')}:${String(Math.round((v%1)*60)).padStart(2,'0')}`],
-    ['skyMix','skyMix',v=>`${v}%`],
-    ['cloud','cloud',v=>`${v}%`],
-    ['cloudThickness','cloudThickness',v=>`${v}%`]
-  ]){
-    const el=document.getElementById(id);
-    const value=field==='time'?state[field]:state[field]*100;
-    el.value=value;
-    document.getElementById(id+'Value').textContent=format(value);
-    el.oninput=()=>{
-      const v=Number(el.value);
-      state[field]=field==='time'?v:v/100;
-      document.getElementById(id+'Value').textContent=format(v);
-    };
-  }
-  const preset=document.getElementById('preset');
-  preset.value=state.preset;
-  preset.onchange=()=>{state.preset=preset.value};
-  document.getElementById('reset').onclick=()=>{
-    state.time=12;
-    const input=document.getElementById('time');input.value=12;
-    document.getElementById('timeValue').textContent='12:00';
-  };
-}
-function remakeMenuDOM(){
-  // Replacing elements, rather than mutating transforms or hit coordinates,
-  // forces iOS WebKit to create a new touch target layer after rotation.
-  const wasOpen=menuOpen;
-  const previousScroll=scrollRegion.scrollTop;
-  const newPanel=panel.cloneNode(true);
-  const newButton=openButton.cloneNode(true);
-  panel.replaceWith(newPanel);
-  openButton.replaceWith(newButton);
-  panel=newPanel;openButton=newButton;
-  closeButton=panel.querySelector('#close');
-  scrollRegion=panel.querySelector('.panelScroll');
-  connectMenuButtons();connectInputControls();setMenu(wasOpen);
-  scrollRegion.scrollTop=previousScroll;
-}
-connectMenuButtons();connectInputControls();setMenu(false);
-let lastOrientation=innerWidth>=innerHeight?'landscape':'portrait';
-let reflowTimer=0;
-function refreshOrientation(){
-  const newOrientation=innerWidth>=innerHeight?'landscape':'portrait';
-  if(newOrientation===lastOrientation)return;
-  lastOrientation=newOrientation;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    remakeMenuDOM();
-    scheduleResize();
-  }));
-  clearTimeout(reflowTimer);
-  reflowTimer=setTimeout(()=>{
-    // Safari may report a transient viewport during the rotation animation.
-    // Rebuild once after geometry settles, preserving control values and scroll.
-    remakeMenuDOM();scheduleResize();
-  },320);
-}
-addEventListener('orientationchange',refreshOrientation,{passive:true});
-addEventListener('resize',refreshOrientation,{passive:true});
-if(window.visualViewport)window.visualViewport.addEventListener('resize',refreshOrientation,{passive:true});
+menuButton.addEventListener('click',showMenu);
+document.getElementById('close').addEventListener('click',hideUI);
+document.getElementById('done').addEventListener('click',hideUI);
+panel.querySelectorAll('[data-control]').forEach(button=>button.addEventListener('click',()=>openSetting(button.dataset.control)));
+// Diagnostic toggle: compare raw pointer coordinates, viewport, and elementFromPoint
+// after portrait-landscape-portrait. Display only when explicitly enabled.
+let touchDebug=false;
+const diagnostic=document.getElementById('touchDiagnostic'),touchDot=document.getElementById('touchDot'),debugButton=document.getElementById('touchDebugButton');
+debugButton.addEventListener('click',()=>{touchDebug=!touchDebug;debugButton.textContent='タッチ診断：'+(touchDebug?'ON':'OFF');diagnostic.classList.toggle('hide',!touchDebug);touchDot.classList.toggle('hide',!touchDebug);});
+document.addEventListener('pointerdown',e=>{
+ if(!touchDebug)return;
+ const vv=window.visualViewport;
+ const hit=document.elementFromPoint(e.clientX,e.clientY);
+ const rect=e.target.getBoundingClientRect();
+ diagnostic.textContent=`touch ${Math.round(e.clientX)},${Math.round(e.clientY)} / visual ${Math.round(vv?.offsetTop||0)},${Math.round(vv?.height||innerHeight)}\nhit ${hit?.id||hit?.tagName||'-'} target ${e.target.id||e.target.tagName}\nrect ${Math.round(rect.left)},${Math.round(rect.top)} size ${Math.round(rect.width)}x${Math.round(rect.height)}\ninner ${innerWidth}x${innerHeight}`;
+ touchDot.style.left=e.clientX+'px';touchDot.style.top=e.clientY+'px';
+},{capture:true,passive:true});
+// Do not remount controls or apply compensating touch offsets during rotation.
+// The small dock has no scroll state, so CSS can reflow natively on resize.
+addEventListener('orientationchange',scheduleResize,{passive:true});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',scheduleResize,{passive:true});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();stopped=true;const n=document.getElementById('error');n.style.display='block';n.textContent='WebGLの描画コンテキストが失われました。ページを再読み込みしてください。';});
 })();
 </script></body></html>
